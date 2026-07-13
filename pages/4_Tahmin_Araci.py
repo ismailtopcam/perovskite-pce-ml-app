@@ -9,8 +9,10 @@ from lib.ui import page, tr, tez_notu, bilim_uyarisi, conformal_uyarisi, MAVI, K
 
 page("Tahmin Aracı — Sanal Cihaz Tarifi", "4️⃣")
 tez_notu("Bölüm 3.12 ve 4.10",
-         "Tarif, modelin eğitimde gördüğü 77-özellik sözleşmesine kodlanır; belirsizlik "
-         "DOI-grup-güvenli conformal kalibrasyonla verilir.")
+         "Tarif, modelin eğitimde gördüğü 77-özellik sözleşmesine kodlanır. Belirsizlik "
+         "aralığı, modelin daha önce hiç görmediği yayınlardaki gerçek hatalarının "
+         "dağılımından türetilir (conformal kestirim) — yani bir varsayım değil, modelin "
+         "geçmiş hata karnesidir.")
 
 maps = encode.categorical_options()
 meta = data.js("features.json")
@@ -73,8 +75,12 @@ if gonder:
 
     r1, r2, r3, r4 = st.columns(4)
     r1.metric("Tahmini PCE", tr(pred, 2) + " %")
-    r2.metric("%90 aralık (marginal)", f"{tr(m_lo, 1)} – {tr(m_hi, 1)}")
-    r3.metric(f"%90 aralık (Mondrian {quart})", f"{tr(q_lo, 1)} – {tr(q_hi, 1)}")
+    r2.metric("%90 aralık (genel)", f"{tr(m_lo, 1)} – {tr(m_hi, 1)}",
+              help="Modelin görülmemiş yayınlardaki gerçek hatalarının %90'ını kapsayan "
+                   "genişlik (marginal conformal): tüm kalibrasyon kayıtları birlikte.")
+    r3.metric(f"%90 aralık (bölgesel, {quart})", f"{tr(q_lo, 1)} – {tr(q_hi, 1)}",
+              help="Aynı hesap, yalnızca bu tahmin düzeyindeki (çeyrekteki) kayıtların "
+                   "hatalarıyla yapılır (Mondrian conformal) — aralık bölgeye duyarlı hâle gelir.")
     r4.metric("Eğitim-uzayına uzaklık", tr(dist, 2),
               f"eşik {tr(thr, 2)} — {'alan içi' if inside else 'alan DIŞI'}",
               delta_color="normal" if inside else "inverse")

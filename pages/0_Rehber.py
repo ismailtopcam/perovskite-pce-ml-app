@@ -10,7 +10,6 @@ st.markdown(
 Bu uygulama, yüksek lisans tezinin veri hattını ve bulgularını **herkesin
 inceleyebileceği** biçimde sunar. Bu sayfa; her ekranın *ne gösterdiğini*,
 *nasıl okunması gerektiğini* ve *tezin hangi bölümüne dayandığını* açıklar.
-Hiç makine öğrenmesi bilmeseniz de bu rehberle uygulamayı gezebilirsiniz.
 
 **Tek cümlelik özet:** Model, geçmiş literatürdeki on binlerce perovskit güneş
 hücresi kaydından verim (PCE) tahmin etmeyi öğrenir; tezin asıl katkısı ise bu

@@ -7,8 +7,8 @@ from lib.ui import page, tr, tez_notu, bilim_uyarisi, MAVI, KIRMIZI
 
 page("Aday Kompozisyon Tarayıcı", "6️⃣")
 tez_notu("Bölüm 3.12, 4.5 ve 4.10",
-         "756 aday = 7×2×3×2×3×3 kontrollü eksen çarpımı; her adaya conformal aralık, "
-         "eğitim-desteği ve eğitim-uzayına uzaklık eşlik eder.")
+         "756 aday = 7×2×3×2×3×3 kontrollü eksen çarpımı; her adaya %90 belirsizlik "
+         "aralığı, eğitim-verisi desteği ve eğitim-uzayına uzaklık bilgisi eşlik eder.")
 
 cand = data.candidates()
 
@@ -17,7 +17,12 @@ min_pce = f1.slider("Min. tahmini PCE", 8.0, 18.0, 12.0, 0.5)
 a_sel = f2.multiselect("A-site", sorted(cand["A"].unique()))
 b_sel = f3.multiselect("B-site", sorted(cand["B"].unique()))
 arch_sel = f4.multiselect("Mimari", sorted(cand["arch"].unique()))
-sadece_uyumlu = f5.checkbox("Yalnız eğitimde destekli (≥5 kayıt)", value=True)
+sadece_uyumlu = f5.checkbox(
+    "Yalnızca eğitimde denenmiş kombinasyonlar", value=True,
+    help="Adayın mimari–ETL–HTL üçlüsü, modelin eğitim verisinde en az 5 kayıtta "
+         "birlikte görülmüşse gösterilir (tez Bölüm 4.5). Model, hiç görmediği bir "
+         "kombinasyonun katman etkileşimini öğrenmiş olamaz; bu filtre 756 adayı "
+         "546'ya indirir.")
 
 m = cand["Predicted_PCE"] >= min_pce
 if a_sel: m &= cand["A"].isin(a_sel)
@@ -27,7 +32,7 @@ if sadece_uyumlu: m &= cand["uyumlu_N5"]
 sub = cand[m].sort_values("Predicted_PCE", ascending=False)
 
 st.caption(f"**{tr(len(sub), 0)} / 756** aday eşleşti "
-           f"(eğitim destekli: {tr(int(cand['uyumlu_N5'].sum()), 0)}; "
+           f"(eğitimde ≥5 kez görülmüş kombinasyon: {tr(int(cand['uyumlu_N5'].sum()), 0)}; "
            f"eğitim-uzayı eşiği içinde: {tr(int(cand['alan_ici'].sum()), 0)}).")
 
 view = sub[["A", "B", "X", "arch", "ETL", "HTL", "Predicted_PCE",

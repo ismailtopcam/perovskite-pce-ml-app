@@ -24,7 +24,7 @@ st.markdown("---")
 l, r = st.columns([2, 3])
 
 with l:
-    q = st.text_input("DOI ara (parça yeterli)", placeholder="10.1039/...")
+    q = st.text_input("DOI ara", placeholder="örn. 10.1039 — adresin bir parçasını yazmanız yeterli")
     dsub = doi[doi["DOI"].str.contains(q, case=False, regex=False)] if q else \
         doi.sort_values("kayit", ascending=False)
     st.caption(f"{tr(len(dsub), 0)} yayın")
