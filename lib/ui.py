@@ -5,11 +5,11 @@ import streamlit as st
 MAVI = "#4878a8"
 KIRMIZI = "#a85248"
 GRI = "#b0b8c0"
+BORDO = "#ab162c"   # IKCU kurumsal rengi (tez kapagi logosundan orneklendi)
 
 
 def page(title: str, icon: str, wide: bool = True):
-    st.set_page_config(page_title=title, page_icon=icon,
-                       layout="wide" if wide else "centered")
+    # set_page_config girdi noktasinda (streamlit_app.py) bir kez cagrilir.
     st.title(f"{icon} {title}")
 
 

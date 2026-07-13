@@ -1,7 +1,9 @@
 [theme]
-primaryColor = "#4878a8"
+# IKCU kurumsal bordo (tez kapagi logosundan orneklendi: #ab162c).
+# Grafiklerdeki mavi/kirmizi anlamsal ayrimi (yukselten/dusuren) korunur.
+primaryColor = "#ab162c"
 backgroundColor = "#ffffff"
-secondaryBackgroundColor = "#f2f5f8"
+secondaryBackgroundColor = "#f7f3f4"
 textColor = "#1a1f24"
 
 [server]

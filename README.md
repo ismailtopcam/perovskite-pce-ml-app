@@ -12,6 +12,7 @@ Ana pipeline deposu: <https://github.com/ismailtopcam/perovskite-pce-ml-thesis>
 | # | Sayfa | İçerik |
 |---|---|---|
 | — | Ana Sayfa | Tezin savı, başlık sonuçlar, provenans |
+| — | Kullanım Rehberi | Her ekranın açıklaması, küçük sözlük, SSS (uzman olmayan ziyaretçiler için) |
 | 1 | Veri Hattı | Ham→temiz dönüşüm, eleme nedenleri, **kayıt-düzeyi açıklama** ("bu kayıt neden elendi / hangi işlemler uygulandı") |
 | 2 | Doğrulama Deneyleri | ⭐ Merkez ekran: bölme yöntemi ve özellik seti seçiminin R²'ye etkisi (0,263 ↔ 0,938) |
 | 3 | Model Karşılaştırma | 6 modelin DOI-grup CV / holdout başarımları |
@@ -26,7 +27,7 @@ Ana pipeline deposu: <https://github.com/ismailtopcam/perovskite-pce-ml-thesis>
 ```bash
 python -m venv .venv && .venv\Scripts\activate   # Linux/Mac: source .venv/bin/activate
 pip install -r requirements.txt
-streamlit run Ana_Sayfa.py
+streamlit run streamlit_app.py
 ```
 
 Uygulama `data_app/` altındaki **önceden üretilmiş** kompakt dosyalarla çalışır

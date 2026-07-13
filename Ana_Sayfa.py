@@ -36,6 +36,7 @@ with col1:
         """
 | Sayfa | İçerik |
 |---|---|
+| **📖 Kullanım Rehberi** | Her ekranın ne gösterdiği, nasıl okunacağı + küçük sözlük — buradan başlayın |
 | **1 — Veri Hattı** | Ham→temiz dönüşüm, eleme nedenleri, kayıt gezgini ("bu kayıt neden elendi / hangi işlemler uygulandı?") |
 | **2 — Doğrulama Deneyleri** | ⭐ Tezin merkez bulgusu: bölme yöntemi ve özellik seti seçiminin R²'ye etkisi |
 | **3 — Model Karşılaştırma** | 6 modelin DOI-grup CV ve holdout başarımları |
