@@ -77,11 +77,25 @@ Grup-güvenli arama, temel yapılandırmayı seçti;
 5-katta fark **0,000** → başarım veri yapısıyla sınırlı,
 ayarla değil.""")
 
-st.subheader("🧾 Veri bütünlüğü")
+st.subheader("🧾 Model ve veri kimliği")
 st.markdown(f"""
-- `model_ready_dataset.csv` SHA-256: `{meta['model_ready_sha256'][:32]}…`
-- Ham veri anlık görüntüsü: {tr(meta['n_ham'], 0)} kayıt (SHA-256 pipeline README'sinde)
-- Bu uygulamanın tüm dosyaları `tools/prepare_app_data.py` ile pipeline reposundan
-  **deterministik** üretilir; betik, bölmeleri yeniden kurup bilinen değerlerle doğrular
-  (assert), uyuşmazlıkta üretim durur.
+| Alan | Değer |
+|---|---|
+| Model | CatBoost 1.2.10 (iterations=500, depth=6, lr=0.05, seed=42) |
+| Model artefaktı (`model.cbm`) SHA-256 | `{meta.get('model_cbm_sha256', '—')[:32]}…` |
+| `model_ready_dataset.csv` SHA-256 | `{meta['model_ready_sha256'][:32]}…` |
+| Ham veri anlık görüntüsü | {tr(meta['n_ham'], 0)} kayıt × 410 kolon (SHA-256: pipeline README) |
+| Pipeline commit | `{meta['pipeline_git_commit'][:12]}` |
+| Kod arşivi | [Zenodo DOI {meta.get('zenodo_doi', '10.5281/zenodo.21196013')}](https://doi.org/{meta.get('zenodo_doi', '10.5281/zenodo.21196013')}) |
+| Pipeline deposu | [{meta.get('github_pipeline', '').replace('https://', '')}]({meta.get('github_pipeline', '')}) |
+| Uygulama deposu | [{meta.get('github_app', '').replace('https://', '')}]({meta.get('github_app', '')}) |
+| DOI-grup CV sonucu | R² = 0,413 ± 0,006 (MAE 3,12 / RMSE 4,02) |
+
+⚠️ **Ölçüm-sonrası hiçbir değişken (Voc, Jsc, FF, EQE, stabilite alanları) modele dahil
+değildir** — şema katmanı bunu her koşuda zorlar; dahil edilselerdi R² yapay olarak
+0,938'e çıkardı (tez Deney B).
+
+Bu uygulamanın tüm dosyaları `tools/prepare_app_data.py` ile pipeline reposundan
+**deterministik** üretilir; betik, bölmeleri yeniden kurup bilinen değerlerle doğrular
+(assert), uyuşmazlıkta üretim durur.
 """)

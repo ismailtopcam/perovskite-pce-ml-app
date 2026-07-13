@@ -50,11 +50,12 @@ def model():
 
 @st.cache_resource(show_spinner="Eğitim-uzayı indeksi kuruluyor...")
 def ad_index():
-    """(NearestNeighbors, scaler_mean, scaler_scale, esik) — uygulanabilirlik-alani."""
+    """(NearestNeighbors, scaler_mean, scaler_scale, esik, train_row_ids)."""
     from sklearn.neighbors import NearestNeighbors
     z = np.load(DATA / "ad_reference.npz")
     nn = NearestNeighbors(n_neighbors=5).fit(z["X_train_scaled"])
-    return nn, z["scaler_mean"], z["scaler_scale"], float(z["threshold"][0])
+    row_ids = z["train_row_ids"] if "train_row_ids" in z.files else None
+    return nn, z["scaler_mean"], z["scaler_scale"], float(z["threshold"][0]), row_ids
 
 
 @st.cache_resource(show_spinner="SHAP açıklayıcısı hazırlanıyor...")

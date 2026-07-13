@@ -63,11 +63,14 @@ with col2:
     st.subheader("🧾 Provenans")
     st.markdown(
         f"""
-- Pipeline commit: `{meta['pipeline_git_commit'][:12]}`
-- Veri hazırlama: `{meta['hazirlama_zamani_utc']}`
+- Pipeline commit: `{meta['pipeline_git_commit'][:12]}` · Veri hazırlama: `{meta['hazirlama_zamani_utc'][:10]}`
 - Kaynak veri: [Perovskite Database](https://www.perovskitedatabase.com)
-  (Jacobsson vd., 2022) — {tr(meta['n_ham'], 0)} kayıt anlık görüntüsü
-- Kod: [github.com/ismailtopcam/perovskite-pce-ml-thesis](https://github.com/ismailtopcam/perovskite-pce-ml-thesis)
+  (Jacobsson vd., 2022, CC BY 4.0) — {tr(meta['n_ham'], 0)} kayıt anlık görüntüsü
+- Kod: [pipeline deposu]({meta.get('github_pipeline', '#')}) ·
+  [uygulama deposu]({meta.get('github_app', '#')}) ·
+  arşiv: [DOI {meta.get('zenodo_doi', '')}](https://doi.org/{meta.get('zenodo_doi', '')})
+- Ölçüm-sonrası değişkenler (Voc/Jsc/FF...) modele **dahil değildir**; ayrıntı:
+  Pipeline & Provenans sayfası
 """
     )
 

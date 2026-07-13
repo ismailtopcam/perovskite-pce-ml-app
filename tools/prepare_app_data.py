@@ -239,8 +239,9 @@ json.dump({"features": feat_names,
 np.savez_compressed(OUT / "ad_reference.npz",
                     X_train_scaled=Xtr_s,
                     scaler_mean=scaler.mean_, scaler_scale=scaler.scale_,
-                    threshold=np.array([ad_thr]))
-print(f"[prep] model.cbm + ad_reference ({Xtr_s.shape})")
+                    threshold=np.array([ad_thr]),
+                    train_row_ids=rec.loc[tr, "row_id"].values.astype(np.int64))
+print(f"[prep] model.cbm + ad_reference ({Xtr_s.shape}, row_ids dahil)")
 
 # ---------------- 8) Kucuk dosyalarin kopyalari ----------------
 import shutil
@@ -285,9 +286,13 @@ meta = {
     "pipeline_git_commit": git_hash,
     "pipeline_yolu": str(PIPE),
     "model_ready_sha256": sha256(proc / "model_ready_dataset.csv"),
+    "model_cbm_sha256": sha256(OUT / "model.cbm"),
     "n_ham": 43398, "n_temiz": int(len(M)), "n_elenen": int(len(rem_full)),
     "n_egitim": int(len(tr)), "n_holdout": int(len(ho)),
     "n_ozellik": len(feat_names), "seed": SEED,
+    "zenodo_doi": "10.5281/zenodo.21196013",
+    "github_pipeline": "https://github.com/ismailtopcam/perovskite-pce-ml-thesis",
+    "github_app": "https://github.com/ismailtopcam/perovskite-pce-ml-app",
 }
 json.dump(meta, open(OUT / "app_meta.json", "w", encoding="utf-8"),
           ensure_ascii=False, indent=1)

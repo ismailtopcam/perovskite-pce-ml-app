@@ -53,12 +53,13 @@ def encode(a: dict, b: dict, x: dict, arch_col: str, etl_col: str, htl_col: str,
 
 
 def ad_distance(enc: pd.DataFrame):
-    """(knn_uzaklik, esik, alan_ici) — egitim-uzayina yakinlik (tez Bolum 4.10)."""
-    nn, mean, scale, thr = data.ad_index()
+    """(knn_uzaklik, esik, alan_ici, komsu_row_id_listesi) — tez Bolum 4.10."""
+    nn, mean, scale, thr, row_ids = data.ad_index()
     xs = ((enc.values - mean) / scale).astype(np.float32)
-    d, _ = nn.kneighbors(xs)
+    d, idx = nn.kneighbors(xs)
     dist = float(d.mean())
-    return dist, thr, dist <= thr
+    neighbors = row_ids[idx[0]].tolist() if row_ids is not None else []
+    return dist, thr, dist <= thr, neighbors
 
 
 def conformal_interval(pred: float):

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Perovskit PCE Tahmini — İKÇÜ Yüksek Lisans Tezi Uygulaması</title>
+<meta name="description" content="Perovskit güneş hücrelerinde makine öğrenmesiyle sızıntı-güvenli PCE tahmini: 41.485 kayıt, DOI-grup-güvenli doğrulama (R²=0,413), conformal belirsizlik aralıkları ve 756 aday kompozisyonun etkileşimli keşfi. İzmir Kâtip Çelebi Üniversitesi yüksek lisans tezi eşlik uygulaması.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Perovskit PCE Tahmini — Sızıntı-Güvenli ML Hattı">
+<meta property="og:description" content="Aynı veri, aynı model: yalnızca doğrulama kararları değişince R² 0,263–0,938 arasında değişiyor. Tezin merkez bulgusunu kendiniz deneyin.">
+<meta property="og:url" content="https://tez.ismailtopcam.dev/hakkinda">
+<meta property="og:image" content="https://tez.ismailtopcam.dev/static/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  :root { --bordo: #ab162c; --gri: #5c6570; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+         margin: 0; color: #1a1f24; line-height: 1.6; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 2.2rem 1.2rem 3rem; }
+  h1 { color: var(--bordo); font-size: 1.7rem; line-height: 1.3; margin: 0.4rem 0 0.2rem; }
+  .kurum { color: var(--gri); font-size: 0.95rem; }
+  h2 { font-size: 1.15rem; margin-top: 1.8rem; border-bottom: 2px solid #eee;
+       padding-bottom: 0.3rem; }
+  .cta { display: inline-block; background: var(--bordo); color: #fff; font-weight: 600;
+         padding: 0.7rem 1.6rem; border-radius: 8px; text-decoration: none;
+         margin: 1.2rem 0 0.4rem; }
+  .cta:hover { background: #8d1224; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+  td, th { border: 1px solid #e3e6ea; padding: 0.45rem 0.7rem; text-align: left; }
+  th { background: #f7f3f4; }
+  .uyar { background: #fdf3e7; border-left: 4px solid #e0a145; padding: 0.8rem 1rem;
+          border-radius: 4px; font-size: 0.95rem; }
+  a { color: var(--bordo); }
+  footer { color: var(--gri); font-size: 0.85rem; margin-top: 2.4rem;
+           border-top: 1px solid #eee; padding-top: 1rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kurum">İzmir Kâtip Çelebi Üniversitesi · Fen Bilimleri Enstitüsü · Yazılım Mühendisliği</div>
+  <h1>Perovskit Güneş Hücrelerinde Makine Öğrenmesi Tabanlı PCE Tahmini</h1>
+  <div class="kurum">Yüksek lisans tezi eşlik uygulaması — İsmail Topçam</div>
+
+  <a class="cta" href="/">🔬 Uygulamayı aç</a>
+
+  <h2>Bu uygulama ne yapar?</h2>
+  <p>Açık erişimli <a href="https://www.perovskitedatabase.com">Perovskite Database</a>'in
+  43.398 kayıtlık anlık görüntüsünden başlayarak; veri temizliğini, makine öğrenmesi
+  deneylerini ve bulguları <strong>etkileşimli ve denetlenebilir</strong> biçimde sunar.
+  Tezin ana savı: <em>raporlanan model başarımı yalnızca algoritmadan değil, doğrulama
+  ve özellik kararlarından etkilenir.</em></p>
+
+  <h2>Ana bulgular</h2>
+  <table>
+    <tr><th>Bulgu</th><th>Değer</th></tr>
+    <tr><td>Temiz veri</td><td>41.485 kayıt (77 özellik)</td></tr>
+    <tr><td>DOI-grup-güvenli R² (dürüst ölçüm)</td><td><strong>0,413 ± 0,006</strong></td></tr>
+    <tr><td>Rastgele bölme (kardeş-cihaz sızıntısı)</td><td>0,481 — yapay şişme +0,068</td></tr>
+    <tr><td>Ölçüm-sonrası Voc/Jsc/FF eklenirse</td><td>0,938 — hedef sızıntısı</td></tr>
+    <tr><td>%90 conformal aralık (ampirik kapsama %88,2)</td><td>±6,42 PCE puanı</td></tr>
+    <tr><td>Aday tarama uzayı</td><td>756 kompozisyon–cihaz konfigürasyonu</td></tr>
+  </table>
+
+  <h2>Bilimsel sorumluluk reddi</h2>
+  <div class="uyar">Bu uygulamanın hiçbir çıktısı <strong>deneysel doğrulama yerine
+  geçmez</strong>. Model, geçmiş literatür kayıtlarından öğrenilen gözlemsel örüntülerle
+  <strong>aday önceliklendirmesi</strong> yapar; kesin PCE söylemez, nedensel öneri
+  vermez ve eğitim dağılımının dışına ekstrapolasyon yapamaz. Belirsizlik aralıkları
+  kesin garanti değil, görülmemiş yayın gruplarındaki ampirik kapsama aralıklarıdır.</div>
+
+  <h2>Kod, veri ve arşiv</h2>
+  <ul>
+    <li>Pipeline (tez kodu): <a href="https://github.com/ismailtopcam/perovskite-pce-ml-thesis">github.com/ismailtopcam/perovskite-pce-ml-thesis</a></li>
+    <li>Uygulama kaynak kodu: <a href="https://github.com/ismailtopcam/perovskite-pce-ml-app">github.com/ismailtopcam/perovskite-pce-ml-app</a></li>
+    <li>Kod arşivi: <a href="https://doi.org/10.5281/zenodo.21196013">DOI 10.5281/zenodo.21196013</a></li>
+    <li>Veri: Perovskite Database (Jacobsson vd., 2022, <em>Nature Energy</em>) — CC BY 4.0</li>
+  </ul>
+
+  <a class="cta" href="/">🔬 Uygulamayı aç</a>
+
+  <footer>© 2026 İsmail Topçam — İzmir Kâtip Çelebi Üniversitesi. Uygulamadaki tüm
+  sayılar, tez kod deposundan deterministik olarak üretilmiştir; provenans ayrıntıları
+  uygulamanın "Pipeline &amp; Provenans" sayfasındadır.</footer>
+</div>
+</body>
+</html>

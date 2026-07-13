@@ -69,7 +69,7 @@ if gonder:
                         bg, at, ati, bg_unk, at_unk, ati_unk)
     pred = float(data.model().predict(enc)[0])
     m_lo, m_hi, q_lo, q_hi, quart = encode.conformal_interval(pred)
-    dist, thr, inside = encode.ad_distance(enc)
+    dist, thr, inside, komsular = encode.ad_distance(enc)
 
     r1, r2, r3, r4 = st.columns(4)
     r1.metric("Tahmini PCE", tr(pred, 2) + " %")
@@ -87,6 +87,61 @@ if gonder:
     if pred > meta["train_pce_max"] * 0.6:
         st.caption(f"Not: eğitimdeki en yüksek PCE {tr(meta['train_pce_max'], 1)} — ağaç "
                    "modeller bu tavanın üzerine çıkamaz (tez Bölüm 5.4).")
+
+    # ---- Veri desteği: bu tarif eğitim verisinde ne kadar karşılık buluyor? ----
+    st.subheader("📚 Veri desteği")
+    rec = data.records()
+    egitim = rec[rec["bolme"] == "eğitim"]
+    uclu_n = int(((egitim["mimari"] == arch[1]) & (egitim["ETL"] == etl[1]) &
+                  (egitim["HTL"] == htl[1])).sum())
+    solv_n = int((egitim["cozucu"] == solv[1]).sum())
+    d1, d2, d3 = st.columns(3)
+    d1.metric("Mimari–ETL–HTL üçlüsü eğitimde", f"{tr(uclu_n, 0)} kayıt",
+              "hiç görülmedi!" if uclu_n == 0 else
+              ("seyrek (<5)" if uclu_n < 5 else "destekli"),
+              delta_color="inverse" if uclu_n < 5 else "normal")
+    d2.metric("Çözücü sistemi eğitimde", f"{tr(solv_n, 0)} kayıt")
+    d3.metric("En yakın 5 komşuya uzaklık", tr(dist, 2))
+    if uclu_n == 0:
+        st.error("🚧 Seçtiğiniz mimari–ETL–HTL kombinasyonu eğitim verisinde **hiç "
+                 "gözlenmemiş**. Model bu birleşimin etkileşimini öğrenmiş olamaz; "
+                 "tahmin, bileşenlerin tekil örüntülerinin toplamıdır (tez Bölüm 4.5'teki "
+                 "birlikte-görülme denetiminin birebir karşılığı).")
+    elif uclu_n < 5:
+        st.warning(f"⚠️ Bu üçlü eğitimde yalnızca {uclu_n} kez görüldü — tezin "
+                   "eğitim-desteği eşiğinin (≥5) altında (Bölüm 4.5).")
+
+    if komsular:
+        with st.expander("🔍 Eğitimdeki en yakın 5 örnek (ölçekli özellik uzayında)"):
+            kdf = rec.set_index("row_id").loc[[k for k in komsular if k in
+                                               rec["row_id"].values]]
+            st.dataframe(
+                kdf[["kompozisyon", "mimari", "ETL", "HTL", "cozucu", "band_gap",
+                     "PCE", "DOI"]].rename(columns={
+                    "kompozisyon": "Kompozisyon", "cozucu": "Çözücü",
+                    "PCE": "Gerçek PCE"}),
+                hide_index=True, use_container_width=True,
+                column_config={"Gerçek PCE": st.column_config.NumberColumn(format="%.2f"),
+                               "band_gap": st.column_config.NumberColumn(format="%.2f")})
+            st.caption("Modelin tahmini büyük ölçüde bu tür komşu örüntülerden türetilir; "
+                       "komşuların PCE aralığı, tahminin makul bağlamıdır.")
+
+    with st.expander("⚙️ Bu tahminde kullanılan varsayımların tam dökümü"):
+        med = meta["medians"]
+        satirlar = [
+            f"- A/B/X oranları: girdiğiniz değerler (toplamlar doğrulandı)",
+            f"- Mimari / ETL / HTL / çözücü: `{arch[1]}` / `{etl[1]}` / `{htl[1]}` / `{solv[1]}`",
+            (f"- Band gap: **bilinmiyor işaretlendi → eğitim medyanı {tr(med['band_gap'], 2)} eV "
+             f"kullanıldı + eksiklik bayrağı = 1**" if bg_unk
+             else f"- Band gap: {tr(bg, 2)} eV (girdiğiniz değer)"),
+            (f"- Tavlama sıcaklığı: **bilinmiyor → medyan {tr(med['anneal_temp'], 0)} °C + bayrak**"
+             if at_unk else f"- Tavlama sıcaklığı: {tr(at, 0)} °C"),
+            (f"- Tavlama süresi: **bilinmiyor → medyan {tr(med['anneal_time'], 0)} dk + bayrak**"
+             if ati_unk else f"- Tavlama süresi: {tr(ati, 0)} dk"),
+            "- Esnek/yarı-saydam: hayır (0) — tarif formunda sorulmaz, aday uzayıyla aynı varsayım",
+            "- Ölçüm-sonrası hiçbir değişken (Voc, Jsc, FF...) modele girmez (sızıntı-güvenli sözleşme)",
+        ]
+        st.markdown("\n".join(satirlar))
 
     fig = go.Figure()
     fig.add_shape(type="rect", x0=m_lo, x1=m_hi, y0=-0.3, y1=0.3,
