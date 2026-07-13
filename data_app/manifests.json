@@ -1,0 +1,419 @@
+[
+ {
+  "stage": "stage10_conformal",
+  "timestamp_utc": "2026-06-28T22:04:55+00:00",
+  "seed": 42,
+  "target": "JV_default_PCE",
+  "group_col": "Ref_DOI_number",
+  "onehot_top_n": 15,
+  "versions": {
+   "python": "3.14.4",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "numpy": "2.4.6",
+   "pandas": "3.0.3",
+   "scikit-learn": "1.8.0",
+   "scipy": "1.17.1",
+   "xgboost": "3.2.0",
+   "lightgbm": "4.6.0",
+   "catboost": "1.2.10",
+   "shap": "0.51.0"
+  },
+  "metrics": {
+   "marginal90_half_width": 6.4186,
+   "marginal90_coverage": 0.8818,
+   "ad_frac_inside": 0.8014
+  },
+  "outputs": []
+ },
+ {
+  "stage": "stage11_robustness",
+  "timestamp_utc": "2026-07-05T18:36:15+00:00",
+  "seed": 42,
+  "target": "JV_default_PCE",
+  "group_col": "Ref_DOI_number",
+  "onehot_top_n": 15,
+  "versions": {
+   "python": "3.14.4",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "numpy": "2.4.6",
+   "pandas": "3.0.3",
+   "scikit-learn": "1.8.0",
+   "scipy": "1.17.1",
+   "xgboost": "3.2.0",
+   "lightgbm": "4.6.0",
+   "catboost": "1.2.10",
+   "shap": "0.51.0"
+  },
+  "metrics": {
+   "pce_gecerli_ham_kayit": 42391,
+   "max_PCE": 34.8,
+   "PCE_gt_30": 8,
+   "PCE_gt_30_yuzde": 0.019,
+   "PCE_gt_27": 12,
+   "gt30_module_TRUE": 0,
+   "gt30_certified_TRUE": 0,
+   "gt30_cell_area_median_cm2": 0.1,
+   "gt30_farkli_DOI": 4
+  },
+  "outputs": [
+   "outputs/robustness/pce_outlier_audit.csv",
+   "outputs/robustness/robustness_cv.csv"
+  ]
+ },
+ {
+  "stage": "stage12_catboost_tuning",
+  "timestamp_utc": "2026-06-24T22:17:43+00:00",
+  "seed": 42,
+  "target": "JV_default_PCE",
+  "group_col": "Ref_DOI_number",
+  "onehot_top_n": 15,
+  "versions": {
+   "python": "3.14.4",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "numpy": "2.4.6",
+   "pandas": "3.0.3",
+   "scikit-learn": "1.8.0",
+   "scipy": "1.17.1",
+   "xgboost": "3.2.0",
+   "lightgbm": "4.6.0",
+   "catboost": "1.2.10",
+   "shap": "0.51.0"
+  },
+  "metrics": {
+   "default_cv_r2": 0.4129,
+   "tuned_cv_r2": 0.4129
+  },
+  "outputs": [
+   "outputs/tuning_catboost/best_params.json"
+  ]
+ },
+ {
+  "stage": "stage13_preproc_bandgap",
+  "timestamp_utc": "2026-06-24T22:25:06+00:00",
+  "seed": 42,
+  "target": "JV_default_PCE",
+  "group_col": "Ref_DOI_number",
+  "onehot_top_n": 15,
+  "versions": {
+   "python": "3.14.4",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "numpy": "2.4.6",
+   "pandas": "3.0.3",
+   "scikit-learn": "1.8.0",
+   "scipy": "1.17.1",
+   "xgboost": "3.2.0",
+   "lightgbm": "4.6.0",
+   "catboost": "1.2.10",
+   "shap": "0.51.0"
+  },
+  "metrics": {
+   "band_gap_global_median": 1.6
+  },
+  "outputs": [
+   "outputs/robustness/fold_invariance.csv",
+   "outputs/robustness/band_gap_ablation.csv"
+  ]
+ },
+ {
+  "stage": "stage1_clean",
+  "timestamp_utc": "2026-06-28T21:54:02+00:00",
+  "seed": 42,
+  "target": "JV_default_PCE",
+  "group_col": "Ref_DOI_number",
+  "onehot_top_n": 15,
+  "versions": {
+   "python": "3.14.4",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "numpy": "2.4.6",
+   "pandas": "3.0.3",
+   "scikit-learn": "1.8.0",
+   "scipy": "1.17.1",
+   "xgboost": "3.2.0",
+   "lightgbm": "4.6.0",
+   "catboost": "1.2.10",
+   "shap": "0.51.0"
+  },
+  "metrics": {
+   "n_clean": 41485
+  },
+  "outputs": [
+   "data/processed/cleaned_dataset.csv"
+  ]
+ },
+ {
+  "stage": "stage2_features",
+  "timestamp_utc": "2026-06-28T21:54:04+00:00",
+  "seed": 42,
+  "target": "JV_default_PCE",
+  "group_col": "Ref_DOI_number",
+  "onehot_top_n": 15,
+  "versions": {
+   "python": "3.14.4",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "numpy": "2.4.6",
+   "pandas": "3.0.3",
+   "scikit-learn": "1.8.0",
+   "scipy": "1.17.1",
+   "xgboost": "3.2.0",
+   "lightgbm": "4.6.0",
+   "catboost": "1.2.10",
+   "shap": "0.51.0"
+  },
+  "metrics": {
+   "n_rows": 41485,
+   "n_features": 77
+  },
+  "outputs": [
+   "data/processed/model_ready_dataset.csv"
+  ]
+ },
+ {
+  "stage": "stage3_models",
+  "timestamp_utc": "2026-07-13T03:18:34+00:00",
+  "seed": 42,
+  "target": "JV_default_PCE",
+  "group_col": "Ref_DOI_number",
+  "onehot_top_n": 15,
+  "versions": {
+   "python": "3.14.4",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "numpy": "2.4.6",
+   "pandas": "3.0.3",
+   "scikit-learn": "1.8.0",
+   "scipy": "1.17.1",
+   "xgboost": "3.2.0",
+   "lightgbm": "4.6.0",
+   "catboost": "1.2.10",
+   "shap": "0.51.0"
+  },
+  "metrics": {
+   "best_model": "CatBoost",
+   "best_cv_r2": 0.4129,
+   "best_holdout_r2": 0.3924
+  },
+  "outputs": [
+   "outputs/v4/model_comparison_holdout.csv",
+   "outputs/v4/model_comparison_groupkfold.csv",
+   "outputs/v4/best_model_holdout_predictions.csv"
+  ]
+ },
+ {
+  "stage": "stage4_validation",
+  "timestamp_utc": "2026-07-13T03:20:09+00:00",
+  "seed": 42,
+  "target": "JV_default_PCE",
+  "group_col": "Ref_DOI_number",
+  "onehot_top_n": 15,
+  "versions": {
+   "python": "3.14.4",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "numpy": "2.4.6",
+   "pandas": "3.0.3",
+   "scikit-learn": "1.8.0",
+   "scipy": "1.17.1",
+   "xgboost": "3.2.0",
+   "lightgbm": "4.6.0",
+   "catboost": "1.2.10",
+   "shap": "0.51.0"
+  },
+  "metrics": {
+   "random_kfold_r2": 0.4812,
+   "group_kfold_r2": 0.4129,
+   "inflation_r2": 0.0683,
+   "experiment_b_done": true
+  },
+  "outputs": [
+   "outputs/v4/validation_experiments.csv"
+  ]
+ },
+ {
+  "stage": "stage5_shap",
+  "timestamp_utc": "2026-07-13T03:20:16+00:00",
+  "seed": 42,
+  "target": "JV_default_PCE",
+  "group_col": "Ref_DOI_number",
+  "onehot_top_n": 15,
+  "versions": {
+   "python": "3.14.4",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "numpy": "2.4.6",
+   "pandas": "3.0.3",
+   "scikit-learn": "1.8.0",
+   "scipy": "1.17.1",
+   "xgboost": "3.2.0",
+   "lightgbm": "4.6.0",
+   "catboost": "1.2.10",
+   "shap": "0.51.0"
+  },
+  "metrics": {
+   "model": "CatBoost",
+   "shap_sample": 3000,
+   "top_feature": "A_FA"
+  },
+  "outputs": [
+   "outputs/shap_full/shap_top_features.csv"
+  ]
+ },
+ {
+  "stage": "stage6_candidates",
+  "timestamp_utc": "2026-07-13T03:20:17+00:00",
+  "seed": 42,
+  "target": "JV_default_PCE",
+  "group_col": "Ref_DOI_number",
+  "onehot_top_n": 15,
+  "versions": {
+   "python": "3.14.4",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "numpy": "2.4.6",
+   "pandas": "3.0.3",
+   "scikit-learn": "1.8.0",
+   "scipy": "1.17.1",
+   "xgboost": "3.2.0",
+   "lightgbm": "4.6.0",
+   "catboost": "1.2.10",
+   "shap": "0.51.0"
+  },
+  "metrics": {
+   "model": "CatBoost",
+   "n_candidates": 756,
+   "pred_max": 17.7776
+  },
+  "outputs": [
+   "outputs/candidates_full/candidate_predictions.csv",
+   "outputs/candidates_full/top30_diverse.csv"
+  ]
+ },
+ {
+  "stage": "stage7_screening",
+  "timestamp_utc": "2026-07-13T03:20:20+00:00",
+  "seed": 42,
+  "target": "JV_default_PCE",
+  "group_col": "Ref_DOI_number",
+  "onehot_top_n": 15,
+  "versions": {
+   "python": "3.14.4",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "numpy": "2.4.6",
+   "pandas": "3.0.3",
+   "scikit-learn": "1.8.0",
+   "scipy": "1.17.1",
+   "xgboost": "3.2.0",
+   "lightgbm": "4.6.0",
+   "catboost": "1.2.10",
+   "shap": "0.51.0"
+  },
+  "metrics": {
+   "n_test": 8147,
+   "spearman": 0.6148,
+   "gains_threshold": 18
+  },
+  "outputs": [
+   "outputs/screening/enrichment.csv"
+  ]
+ },
+ {
+  "stage": "stage8_tuning",
+  "timestamp_utc": "2026-06-28T22:04:28+00:00",
+  "seed": 42,
+  "target": "JV_default_PCE",
+  "group_col": "Ref_DOI_number",
+  "onehot_top_n": 15,
+  "versions": {
+   "python": "3.14.4",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "numpy": "2.4.6",
+   "pandas": "3.0.3",
+   "scikit-learn": "1.8.0",
+   "scipy": "1.17.1",
+   "xgboost": "3.2.0",
+   "lightgbm": "4.6.0",
+   "catboost": "1.2.10",
+   "shap": "0.51.0"
+  },
+  "metrics": {
+   "default_cv_r2": 0.4122,
+   "tuned_cv_r2": 0.4124
+  },
+  "outputs": [
+   "outputs/tuning/best_params.json"
+  ]
+ },
+ {
+  "stage": "stage9_ablation",
+  "timestamp_utc": "2026-06-28T22:04:49+00:00",
+  "seed": 42,
+  "target": "JV_default_PCE",
+  "group_col": "Ref_DOI_number",
+  "onehot_top_n": 15,
+  "versions": {
+   "python": "3.14.4",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "numpy": "2.4.6",
+   "pandas": "3.0.3",
+   "scikit-learn": "1.8.0",
+   "scipy": "1.17.1",
+   "xgboost": "3.2.0",
+   "lightgbm": "4.6.0",
+   "catboost": "1.2.10",
+   "shap": "0.51.0"
+  },
+  "metrics": {
+   "descriptor_yok": {
+    "r2": 0.4122,
+    "std": 0.0052,
+    "n_feat": 77
+   },
+   "descriptor_var": {
+    "r2": 0.4093,
+    "std": 0.0058,
+    "n_feat": 81
+   },
+   "delta_r2": -0.0028
+  },
+  "outputs": []
+ },
+ {
+  "stage": "14_pipeline_cv",
+  "timestamp_utc": "2026-06-26T18:21:00+00:00",
+  "seed": 42,
+  "target": "JV_default_PCE",
+  "group_col": "Ref_DOI_number",
+  "onehot_top_n": 15,
+  "versions": {
+   "python": "3.14.4",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "numpy": "2.4.6",
+   "pandas": "3.0.3",
+   "scikit-learn": "1.8.0",
+   "scipy": "1.17.1",
+   "xgboost": "3.2.0",
+   "lightgbm": "4.6.0",
+   "catboost": "1.2.10",
+   "shap": "0.51.0"
+  },
+  "metrics": {
+   "global_mean": 0.4128724715701157,
+   "global_std": 0.006457042722070404,
+   "foldlocal_mean": 0.4126550339759742,
+   "foldlocal_std": 0.006375660105998738,
+   "delta": -0.00021743759414150077,
+   "global_folds": [
+    0.42081726780095463,
+    0.41101997618059516,
+    0.4109287413479269,
+    0.40275045145540667,
+    0.4188459210656953
+   ],
+   "foldlocal_folds": [
+    0.4218072129646415,
+    0.41074263820815526,
+    0.4085271538100701,
+    0.4042454627425732,
+    0.41795270215443103
+   ]
+  },
+  "outputs": [
+   "results.json"
+  ]
+ }
+]
