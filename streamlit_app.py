@@ -1,18 +1,35 @@
 # -*- coding: utf-8 -*-
-"""Giris noktasi: st.navigation ile tam Turkce kenar cubugu + IKCU logosu.
+"""Giris noktasi: st.navigation ile tam Turkce kenar cubugu.
 
 Sayfa dosya adlari (ve URL'ler) ASCII kalir; kenar cubugunda gorunen
 basliklar burada tanimlanir.
 """
-from pathlib import Path
-
 import streamlit as st
-
-ROOT = Path(__file__).resolve().parent
 
 st.set_page_config(page_title="Perovskit PCE — İKÇÜ", page_icon="🔬", layout="wide",
                    initial_sidebar_state="expanded")
-st.logo(str(ROOT / "assets" / "ikcu_logo.jpeg"), size="large")
+
+# Universite kimligi: kenar cubugunun EN USTUNDE metin olarak (logo yerine).
+# CSS, kullanici icerigini nav'in uzerine tasir; uyumsuz bir Streamlit
+# surumunde blok zarifce nav'in altina duser.
+st.sidebar.markdown(
+    """
+<style>
+  [data-testid="stSidebarContent"] { display: flex; flex-direction: column; }
+  [data-testid="stSidebarUserContent"] { order: -1; padding-bottom: 0; }
+</style>
+<div style="padding:0.1rem 0 0.3rem 0; line-height:1.35">
+  <div style="color:#ab162c; font-weight:700; font-size:1.06rem">
+    İzmir Kâtip Çelebi Üniversitesi</div>
+  <div style="font-size:0.8rem; color:#666">
+    Fen Bilimleri Enstitüsü · Yazılım Mühendisliği</div>
+  <div style="font-size:0.8rem; color:#666">
+    Yüksek Lisans Tezi — Etkileşimli Uygulama</div>
+</div>
+<hr style="margin:0.5rem 0 0 0; border:none; border-top:1px solid #e4d5d8">
+""",
+    unsafe_allow_html=True,
+)
 
 pages = [
     st.Page("Ana_Sayfa.py", title="Ana Sayfa", icon="🏠", default=True),
