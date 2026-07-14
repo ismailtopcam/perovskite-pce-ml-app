@@ -9,6 +9,10 @@ st.markdown(
     """
 Bu sayfa; her ekranın *ne gösterdiğini*, *nasıl okunması gerektiğini* ve
 *tezin hangi bölümüne dayandığını* açıklar.
+
+Model, geçmiş literatürdeki on binlerce perovskit güneş hücresi kaydından verim
+(PCE) tahmin etmeyi öğrenir; tezin asıl katkısı ise bu tahminin **dürüstçe nasıl
+ölçüleceğini** göstermektir.
 """
 )
 
