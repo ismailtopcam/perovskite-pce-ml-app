@@ -7,7 +7,7 @@ basliklar burada tanimlanir.
 import streamlit as st
 
 st.set_page_config(page_title="Perovskit PCE — İKÇÜ", page_icon="🔬", layout="wide",
-                   initial_sidebar_state="expanded")
+                   initial_sidebar_state="auto")
 
 # Universite kimligi: kenar cubugunun EN USTUNDE metin olarak (logo yerine).
 # CSS, kullanici icerigini nav'in uzerine tasir; uyumsuz bir Streamlit

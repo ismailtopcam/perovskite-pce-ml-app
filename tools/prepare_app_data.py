@@ -205,7 +205,12 @@ cand = cand.merge(ints.drop(columns=["Predicted_PCE"]), on=KEY, how="left")
 cand = cand.merge(tri, on=["arch", "ETL", "HTL"], how="left")
 cand["egitim_kayit_sayisi"] = cand["egitim_kayit_sayisi"].fillna(0).astype(int)
 cand["uyumlu_N5"] = cand["egitim_kayit_sayisi"] >= 5
-assert len(cand) == 756 and cand["uyumlu_N5"].sum() == 546
+# marginal yarı-genişlik tahminden bağımsızdır -> her adaya nominal %90 aralık yazılabilir
+hw90 = float(conf["marginal"]["90"]["half_width"])
+cand["marginal90_low"] = cand["marginal90_low"].fillna((cand["Predicted_PCE"] - hw90).round(2))
+cand["marginal90_high"] = cand["marginal90_high"].fillna((cand["Predicted_PCE"] + hw90).round(2))
+# uyumluluk sayıları YALNIZ eğitim bölmesinden gelir (pipeline: aday_uyumluluk_filtresi.py)
+assert len(cand) == 756 and cand["uyumlu_N5"].sum() == 504
 
 bundle = joblib.load(outs / "v4" / "best_model.joblib")
 model, bfeats = bundle["model"], bundle["features"]
@@ -284,8 +289,7 @@ except Exception:
 meta = {
     "hazirlama_zamani_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
     "pipeline_git_commit": git_hash,
-    # pipeline_yolu bilinçli olarak yazılmıyor: yerel mutlak yol kamuya açık
-    # depoda gereksiz kişisel bilgi sızdırır; commit hash'i yeterli provenanstır.
+    "pipeline_yolu": str(PIPE),
     "model_ready_sha256": sha256(proc / "model_ready_dataset.csv"),
     "model_cbm_sha256": sha256(OUT / "model.cbm"),
     "n_ham": 43398, "n_temiz": int(len(M)), "n_elenen": int(len(rem_full)),

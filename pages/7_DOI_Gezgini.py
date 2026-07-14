@@ -28,6 +28,9 @@ with l:
     dsub = doi[doi["DOI"].str.contains(q, case=False, regex=False)] if q else \
         doi.sort_values("kayit", ascending=False)
     st.caption(f"{tr(len(dsub), 0)} yayın")
+    if dsub.empty:
+        st.info("Aramanızla eşleşen yayın bulunamadı — adresin farklı bir parçasını deneyin.")
+        st.stop()
     st.dataframe(dsub[["DOI", "kayit", "pce_medyan", "bolme"]].head(300),
                  hide_index=True, height=280, use_container_width=True,
                  column_config={"pce_medyan": st.column_config.NumberColumn(

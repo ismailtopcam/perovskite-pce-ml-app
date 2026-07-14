@@ -11,8 +11,8 @@ page("Tahmin Aracı — Sanal Cihaz Tarifi", "4️⃣")
 tez_notu("Bölüm 3.12 ve 4.10",
          "Tarif, modelin eğitimde gördüğü 77-özellik sözleşmesine kodlanır. Belirsizlik "
          "aralığı, modelin daha önce hiç görmediği yayınlardaki gerçek hatalarının "
-         "dağılımından türetilir (conformal kestirim) — yani bir varsayım değil, modelin "
-         "geçmiş hata karnesidir.")
+         "dağılımından türetilir (conformal kestirim). Aralıklar nominal %90 düzeyindedir; "
+         "holdout'ta gözlenen kapsama %88,2'dir (tez Bölüm 4.10).")
 
 maps = encode.categorical_options()
 meta = data.js("features.json")
@@ -75,10 +75,11 @@ if gonder:
 
     r1, r2, r3, r4 = st.columns(4)
     r1.metric("Tahmini PCE", tr(pred, 2) + " %")
-    r2.metric("%90 aralık (genel)", f"{tr(m_lo, 1)} – {tr(m_hi, 1)}",
+    r2.metric("Nominal %90 aralık (genel)", f"{tr(m_lo, 1)} – {tr(m_hi, 1)}",
               help="Modelin görülmemiş yayınlardaki gerçek hatalarının %90'ını kapsayan "
-                   "genişlik (marginal conformal): tüm kalibrasyon kayıtları birlikte.")
-    r3.metric(f"%90 aralık (bölgesel, {quart})", f"{tr(q_lo, 1)} – {tr(q_hi, 1)}",
+                   "genişlik (marginal conformal): tüm kalibrasyon kayıtları birlikte. "
+              "Holdout'ta gözlenen kapsama: %88,2 (tez Bölüm 4.10).")
+    r3.metric(f"Nominal %90 aralık (bölgesel, {quart})", f"{tr(q_lo, 1)} – {tr(q_hi, 1)}",
               help="Aynı hesap, yalnızca bu tahmin düzeyindeki (çeyrekteki) kayıtların "
                    "hatalarıyla yapılır (Mondrian conformal) — aralık bölgeye duyarlı hâle gelir.")
     r4.metric("Eğitim-uzayına uzaklık", tr(dist, 2),
@@ -87,12 +88,13 @@ if gonder:
 
     if not inside:
         st.error("🚧 Bu tarif, eğitim verisinin yoğun bölgesinin **dışında** "
-                 f"(kNN uzaklığı {tr(dist, 2)} > eşik {tr(thr, 2)}). Model burada "
-                 "yalnızca en yakın gördüğü örneklerin ortalamasına çekilir; tahmini "
+                 f"(kNN uzaklığı {tr(dist, 2)} > eşik {tr(thr, 2)}). Model bu bölgeyi "
+                 "çok az örnekten öğrenmiştir; tahmini "
                  "yalnızca kaba bir yönlendirme olarak okuyun.")
     if pred > meta["train_pce_max"] * 0.6:
         st.caption(f"Not: eğitimdeki en yüksek PCE {tr(meta['train_pce_max'], 1)} — ağaç "
-                   "modeller bu tavanın üzerine çıkamaz (tez Bölüm 5.4).")
+                   "modeller gözlenmemiş bölgede güvenilir ekstrapolasyon yapamaz; "
+                   "tahminler pratikte bu tavanın belirgin altında kalır (tez Bölüm 5.4).")
 
     # ---- Veri desteği: bu tarif eğitim verisinde ne kadar karşılık buluyor? ----
     st.subheader("📚 Veri desteği")
@@ -129,8 +131,10 @@ if gonder:
                 hide_index=True, use_container_width=True,
                 column_config={"Gerçek PCE": st.column_config.NumberColumn(format="%.2f"),
                                "band_gap": st.column_config.NumberColumn(format="%.2f")})
-            st.caption("Modelin tahmini büyük ölçüde bu tür komşu örüntülerden türetilir; "
-                       "komşuların PCE aralığı, tahminin makul bağlamıdır.")
+            st.caption("Bu komşular tahminin kaynağı değildir: CatBoost tahmini doğrudan "
+                       "77-özellik vektöründen üretir; komşular yalnızca tarifin eğitim "
+                       "verisindeki bağlamını gösterir (uygulanabilirlik-alanı teşhisi). "
+                       "Komşuların gerçek PCE aralığı, tahmini tartmak için makul bir bağlamdır.")
 
     with st.expander("⚙️ Bu tahminde kullanılan varsayımların tam dökümü"):
         med = meta["medians"]

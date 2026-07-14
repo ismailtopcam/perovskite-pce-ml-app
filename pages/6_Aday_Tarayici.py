@@ -7,7 +7,7 @@ from lib.ui import page, tr, tez_notu, bilim_uyarisi, MAVI, KIRMIZI
 
 page("Aday Kompozisyon Tarayıcı", "6️⃣")
 tez_notu("Bölüm 3.12, 4.5 ve 4.10",
-         "756 aday = 7×2×3×2×3×3 kontrollü eksen çarpımı; her adaya %90 belirsizlik "
+         "756 aday = 7×2×3×2×3×3 kontrollü eksen çarpımı; her adaya nominal %90 belirsizlik "
          "aralığı, eğitim-verisi desteği ve eğitim-uzayına uzaklık bilgisi eşlik eder.")
 
 cand = data.candidates()
@@ -22,7 +22,7 @@ sadece_uyumlu = f5.checkbox(
     help="Adayın mimari–ETL–HTL üçlüsü, modelin eğitim verisinde en az 5 kayıtta "
          "birlikte görülmüşse gösterilir (tez Bölüm 4.5). Model, hiç görmediği bir "
          "kombinasyonun katman etkileşimini öğrenmiş olamaz; bu filtre 756 adayı "
-         "546'ya indirir.")
+         "504'e indirir.")
 
 m = cand["Predicted_PCE"] >= min_pce
 if a_sel: m &= cand["A"].isin(a_sel)
@@ -67,7 +67,7 @@ with r:
   ekstrapolasyon yapamaz; liste **yeni keşif değil, bilinen yüksek-verim bölgesinin
   yeniden bulunmasıdır** (tez Bölüm 5.4).
 - **Eğitim desteği:** ham ilk-30'a hâkim bazı (mimari, ETL, HTL) üçlüleri eğitimde hiç
-  görülmemiştir; ≥5 kayıt filtresi 756 adayı 546'ya indirir ve tavanı değiştirmez
+  görülmemiştir; ≥5 kayıt filtresi 756 adayı 504'e indirir ve tavanı değiştirmez
   (tez Bölüm 4.5).
 - **Uzaklık ≠ güven:** adayların yalnızca {tr(int(cand['alan_ici'].sum()), 0)} tanesi
   eğitim-uzayı eşiğinin içindedir (sabit medyan varsayımları yüzünden beklenen bir durum).
