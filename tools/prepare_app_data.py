@@ -284,7 +284,8 @@ except Exception:
 meta = {
     "hazirlama_zamani_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
     "pipeline_git_commit": git_hash,
-    "pipeline_yolu": str(PIPE),
+    # pipeline_yolu bilinçli olarak yazılmıyor: yerel mutlak yol kamuya açık
+    # depoda gereksiz kişisel bilgi sızdırır; commit hash'i yeterli provenanstır.
     "model_ready_sha256": sha256(proc / "model_ready_dataset.csv"),
     "model_cbm_sha256": sha256(OUT / "model.cbm"),
     "n_ham": 43398, "n_temiz": int(len(M)), "n_elenen": int(len(rem_full)),

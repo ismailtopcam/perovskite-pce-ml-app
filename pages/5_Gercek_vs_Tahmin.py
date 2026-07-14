@@ -20,7 +20,9 @@ c1, c2, c3, c4 = st.columns(4)
 c1.metric("Holdout kayıt", tr(len(ho), 0))
 c2.metric("MAE", tr(ho["mutlak_hata"].mean(), 2) + " puan")
 c3.metric("Medyan mutlak hata", tr(ho["mutlak_hata"].median(), 2) + " puan")
-c4.metric("%90 bandın kapsaması", f"%{tr(100 * ho['kapsandi'].mean(), 1)}")
+c4.metric("±6,42 bandının holdout kapsaması", f"%{tr(100 * ho['kapsandi'].mean(), 1)}",
+          help="Kalibrasyon + conformal-test kayıtları birlikte. Tezde raporlanan %88,2, "
+               "yalnızca conformal-test yarısında ölçülür (tez Bölüm 4.10).")
 
 tab1, tab2, tab3 = st.tabs(["🎯 Kayıt bazında", "📉 Hata grupları", "🔬 Model nerede yanılıyor?"])
 
