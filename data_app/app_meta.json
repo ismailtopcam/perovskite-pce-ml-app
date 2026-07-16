@@ -1,6 +1,7 @@
 {
- "hazirlama_zamani_utc": "2026-07-13T14:24:58+00:00",
- "pipeline_git_commit": "61b7a1d60236a55f720c3a0adea612143d2bf780",
+ "hazirlama_zamani_utc": "2026-07-16T22:06:55+00:00",
+ "pipeline_git_commit": "e10156b20df324f0793fac8f05c61b50fe75887f",
+ "pipeline_yolu": "C:\\Users\\nadir.karatay\\Desktop\\Ismail\\İKÇU\\Tez\\perovskite-pce-ml",
  "model_ready_sha256": "11ed2e5209f4ff886ad65d505efe633268ed1c8c3bc424e341fefa4c1154897d",
  "model_cbm_sha256": "a9a0f431427c8023e2d10b9bb1cb1cd122a71ecbe2e50f46bbf7a8fad6ea0ae1",
  "n_ham": 43398,
@@ -10,7 +11,7 @@
  "n_holdout": 8147,
  "n_ozellik": 77,
  "seed": 42,
- "zenodo_doi": "10.5281/zenodo.21196013",
+ "zenodo_doi": "10.5281/zenodo.20829027",
  "github_pipeline": "https://github.com/ismailtopcam/perovskite-pce-ml-thesis",
  "github_app": "https://github.com/ismailtopcam/perovskite-pce-ml-app"
 }

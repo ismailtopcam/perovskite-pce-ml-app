@@ -295,7 +295,7 @@ meta = {
     "n_ham": 43398, "n_temiz": int(len(M)), "n_elenen": int(len(rem_full)),
     "n_egitim": int(len(tr)), "n_holdout": int(len(ho)),
     "n_ozellik": len(feat_names), "seed": SEED,
-    "zenodo_doi": "10.5281/zenodo.21196013",
+    "zenodo_doi": "10.5281/zenodo.20829027",  # concept DOI: tum surumler, daima en yeniye cozunur
     "github_pipeline": "https://github.com/ismailtopcam/perovskite-pce-ml-thesis",
     "github_app": "https://github.com/ismailtopcam/perovskite-pce-ml-app",
 }
