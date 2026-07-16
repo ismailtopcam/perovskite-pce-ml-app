@@ -1,6 +1,6 @@
 {
- "hazirlama_zamani_utc": "2026-07-16T23:06:13+00:00",
- "pipeline_git_commit": "617a2e1f3a1c24b4e073b1c32139d92bb55e5a23",
+ "hazirlama_zamani_utc": "2026-07-16T23:15:56+00:00",
+ "pipeline_git_commit": "a31c3f1b3b63192b6ed6f6bba68593a192fd7bab",
  "model_ready_sha256": "11ed2e5209f4ff886ad65d505efe633268ed1c8c3bc424e341fefa4c1154897d",
  "model_cbm_sha256": "a9a0f431427c8023e2d10b9bb1cb1cd122a71ecbe2e50f46bbf7a8fad6ea0ae1",
  "n_ham": 43398,
