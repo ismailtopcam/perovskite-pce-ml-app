@@ -4,7 +4,7 @@ import streamlit as st
 from lib import data
 from lib.ui import page, tr
 
-page("Perovskit PCE — Sızıntı-Güvenli ML Hattı", "🔬")
+page("Perovskit PCE — DOI-Grup-Ayrık ML Hattı", "🔬")
 
 meta = data.js("app_meta.json")
 

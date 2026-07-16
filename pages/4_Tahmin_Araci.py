@@ -149,7 +149,7 @@ if gonder:
             (f"- Tavlama süresi: **bilinmiyor → medyan {tr(med['anneal_time'], 0)} dk + bayrak**"
              if ati_unk else f"- Tavlama süresi: {tr(ati, 0)} dk"),
             "- Esnek/yarı-saydam: hayır (0) — tarif formunda sorulmaz, aday uzayıyla aynı varsayım",
-            "- Ölçüm-sonrası hiçbir değişken (Voc, Jsc, FF...) modele girmez (sızıntı-güvenli sözleşme)",
+            "- Ölçüm-sonrası hiçbir değişken (Voc, Jsc, FF...) modele girmez (hedef-sızıntısı denetimli sözleşme)",
         ]
         st.markdown("\n".join(satirlar))
 

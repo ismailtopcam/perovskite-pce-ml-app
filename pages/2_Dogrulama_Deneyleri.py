@@ -20,20 +20,21 @@ st.subheader("🎛️ Kararları siz verin")
 c1, c2 = st.columns(2)
 with c1:
     bolme = st.radio("**Bölme yöntemi**",
-                     ["DOI-grup (sızıntı-güvenli)", "Rastgele KFold"],
+                     ["DOI-grup (yayın-ayrık)", "Rastgele KFold"],
                      help="Aynı yayının kardeş cihazları eğitim+test'e birlikte düşerse "
                           "model 'görmediği' veriyi dolaylı görmüş olur.")
 with c2:
     ozellik = st.radio("**Özellik seti**",
-                       ["Sızıntı-güvenli (77 özellik)", "+ Voc, Jsc, FF (ölçüm sonrası)"],
+                       ["Ölçüm-öncesi 77 özellik", "+ Voc, Jsc, FF (ölçüm sonrası)"],
                        help="Voc×Jsc×FF ≈ PCE: bu üçlü, hedefin kendisini dolaylı taşır.")
 
 grup = bolme.startswith("DOI")
-safe = ozellik.startswith("Sızıntı")
+safe = ozellik.startswith("Ölçüm-öncesi")
 
 if grup and safe:
     r2, std, yorum, renk = 0.4129, 0.0065, \
-        "✅ **Tezin başlık sonucu.** Görülmemiş yayınlara genellemenin dürüst ölçüsü.", "normal"
+        "✅ **Tezin başlık sonucu.** Eğitimden ham DOI anahtarı düzeyinde ayrık tutulan " \
+        "yayınlara genellemenin dürüst ölçüsü.", "normal"
 elif not grup and safe:
     r2, std, yorum, renk = 0.4812, 0.0089, \
         "⚠️ **+0,068 yapay şişme** — kardeş cihazlar test kümesine sızdı. Skor arttı, " \
@@ -63,7 +64,7 @@ l, r = st.columns(2)
 with l:
     st.subheader("Deney A+B — bölme ve sızıntının etkisi")
     df = val.copy()
-    df["etiket"] = ["Rastgele KFold", "DOI-grup KFold", "Sızıntı-güvenli (77)",
+    df["etiket"] = ["Rastgele KFold", "DOI-grup KFold", "Ölçüm-öncesi (77)",
                     "+Voc/Jsc/FF", "Kompozisyon (14)", "+Cihaz (57)", "+Süreç (77)"]
     ab = df.iloc[[1, 0, 3]]
     fig = go.Figure(go.Bar(
