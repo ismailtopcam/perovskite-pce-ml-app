@@ -57,7 +57,7 @@ with st.form("tarif"):
         ati_unk = st.checkbox("Tavlama süresi bilinmiyor")
         ati = st.number_input("Tavlama süresi (dk)", 0.0, 600.0, 20.0, 5.0,
                               disabled=ati_unk)
-    gonder = st.form_submit_button("🔮 PCE tahmini al", use_container_width=True)
+    gonder = st.form_submit_button("🔮 PCE tahmini al", width="stretch")
 
 if gonder:
     hatalar = [s for s, v in (("A", a), ("B", b), ("X", x))
@@ -128,7 +128,7 @@ if gonder:
                      "PCE", "DOI"]].rename(columns={
                     "kompozisyon": "Kompozisyon", "cozucu": "Çözücü",
                     "PCE": "Gerçek PCE"}),
-                hide_index=True, use_container_width=True,
+                hide_index=True, width="stretch",
                 column_config={"Gerçek PCE": st.column_config.NumberColumn(format="%.2f"),
                                "band_gap": st.column_config.NumberColumn(format="%.2f")})
             st.caption("Bu komşular tahminin kaynağı değildir: CatBoost tahmini doğrudan "
@@ -166,7 +166,7 @@ if gonder:
                       xaxis_range=[max(0, m_lo - 2), m_hi + 2],
                       margin=dict(t=10, b=10),
                       title="Açık bant: marginal %90 · koyu bant: Mondrian %90")
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     st.subheader("🧠 Bu tahmini ne belirledi? (yerel SHAP)")
     sv = data.explainer().shap_values(enc)[0]
@@ -180,11 +180,11 @@ if gonder:
     fig.update_layout(height=420, xaxis_title="PCE katkısı (puan)",
                       title="Yükselten (mavi) / düşüren (kırmızı) özellikler",
                       margin=dict(t=40))
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     with st.expander("🌍 Küresel önem sıralaması (model geneli, tez Tablo 4.6)"):
         g = data.csv("shap_top_features.csv").head(15)
-        st.dataframe(g, hide_index=True, use_container_width=True,
+        st.dataframe(g, hide_index=True, width="stretch",
                      column_config={"mean_abs_shap": st.column_config.NumberColumn(
                          "ort |SHAP|", format="%.4f")})
 

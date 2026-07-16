@@ -39,7 +39,7 @@ with tab1:
                 "kapsandi", "DOI"]].rename(columns={
         "kompozisyon": "Kompozisyon", "mimari": "Mimari", "PCE": "Gerçek PCE",
         "tahmin": "Tahmin", "mutlak_hata": "Mutlak hata", "kapsandi": "%90 bant kapsıyor?"})
-    st.dataframe(view, hide_index=True, use_container_width=True, height=330,
+    st.dataframe(view, hide_index=True, width="stretch", height=330,
                  column_config={c: st.column_config.NumberColumn(c, format="%.2f")
                                 for c in ["Gerçek PCE", "Tahmin", "Mutlak hata"]})
     r = sub.iloc[0]
@@ -61,7 +61,7 @@ with tab2:
                      labels={"x": "Mutlak hata (PCE puanı)", "y": "Kayıt %"})
         fig.update_traces(marker_color=MAVI, textposition="outside")
         fig.update_layout(height=340, title="Hata büyüklüğü dağılımı")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
         st.caption(f"Kayıtların %{tr(100 * (ho['mutlak_hata'] <= 2).mean(), 0)}'ı ≤2 puan, "
                    f"%{tr(100 * (ho['mutlak_hata'] <= 3).mean(), 0)}'i ≤3 puan hatayla "
                    "tahmin ediliyor (tez Bölüm 4.7).")
@@ -73,7 +73,7 @@ with tab2:
         fig.add_vline(x=0, line_color=KIRMIZI)
         fig.update_layout(height=340, title=f"Yön: >+5 aşırı tahmin %{tr(100 * (err > 5).mean(), 1)} · "
                                             f"<−5 eksik tahmin %{tr(100 * (err < -5).mean(), 1)}")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
         st.caption("Sağa çarpık kuyruk: model düşük verimli kayıtları zaman zaman olduğundan "
                    "yüksek tahmin ediyor — reçete-içi etiket gürültüsünün beklenen izi "
                    "(tez Bölüm 5.1, Tablo 5.1).")
@@ -107,7 +107,7 @@ with tab3:
                                                      seg.sort_values("MAE")["MAE"])],
                       textposition="outside")
     fig.update_layout(height=380, xaxis_title="MAE (PCE puanı)", margin=dict(t=20))
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
     st.info(
         "Beklenenin tersine, az temsil edilen bölgelerin çoğunda (Sn'li, geniş band gap, "
         "Br-ağırlıklı) MAE genel ortalamanın altındadır: bu alt kümelerde PCE değerleri dar ve "

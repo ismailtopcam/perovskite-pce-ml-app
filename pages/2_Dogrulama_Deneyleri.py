@@ -73,7 +73,7 @@ with l:
         text=[tr(v, 3) for v in ab["R2_mean"]], textposition="outside"))
     fig.update_layout(xaxis_range=[0, 1.05], height=300, xaxis_title="R² (5-kat CV)",
                       margin=dict(t=10))
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     st.subheader("Deney C — özellik kapsamı")
     cdf = df.iloc[[4, 5, 6]]
@@ -82,7 +82,7 @@ with l:
                  labels={"etiket": "", "R2_mean": "R² (DOI-grup CV)"})
     fig.update_traces(marker_color=MAVI, textposition="outside")
     fig.update_layout(height=300, yaxis_range=[0, 0.5], margin=dict(t=10))
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
     st.caption("PCE yalnızca kompozisyonla açıklanamıyor (0,263); cihaz (0,362) ve süreç "
                "(0,413) bilgisi anlamlı katkı veriyor — tez Bölüm 4.3.")
 
@@ -111,7 +111,7 @@ with r:
                       title=f"Gerçek vs tahmin (kesikli: ±6,42 = %90 bandı; "
                             f"negatif tahminler dahil, örneklemde {n_neg} adet)",
                       xaxis_range=[-4, 30], yaxis_range=[0, 32], margin=dict(t=40))
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     err = (ho["tahmin"] - ho["PCE"])
     fig = px.histogram(err, nbins=80, labels={"value": "İşaretli hata (tahmin − gerçek)"})
@@ -119,7 +119,7 @@ with r:
     fig.add_vline(x=0, line_color=KIRMIZI)
     fig.update_layout(height=260, title=f"Hata dağılımı (medyan mutlak hata "
                                         f"{tr(ho['mutlak_hata'].median(), 2)})", margin=dict(t=40))
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
 st.info(
     "**Neden önemli?** Literatürde Perovskite Database üzerinde rastgele bölmeyle 0,70–0,75 "

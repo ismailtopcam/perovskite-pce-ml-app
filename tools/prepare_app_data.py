@@ -219,9 +219,10 @@ bg_med = float(M["band_gap"].median())
 at_med = float(M["anneal_temp"].median())
 ati_med = float(M["anneal_time"].median())
 recipes, enc = enumerate_candidates(feat_names, bg_med, at_med, ati_med)
-assert (recipes[KEY].values == cand[KEY].values).all() or True  # sira farkli olabilir; asagida merge ile hizala
 enc_key = recipes[KEY].astype(str).agg("|".join, axis=1)
 cand_key = cand[KEY].astype(str).agg("|".join, axis=1)
+assert sorted(enc_key) == sorted(cand_key) and enc_key.is_unique, \
+    "aday anahtar kumeleri uyusmuyor (enumerate ile CSV farkli uzaylar)"
 order = pd.Series(range(len(enc_key)), index=enc_key)[cand_key].values
 enc_aligned = enc.iloc[order].reset_index(drop=True)
 
@@ -289,7 +290,6 @@ except Exception:
 meta = {
     "hazirlama_zamani_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
     "pipeline_git_commit": git_hash,
-    "pipeline_yolu": str(PIPE),
     "model_ready_sha256": sha256(proc / "model_ready_dataset.csv"),
     "model_cbm_sha256": sha256(OUT / "model.cbm"),
     "n_ham": 43398, "n_temiz": int(len(M)), "n_elenen": int(len(rem_full)),

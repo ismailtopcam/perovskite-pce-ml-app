@@ -47,7 +47,7 @@ for m in manifests:
         "sklearn": v.get("scikit-learn"), "catboost": v.get("catboost"),
         "Metrikler": ", ".join(f"{k}={v_}" for k, v_ in list(m.get("metrics", {}).items())[:3]),
     })
-st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True, height=380)
+st.dataframe(pd.DataFrame(rows), hide_index=True, width="stretch", height=380)
 
 vs = {tuple(sorted(m.get("versions", {}).items())) for m in manifests}
 if len(vs) == 1:
@@ -86,7 +86,7 @@ st.markdown(f"""
 | `model_ready_dataset.csv` SHA-256 | `{meta['model_ready_sha256'][:32]}…` |
 | Ham veri anlık görüntüsü | {tr(meta['n_ham'], 0)} kayıt × 410 kolon (SHA-256: pipeline README) |
 | Pipeline commit | `{meta['pipeline_git_commit'][:12]}` |
-| Kod arşivi | [Zenodo DOI {meta.get('zenodo_doi', '10.5281/zenodo.21196013')}](https://doi.org/{meta.get('zenodo_doi', '10.5281/zenodo.21196013')}) |
+| Kod arşivi | [Zenodo DOI {meta.get('zenodo_doi', '10.5281/zenodo.20829027')}](https://doi.org/{meta.get('zenodo_doi', '10.5281/zenodo.20829027')}) |
 | Pipeline deposu | [{meta.get('github_pipeline', '').replace('https://', '')}]({meta.get('github_pipeline', '')}) |
 | Uygulama deposu | [{meta.get('github_app', '').replace('https://', '')}]({meta.get('github_app', '')}) |
 | DOI-grup CV sonucu | R² = 0,413 ± 0,006 (MAE 3,12 / RMSE 4,02) |

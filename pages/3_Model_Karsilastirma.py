@@ -23,7 +23,7 @@ with l:
         text=[tr(v, 3) for v in cv["R2_mean"][::-1]], textposition="outside"))
     fig.update_layout(height=340, xaxis_title="R² (ort ± std)", xaxis_range=[0, 0.5],
                       margin=dict(t=10))
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
     st.caption("İlk dört boosting modeli standart sapma mertebesinde iç içedir; CatBoost'un "
                "üstünlüğü **marjinaldir** (tez Bölüm 5.1). Salt-sklearn HistGBM'in dış "
                "kütüphanelerle at başı gitmesi, kurulum-hafif tekrar üretim için önemlidir.")
@@ -34,7 +34,7 @@ with r:
     tab = tab[["model", "R2_mean", "R2_std", "MAE_mean", "RMSE_mean", "R2", "MAE", "RMSE"]]
     tab.columns = ["Model", "CV R²", "± std", "CV MAE", "CV RMSE",
                    "Holdout R²", "Holdout MAE", "Holdout RMSE"]
-    st.dataframe(tab, hide_index=True, use_container_width=True,
+    st.dataframe(tab, hide_index=True, width="stretch",
                  column_config={c: st.column_config.NumberColumn(c, format="%.3f")
                                 for c in tab.columns if c != "Model"})
     st.markdown(

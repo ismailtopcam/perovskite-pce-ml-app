@@ -41,7 +41,7 @@ view = sub[["A", "B", "X", "arch", "ETL", "HTL", "Predicted_PCE",
     "Predicted_PCE": "Tahmini PCE", "marginal90_low": "%90 alt",
     "marginal90_high": "%90 üst", "egitim_kayit_sayisi": "Eğitim desteği (üçlü)",
     "knn_uzaklik": "Eğitim-uzayı uzaklığı", "alan_ici": "Eşik içi?"})
-st.dataframe(view.head(200), hide_index=True, use_container_width=True, height=380,
+st.dataframe(view.head(200), hide_index=True, width="stretch", height=380,
              column_config={c: st.column_config.NumberColumn(c, format="%.2f")
                             for c in ["Tahmini PCE", "%90 alt", "%90 üst",
                                       "Eğitim-uzayı uzaklığı"]})
@@ -58,7 +58,7 @@ with l:
     fig.add_vline(x=thr, line_dash="dash", line_color="#333",
                   annotation_text=f"AD eşiği {tr(thr, 2)}")
     fig.update_layout(height=380, title="Tahmin vs eğitim-uzayına yakınlık (756 aday)")
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 with r:
     st.markdown(f"""
 ### Bu sayfayı dürüst okumak

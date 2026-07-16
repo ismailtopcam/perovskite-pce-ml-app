@@ -32,7 +32,7 @@ with l:
         st.info("Aramanızla eşleşen yayın bulunamadı — adresin farklı bir parçasını deneyin.")
         st.stop()
     st.dataframe(dsub[["DOI", "kayit", "pce_medyan", "bolme"]].head(300),
-                 hide_index=True, height=280, use_container_width=True,
+                 hide_index=True, height=280, width="stretch",
                  column_config={"pce_medyan": st.column_config.NumberColumn(
                      "PCE medyan", format="%.1f")})
     secim = st.selectbox("Yayın seç", dsub["DOI"].head(300))
@@ -61,13 +61,13 @@ with r:
     fig = px.histogram(kayitlar, x="PCE", nbins=25, labels={"PCE": "PCE (%)"})
     fig.update_traces(marker_color=MAVI)
     fig.update_layout(height=230, title="Yayının PCE dağılımı", margin=dict(t=40))
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     goster = kayitlar[["kompozisyon", "mimari", "ETL", "HTL", "PCE", "tahmin",
                        "mutlak_hata"]].rename(columns={
         "kompozisyon": "Kompozisyon", "PCE": "Gerçek PCE",
         "tahmin": "Tahmin", "mutlak_hata": "Hata"})
-    st.dataframe(goster, hide_index=True, use_container_width=True, height=220,
+    st.dataframe(goster, hide_index=True, width="stretch", height=220,
                  column_config={c: st.column_config.NumberColumn(c, format="%.2f")
                                 for c in ["Gerçek PCE", "Tahmin", "Hata"]})
 
@@ -82,5 +82,5 @@ sınırını, **{g['n_collisions_split_cv']}**'si CV kat sınırını aşıyor
 Sınır aşan yayınların test kayıtlarında hata **düşük değil yüksek** çıktı
 (MAE {tr(k['mae_contaminated'], 2)} vs {tr(k['mae_clean'], 2)}) ve DOI-normalizasyonlu
 duyarlılık koşumunda skor değişimi kat gürültüsü içinde kaldı — yani bu kusur ölçüldü,
-skor şişirmediği kayıt düzeyinde doğrulandı ve belgelenmiş kalıntı risk olarak raporlandı.
+bu alt kümede ek bir skor şişmesi sinyali gözlenmedi; kusur, belgelenmiş kalıntı risk olarak raporlandı.
 """)

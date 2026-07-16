@@ -45,7 +45,7 @@ with tab_akis:
                      labels={"count": "Kayıt sayısı", "neden_tr": ""})
         fig.update_traces(marker_color=KIRMIZI)
         fig.update_layout(title="Eleme nedenleri (toplam 1.913)", height=340)
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
     with right:
         imp = pd.DataFrame({
             "Değişken": ["Band gap", "Tavlama süresi", "Tavlama sıcaklığı"],
@@ -59,7 +59,7 @@ with tab_akis:
         fig.update_traces(marker_color=MAVI)
         fig.update_layout(title="Eksik değer doldurma oranları (bayrakla izlenir)",
                           height=340, xaxis_range=[0, 30])
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
     st.info(
         "Elenen her kaydın **nedeni kayıt düzeyinde** loglanır "
         "(`outputs/logs/removed_records_log.csv`); doldurulan her değer modele ayrı bir "
@@ -74,7 +74,7 @@ with tab_dagilim:
         fig.update_traces(marker_color=MAVI)
         fig.update_layout(title=f"PCE dağılımı (n = {tr(len(rec), 0)}; "
                                 f"medyan {tr(rec['PCE'].median(), 2)})", height=330)
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
         doi_sizes = rec[rec["DOI"] != "(DOI yok)"].groupby("DOI").size()
         fig = go.Figure(go.Histogram(x=doi_sizes[doi_sizes <= 60], nbinsx=60,
@@ -86,7 +86,7 @@ with tab_dagilim:
                                 f"p95={int(doi_sizes.quantile(.95))}, maks={doi_sizes.max()})",
                           yaxis_type="log", height=330,
                           xaxis_title="Yayın başına kayıt", yaxis_title="Yayın sayısı (log)")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
     with r:
         site = st.radio("Kompozisyon ekseni", ["A-site", "B-site", "X-site"], horizontal=True)
         cols = {"A-site": ["A_FA", "A_MA", "A_Cs"], "B-site": ["B_Pb", "B_Sn"],
@@ -96,7 +96,7 @@ with tab_dagilim:
         fig = px.histogram(melt, x="oran", color="iyon", nbins=40, barmode="overlay",
                            opacity=0.6)
         fig.update_layout(title=f"{site} iyon oranları", yaxis_type="log", height=330)
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
         kat = st.selectbox("Kategori dağılımı", ["mimari", "ETL", "HTL", "cozucu"],
                            format_func=lambda s: {"mimari": "Hücre mimarisi", "ETL": "ETL",
@@ -106,7 +106,7 @@ with tab_dagilim:
         fig.update_traces(marker_color=MAVI)
         fig.update_layout(title=f"En sık 10 kategori — {kat}", height=330,
                           xaxis_title="Kayıt", yaxis_title="")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
 with tab_gezgin:
     st.markdown("**Filtreler** — temiz veri kümesinde gezinin, bir kayda tıklayıp "
@@ -134,7 +134,7 @@ with tab_gezgin:
 
     show = sub[["row_id", "DOI", "kompozisyon", "PCE", "mimari", "ETL", "HTL",
                 "band_gap", "bolme", "tahmin"]].head(2000)
-    st.dataframe(show, use_container_width=True, height=320, hide_index=True,
+    st.dataframe(show, width="stretch", height=320, hide_index=True,
                  column_config={"row_id": "Kayıt No", "tahmin": st.column_config.NumberColumn(
                      "Model tahmini", format="%.2f")})
 
@@ -176,7 +176,7 @@ with tab_elenen:
     st.dataframe(
         sub[["row_id", "neden_tr", "DOI", "PCE_ham", "Modul",
              "A_iyonlar", "A_katsayilar", "B_iyonlar", "X_iyonlar"]].head(2000),
-        use_container_width=True, height=340, hide_index=True,
+        width="stretch", height=340, hide_index=True,
         column_config={"row_id": "Ham kayıt no", "neden_tr": "Eleme nedeni",
                        "PCE_ham": "Ham PCE"})
     if len(sub):
