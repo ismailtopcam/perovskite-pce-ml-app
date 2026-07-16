@@ -101,13 +101,16 @@ with r:
     fig = px.scatter(plot_df, x="tahmin", y="PCE", opacity=0.25,
                      labels={"tahmin": "Model tahmini (PCE)", "PCE": "Gerçek PCE"})
     fig.update_traces(marker=dict(size=4, color=MAVI))
-    fig.add_shape(type="line", x0=0, y0=0, x1=30, y1=30, line=dict(color="#333", width=1))
-    fig.add_shape(type="line", x0=0, y0=6.42, x1=30, y1=36.42,
+    fig.add_shape(type="line", x0=-4, y0=-4, x1=30, y1=30, line=dict(color="#333", width=1))
+    fig.add_shape(type="line", x0=-4, y0=2.42, x1=30, y1=36.42,
                   line=dict(color=KIRMIZI, width=1, dash="dash"))
-    fig.add_shape(type="line", x0=0, y0=-6.42, x1=30, y1=23.58,
+    fig.add_shape(type="line", x0=-4, y0=-10.42, x1=30, y1=23.58,
                   line=dict(color=KIRMIZI, width=1, dash="dash"))
-    fig.update_layout(height=380, title="Gerçek vs tahmin (kesikli: ±6,42 = %90 conformal bandı)",
-                      xaxis_range=[0, 30], yaxis_range=[0, 32], margin=dict(t=40))
+    n_neg = int((plot_df["tahmin"] < 0).sum())
+    fig.update_layout(height=380,
+                      title=f"Gerçek vs tahmin (kesikli: ±6,42 = %90 bandı; "
+                            f"negatif tahminler dahil, örneklemde {n_neg} adet)",
+                      xaxis_range=[-4, 30], yaxis_range=[0, 32], margin=dict(t=40))
     st.plotly_chart(fig, use_container_width=True)
 
     err = (ho["tahmin"] - ho["PCE"])

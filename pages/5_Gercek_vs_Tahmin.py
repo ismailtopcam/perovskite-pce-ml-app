@@ -8,8 +8,8 @@ from lib import data
 from lib.ui import page, tr, tez_notu, MAVI, KIRMIZI
 
 page("Gerçek Deney vs Model Tahmini", "5️⃣")
-tez_notu("Bölüm 4.7", "8.147 holdout kaydında (modelin eğitimde HİÇ görmediği yayınlar) "
-                      "kayıt düzeyinde hata analizi.")
+tez_notu("Bölüm 4.7", "8.147 holdout kaydında (eğitimden ham DOI anahtarı düzeyinde ayrık "
+                      "tutulan yayınlar) kayıt düzeyinde hata analizi.")
 
 rec = data.records()
 ho = rec[rec["bolme"] == "holdout-test"].copy()

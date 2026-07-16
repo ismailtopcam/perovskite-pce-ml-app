@@ -10,9 +10,9 @@ from lib.ui import page, tr, tez_notu, bilim_uyarisi, conformal_uyarisi, MAVI, K
 page("Tahmin Aracı — Sanal Cihaz Tarifi", "4️⃣")
 tez_notu("Bölüm 3.12 ve 4.10",
          "Tarif, modelin eğitimde gördüğü 77-özellik sözleşmesine kodlanır. Belirsizlik "
-         "aralığı, modelin daha önce hiç görmediği yayınlardaki gerçek hatalarının "
-         "dağılımından türetilir (conformal kestirim). Aralıklar nominal %90 düzeyindedir; "
-         "holdout'ta gözlenen kapsama %88,2'dir (tez Bölüm 4.10).")
+         "aralığı, eğitimden ham DOI anahtarı düzeyinde ayrık tutulan yayınlardaki gerçek "
+         "hataların dağılımından türetilir (conformal kestirim). Aralıklar nominal %90 "
+         "düzeyindedir; holdout'ta gözlenen kapsama %88,2'dir (tez Bölüm 4.10).")
 
 maps = encode.categorical_options()
 meta = data.js("features.json")
@@ -76,8 +76,8 @@ if gonder:
     r1, r2, r3, r4 = st.columns(4)
     r1.metric("Tahmini PCE", tr(pred, 2) + " %")
     r2.metric("Nominal %90 aralık (genel)", f"{tr(m_lo, 1)} – {tr(m_hi, 1)}",
-              help="Modelin görülmemiş yayınlardaki gerçek hatalarının %90'ını kapsayan "
-                   "genişlik (marginal conformal): tüm kalibrasyon kayıtları birlikte. "
+              help="Eğitim dışı (DOI düzeyinde ayrık) yayınlardaki gerçek hataların %90'ını "
+                   "kapsayan genişlik (marginal conformal): tüm kalibrasyon kayıtları birlikte. "
               "Holdout'ta gözlenen kapsama: %88,2 (tez Bölüm 4.10).")
     r3.metric(f"Nominal %90 aralık (bölgesel, {quart})", f"{tr(q_lo, 1)} – {tr(q_hi, 1)}",
               help="Aynı hesap, yalnızca bu tahmin düzeyindeki (çeyrekteki) kayıtların "

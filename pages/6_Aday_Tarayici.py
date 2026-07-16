@@ -63,9 +63,11 @@ with r:
     st.markdown(f"""
 ### Bu sayfayı dürüst okumak
 
-- **Tavan 17,78:** hiçbir aday eğitim maksimumuna (34,8) yaklaşamaz — ağaç modeller
-  ekstrapolasyon yapamaz; liste **yeni keşif değil, bilinen yüksek-verim bölgesinin
-  yeniden bulunmasıdır** (tez Bölüm 5.4).
+- **Tavan 17,78:** hiçbir aday eğitim maksimumuna (34,8) yaklaşamaz. Üç etken
+  birlikte çalışır: ağaç tabanlı modelin eğitim aralığı dışına çıkamaması, 756
+  adaylık **kısıtlı eksen uzayı** ve band gap/tavlama gibi bağlam değişkenlerinin
+  eğitim medyanlarına **sabitlenmesi**. Liste **yeni keşif değil, bilinen
+  yüksek-verim bölgesinin yeniden bulunmasıdır** (tez Bölüm 5.4).
 - **Eğitim desteği:** ham ilk-30'a hâkim bazı (mimari, ETL, HTL) üçlüleri eğitimde hiç
   görülmemiştir; ≥5 kayıt filtresi 756 adayı 504'e indirir ve tavanı değiştirmez
   (tez Bölüm 4.5).

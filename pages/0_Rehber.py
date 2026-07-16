@@ -96,7 +96,9 @@ deneysel taramayı daraltma aracı olarak okunmalıdır.
 """),
     ("7️⃣ DOI Gezgini — *tez Bölüm 3.8, 5.7*", """
 **Ne gösterir?** Verinin yayın (DOI) düzeyindeki yapısını ve tezin en kritik
-kuralını: aynı yayının kayıtları asla eğitim ile testin ikisine birden düşmez.
+kuralını: aynı DOI anahtarına sahip kayıtlar asla eğitim ile testin ikisine
+birden düşmez (ayrım ham anahtar düzeyindedir; tez Bölüm 5.7 bu anahtarın
+kendisini de denetler).
 
 **Nasıl okunur?** Bir yayın seçin — uygulama o yayının eğitimde mi holdout'ta
 mı olduğunu rozetle söyler. Alttaki genişletilebilir bölümde grup anahtarının
@@ -128,8 +130,8 @@ with c1:
   0 = ortalamayı söylemekten farksız). 0,413 = farklılıkların ~%41'i.
 - **MAE / RMSE** — ortalama tahmin hatası (PCE puanı cinsinden); RMSE büyük
   hataları daha çok cezalandırır.
-- **Holdout** — modelin eğitimde hiç görmediği, yalnızca sınavda kullanılan
-  kayıtlar (%20).
+- **Holdout** — eğitime alınmayan, yalnızca sınavda kullanılan kayıtlar (%20);
+  ayrım ham DOI anahtarı düzeyinde yapılır.
 - **Veri sızıntısı** — cevabın bir kopyasının soruya karışması; skoru gerçek
   dışı şişirir.
 """
@@ -139,8 +141,9 @@ with c2:
         """
 - **DOI-grup bölme** — aynı yayının tüm kayıtlarını aynı tarafta (ya eğitim ya
   test) tutan bölme; kardeş-cihaz sızıntısını engeller.
-- **Conformal aralık** — "gerçek değer %90 olasılıkla bu banttadır" diyebilmenin
-  dağılım-varsayımsız yolu; tezde DOI-grup-güvenli kalibre edilmiştir.
+- **Conformal aralık** — tekrarlı kullanımda aralıkların gerçek değeri **nominal
+  %90 sıklıkla** kapsamasını hedefleyen, dağılım-varsayımsız yöntem; tek bir
+  tahmine "%90 olasılık" garantisi vermez. Tezde DOI-grup-güvenli kalibre edilmiştir.
 - **SHAP** — bir tahmini, özelliklerin katkılarına adilce bölüştüren
   açıklanabilirlik yöntemi (nedensellik değil, ilişki gösterir).
 - **Eğitim-uzayına uzaklık** — tarifin, modelin gördüğü veriye ne kadar
