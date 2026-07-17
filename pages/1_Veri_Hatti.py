@@ -161,7 +161,7 @@ with tab_gezgin:
                 else:
                     islemler.append(f"✓ {ad} raporlanmış: {tr(val, 2)}")
             islemler.append("✓ A/B/X katsayıları sayısal vektöre dönüştürüldü")
-            islemler.append(f"✓ DOI grubu atandı → aynı yayının kayıtları asla eğitim+test'e bölünmez")
+            islemler.append(f"✓ DOI grubu atandı → aynı ham DOI anahtarını taşıyan kayıtlar asla eğitim+test'e bölünmez")
             if r["bolme"] == "holdout-test" and not np.isnan(r["tahmin"]):
                 islemler.append(f"🎯 Holdout tahmini: **{tr(r['tahmin'], 2)}** "
                                 f"(mutlak hata {tr(r['mutlak_hata'], 2)})")

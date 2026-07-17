@@ -139,8 +139,8 @@ with c1:
 with c2:
     st.markdown(
         """
-- **DOI-grup bölme** — aynı yayının tüm kayıtlarını aynı tarafta (ya eğitim ya
-  test) tutan bölme; kardeş-cihaz sızıntısını engeller.
+- **DOI-grup bölme** — aynı ham DOI anahtarını taşıyan tüm kayıtları aynı tarafta
+  (ya eğitim ya test) tutan bölme; kardeş-cihaz sızıntısını büyük ölçüde azaltır.
 - **Conformal aralık** — tekrarlı kullanımda aralıkların gerçek değeri **nominal
   %90 sıklıkla** kapsamasını hedefleyen, dağılım-varsayımsız yöntem; tek bir
   tahmine "%90 olasılık" garantisi vermez. Tezde DOI-grup-güvenli kalibre edilmiştir.

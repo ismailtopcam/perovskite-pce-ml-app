@@ -51,7 +51,7 @@ with r:
     b3.metric("CV katı", f"{int(d['cv_fold'])}")
     if egitimde:
         st.success("🔒 **Bu yayın EĞİTİM kümesinde.** Aynı DOI'nin hiçbir kaydı holdout "
-                   "test kümesine alınmamıştır — skor, bu yayının kardeş cihazlarından "
+                   "test kümesine alınmamıştır — skor, bu DOI'nin kardeş cihazlarından "
                    "beslenemez.")
     else:
         st.info(f"🎯 **Bu yayın HOLDOUT-TEST kümesinde.** Modeli eğitirken bu yayının "
