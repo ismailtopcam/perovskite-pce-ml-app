@@ -157,8 +157,8 @@ st.divider()
 st.subheader("❓ Sık sorulanlar")
 with st.expander("R² = 0,413 düşük değil mi?"):
     st.markdown(
-        "Tek başına bakıldığında mütevazı görünür; ama bu değer **görülmemiş "
-        "yayınlara genellemeyi** ölçer ve tez, literatür verisindeki reçete-içi "
+        "Tek başına bakıldığında mütevazı görünür; ama bu değer **eğitimden ham DOI "
+        "anahtarı düzeyinde ayrık tutulan yayınlara genellemeyi** ölçer ve tez, literatür verisindeki reçete-içi "
         "gürültünün ulaşılabilir tavanı ~0,52'ye sınırladığını gösterir (Bölüm 5.1). "
         "Yani 0,413, 'kötü bir model' değil; 'dürüst ölçülmüş, tavana yakın bir "
         "model'dir. Daha yüksek görünen skorların nasıl üretildiğini 2. sayfada "

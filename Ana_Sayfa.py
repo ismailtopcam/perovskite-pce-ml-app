@@ -53,9 +53,10 @@ with col2:
         """
 - Buradaki hiçbir çıktı **deneysel doğrulama yerine geçmez**; model, geçmiş
   literatürden öğrenilen örüntülerle **önceliklendirme** yapar.
-- Grup-güvenli R² = 0,413 **bilinçli olarak muhafazakârdır**: görülmemiş
-  yayınlara genellemeyi ölçer. Daha yüksek görünen skorlar (0,481; 0,938)
-  metodolojik gevşemenin ürünüdür — 2. sayfada kendiniz deneyin.
+- Grup-güvenli R² = 0,413 **bilinçli olarak muhafazakârdır**: eğitimden ham DOI
+  anahtarı düzeyinde ayrık tutulan yayınlara genellemeyi ölçer. Daha yüksek görünen
+  skorlar (0,481; 0,938), bu çalışmada ölçülen iki metodolojik gevşemenin (rastgele
+  bölme; ölçüm-sonrası değişkenler) sonucudur — 2. sayfada kendiniz deneyin.
 - Belirsizlik aralıkları DOI-grup-güvenli **conformal** kalibrasyonla üretilmiştir
   (tez Bölüm 4.10).
 """
