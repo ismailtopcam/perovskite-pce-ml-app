@@ -83,7 +83,7 @@ for f_i, (_, vai) in enumerate(GroupKFold(n_splits=5).split(X, y, groups)):
 pred = pd.read_csv(outs / "v4" / "best_model_holdout_predictions.csv")
 avp = pd.read_csv(outs / "v4" / "actual_vs_predicted.csv")
 assert len(pred) == len(ho) == len(avp)
-assert np.allclose(y[ho][:500], pred["y_true"].values[:500], atol=1e-6), "holdout hizasiz!"
+assert np.allclose(y[ho], pred["y_true"].values, atol=1e-6), "holdout hizasiz!"
 
 # ---------------- 2) Kategori etiket haritalari (one-hot kolon <-> ham etiket) ----------------
 feat_set = set(feat_names)

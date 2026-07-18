@@ -20,7 +20,11 @@ c1, c2, c3, c4 = st.columns(4)
 c1.metric("Holdout kayıt", tr(len(ho), 0))
 c2.metric("MAE", tr(ho["mutlak_hata"].mean(), 2) + " puan")
 c3.metric("Medyan mutlak hata", tr(ho["mutlak_hata"].median(), 2) + " puan")
-c4.metric("%90 bandın kapsaması", f"%{tr(100 * ho['kapsandi'].mean(), 1)}")
+c4.metric("%90 bandın kapsaması", f"%{tr(100 * ho['kapsandi'].mean(), 1)}",
+          help="±6,42'lik bandın 8.147 holdout kaydının tamamında gerçek değeri kapsama "
+               "oranı. Tezin conformal-test alt kümesindeki (4.155 kayıt) ampirik kapsama "
+               "%88,2'dir (Bölüm 4.10); küçük fark, kalibrasyon yarısının da bu sayıma "
+               "dahil olmasından gelir.")
 
 tab1, tab2, tab3 = st.tabs(["🎯 Kayıt bazında", "📉 Hata grupları", "🔬 Model nerede yanılıyor?"])
 
