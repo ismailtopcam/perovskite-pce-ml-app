@@ -8,7 +8,7 @@ from lib.ui import page, tr, tez_notu
 page("Pipeline ve Provenans", "8️⃣")
 tez_notu("Bölüm 3.15",
          "Her aşama; parametre, seed ve paket sürümlerini bir koşu-manifestine yazar. "
-         "Bu sayfa o manifestlerin canlı görünümüdür — uygulama bir ML denetim (audit) "
+         "Bu sayfa o manifestlerin canlı görünümüdür; uygulama bir ML denetim (audit) "
          "kaydı gibi okunabilir.")
 
 meta = data.js("app_meta.json")
@@ -37,7 +37,7 @@ c2.metric("Seed", str(meta["seed"]))
 c3.metric("Aşama manifesti", str(len(manifests)))
 c4.metric("Veri hazırlama", meta["hazirlama_zamani_utc"][:10])
 
-st.subheader("📜 Koşu manifestleri")
+st.subheader("Koşu manifestleri")
 rows = []
 for m in manifests:
     v = m.get("versions", {})
@@ -51,19 +51,19 @@ st.dataframe(pd.DataFrame(rows), hide_index=True, width="stretch", height=380)
 
 vs = {tuple(sorted(m.get("versions", {}).items())) for m in manifests}
 if len(vs) == 1:
-    st.success("✅ 14 manifestin tamamı **aynı ortamı** kaydediyor (Python "
+    st.success("14 manifestin tamamı **aynı ortamı** kaydediyor (Python "
                f"{manifests[0]['versions']['python']}, scikit-learn "
                f"{manifests[0]['versions']['scikit-learn']}, catboost "
-               f"{manifests[0]['versions']['catboost']}) — sürüm karışması yok.")
+               f"{manifests[0]['versions']['catboost']}); sürüm karışması yoktur.")
 
-st.subheader("🔎 Bağımsız denetim özetleri")
+st.subheader("Bağımsız denetim özetleri")
 a, b, c = st.columns(3)
 with a:
     p = data.js("pipeline_cv_results.json")
     st.markdown(f"""**Ön-işleme sızıntısı testi** (Bölüm 3.7)
 Global matris: R² {tr(p['global_mean'], 4)}
 Kat-içi Pipeline: R² {tr(p['foldlocal_mean'], 4)}
-Fark: **{tr(abs(p['delta']), 4)}** → önişleme sızıntısı ihmal edilebilir.""")
+Fark: **{tr(abs(p['delta']), 4)}**; önişleme sızıntısı ihmal edilebilir.""")
 with b:
     d = data.js("doi_normalizasyon_duyarlilik.json")
     st.markdown(f"""**DOI normalizasyon duyarlılığı** (Bölüm 5.7)
@@ -74,10 +74,10 @@ with c:
     t = data.js("tuning_catboost_best_params.json")
     st.markdown(f"""**CatBoost ızgara araması** (Bölüm 4.8)
 Grup-güvenli arama, temel yapılandırmayı seçti;
-5-katta fark **0,000** → başarım veri yapısıyla sınırlı,
-ayarla değil.""")
+5-katta fark **0,000**. Başarımı sınırlayan etken,
+hiperparametre ayarından çok veri yapısıdır.""")
 
-st.subheader("🧾 Model ve veri kimliği")
+st.subheader("Model ve veri kimliği")
 st.markdown(f"""
 | Alan | Değer |
 |---|---|
@@ -91,8 +91,8 @@ st.markdown(f"""
 | Uygulama deposu | [{meta.get('github_app', '').replace('https://', '')}]({meta.get('github_app', '')}) |
 | DOI-grup CV sonucu | R² = 0,413 ± 0,006 (MAE 3,12 / RMSE 4,02) |
 
-⚠️ **Ölçüm-sonrası hiçbir değişken (Voc, Jsc, FF, EQE, stabilite alanları) modele dahil
-değildir** — şema katmanı bunu her koşuda zorlar; dahil edilselerdi R² yapay olarak
+**Ölçüm-sonrası hiçbir değişken (Voc, Jsc, FF, EQE, stabilite alanları) modele dahil
+değildir.** Şema katmanı bunu her koşuda zorlar; dahil edilselerdi R² yapay olarak
 0,938'e çıkardı (tez Deney B).
 
 Bu uygulamanın tüm dosyaları `tools/prepare_app_data.py` ile pipeline reposundan

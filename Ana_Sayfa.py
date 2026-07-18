@@ -15,8 +15,8 @@ Yüksek Verim Potansiyelli Aday Kompozisyonların Belirlenmesi"** başlıklı y�
 tezinin (İzmir Kâtip Çelebi Üniversitesi, Yazılım Mühendisliği) veri hattını, deneylerini
 ve bulgularını **etkileşimli** olarak sunar.
 
-Tezin ana savı şudur: *raporlanan model başarımı yalnızca algoritmadan değil,
-**doğrulama ve özellik kararlarından** etkilenir.* Bu uygulamadaki her ekran bu savı
+Tezin ana savı şudur: *raporlanan model başarımını algoritma kadar
+**doğrulama ve özellik kararları** da belirler.* Bu uygulamadaki her ekran bu savı
 veriyle görünür kılmak için tasarlandı.
 """
 )
@@ -31,14 +31,14 @@ st.divider()
 
 col1, col2 = st.columns(2)
 with col1:
-    st.subheader("📑 Sayfalar")
+    st.subheader("Sayfalar")
     st.markdown(
         """
 | Sayfa | İçerik |
 |---|---|
-| **📖 Kullanım Rehberi** | Her ekranın ne gösterdiği, nasıl okunacağı + küçük sözlük — buradan başlayın |
+| **Kullanım Rehberi** | Her ekranın ne gösterdiği, nasıl okunacağı + küçük sözlük (buradan başlayın) |
 | **1 — Veri Hattı** | Ham→temiz dönüşüm, eleme nedenleri, kayıt gezgini ("bu kayıt neden elendi / hangi işlemler uygulandı?") |
-| **2 — Doğrulama Deneyleri** | ⭐ Tezin merkez bulgusu: bölme yöntemi ve özellik seti seçiminin R²'ye etkisi |
+| **2 — Doğrulama Deneyleri** | Tezin merkez bulgusu: bölme yöntemi ve özellik seti seçiminin R²'ye etkisi |
 | **3 — Model Karşılaştırma** | 6 modelin DOI-grup CV ve holdout başarımları |
 | **4 — Tahmin Aracı** | Sanal cihaz tarifi → PCE + %90 belirsizlik aralığı + yerel SHAP |
 | **5 — Gerçek vs Tahmin** | 8.147 holdout kaydında hata analizi; model nerede yanılıyor? |
@@ -48,7 +48,7 @@ with col1:
 """
     )
 with col2:
-    st.subheader("⚠️ Nasıl okumalı?")
+    st.subheader("Nasıl okumalı?")
     st.markdown(
         """
 - Buradaki hiçbir çıktı **deneysel doğrulama yerine geçmez**; model, geçmiş
@@ -56,12 +56,12 @@ with col2:
 - Grup-güvenli R² = 0,413 **bilinçli olarak muhafazakârdır**: eğitimden ham DOI
   anahtarı düzeyinde ayrık tutulan yayınlara genellemeyi ölçer. Daha yüksek görünen
   skorlar (0,481; 0,938), bu çalışmada ölçülen iki metodolojik gevşemenin (rastgele
-  bölme; ölçüm-sonrası değişkenler) sonucudur — 2. sayfada kendiniz deneyin.
+  bölme; ölçüm-sonrası değişkenler) sonucudur; 2. sayfada kendiniz deneyin.
 - Belirsizlik aralıkları DOI-grup-güvenli **conformal** kalibrasyonla üretilmiştir
   (tez Bölüm 4.10).
 """
     )
-    st.subheader("🧾 Provenans")
+    st.subheader("Provenans")
     st.markdown(
         f"""
 - Pipeline commit: `{meta['pipeline_git_commit'][:12]}` · Veri hazırlama: `{meta['hazirlama_zamani_utc'][:10]}`

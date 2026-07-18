@@ -66,16 +66,16 @@ with r:
 - **Tavan 17,78:** hiçbir aday eğitim maksimumuna (34,8) yaklaşamaz. Üç etken
   birlikte çalışır: ağaç tabanlı modelin eğitim aralığı dışına çıkamaması, 756
   adaylık **kısıtlı eksen uzayı** ve band gap/tavlama gibi bağlam değişkenlerinin
-  eğitim medyanlarına **sabitlenmesi**. Liste **yeni keşif değil, bilinen
-  yüksek-verim bölgesinin yeniden bulunmasıdır** (tez Bölüm 5.4).
+  eğitim medyanlarına **sabitlenmesi**. Liste **bilinen yüksek-verim bölgesinin
+  yeniden bulunmasıdır**; yeni bir keşif vaat etmez (tez Bölüm 5.4).
 - **Eğitim desteği:** ham ilk-30'a hâkim bazı (mimari, ETL, HTL) üçlüleri eğitimde hiç
   görülmemiştir; ≥5 kayıt filtresi 756 adayı 504'e indirir ve tavanı değiştirmez
   (tez Bölüm 4.5).
 - **Uzaklık ≠ güven:** adayların yalnızca {tr(int(cand['alan_ici'].sum()), 0)} tanesi
   eğitim-uzayı eşiğinin içindedir (sabit medyan varsayımları yüzünden beklenen bir durum).
   Üstelik tez, bu mesafenin holdout'ta hata düzeyini **ayırt etmediğini** göstermiştir
-  (MAE 3,28 vs 3,19; Bölüm 4.10) — bu sütunu bir güven skoru değil, adayın veri
-  yoğunluğu bilgisi olarak okuyun.
+  (MAE 3,28 vs 3,19; Bölüm 4.10). Bu sütunu adayın veri yoğunluğu bilgisi olarak
+  okuyun; güven skoru sayılmaz.
 - Adaylar holdout dağılımından gelmediği için aralıklar kesin %90 garantisi değildir.
 """)
 

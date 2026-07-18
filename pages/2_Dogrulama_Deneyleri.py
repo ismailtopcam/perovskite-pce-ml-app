@@ -16,7 +16,7 @@ val = data.csv("validation_experiments.csv")
 rec = data.records()
 ho = rec[rec["bolme"] == "holdout-test"]
 
-st.subheader("🎛️ Kararları siz verin")
+st.subheader("Kararları siz verin")
 c1, c2 = st.columns(2)
 with c1:
     bolme = st.radio("**Bölme yöntemi**",
@@ -33,19 +33,19 @@ safe = ozellik.startswith("Ölçüm-öncesi")
 
 if grup and safe:
     r2, std, yorum, renk = 0.4129, 0.0065, \
-        "✅ **Tezin başlık sonucu.** Eğitimden ham DOI anahtarı düzeyinde ayrık tutulan " \
+        "**Tezin başlık sonucu.** Eğitimden ham DOI anahtarı düzeyinde ayrık tutulan " \
         "yayınlara genellemenin dürüst ölçüsü.", "normal"
 elif not grup and safe:
     r2, std, yorum, renk = 0.4812, 0.0089, \
-        "⚠️ **+0,068 yapay şişme** — kardeş cihazlar test kümesine sızdı. Skor arttı, " \
+        "**+0,068 yapay şişme:** kardeş cihazlar test kümesine sızdı. Skor arttı, " \
         "genelleme gücü artmadı (tez Deney A).", "inverse"
 elif grup and not safe:
     r2, std, yorum, renk = 0.9380, 0.0040, \
-        "🚨 **Hedef sızıntısı.** Voc×Jsc×FF, PCE'yi neredeyse doğrudan verir: model artık " \
+        "**Hedef sızıntısı.** Voc×Jsc×FF, PCE'yi neredeyse doğrudan verir: model artık " \
         "tahmin değil, kopyalama yapıyor (tez Deney B). Sentez ÖNCESİ bu değerler bilinemez.", "inverse"
 else:
     r2, std, yorum, renk = None, None, \
-        "❔ Bu kombinasyon tezde koşulmadı: iki gevşemeyi birleştirmek yalnızca daha da " \
+        "Bu kombinasyon tezde koşulmadı: iki gevşemeyi birleştirmek yalnızca daha da " \
         "iyimser (ve daha da anlamsız) bir skor üretir.", "off"
 
 m1, m2, m3 = st.columns([1, 1, 2])
@@ -85,7 +85,7 @@ with l:
     fig.update_layout(height=300, yaxis_range=[0, 0.5], margin=dict(t=10))
     st.plotly_chart(fig, width="stretch")
     st.caption("PCE yalnızca kompozisyonla açıklanamıyor (0,263); cihaz (0,362) ve süreç "
-               "(0,413) bilgisi anlamlı katkı veriyor — tez Bölüm 4.3.")
+               "(0,413) bilgisi anlamlı katkı veriyor (tez Bölüm 4.3).")
 
 with r:
     st.subheader("Başlık kurulumun holdout görünümü")

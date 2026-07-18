@@ -24,7 +24,7 @@ def tr(x, nd: int = 3) -> str:
 
 
 def tez_notu(bolum: str, metin: str):
-    st.caption(f"📖 **Tez {bolum}** — {metin}")
+    st.caption(f"**Tez {bolum}** · {metin}")
 
 
 def bilim_uyarisi():
@@ -39,8 +39,8 @@ def bilim_uyarisi():
 
 def conformal_uyarisi():
     st.caption(
-        "ℹ️ %90 aralıklar DOI-grup-güvenli kalibrasyonla (tez Bölüm 4.10) hesaplanmıştır. "
+        "%90 aralıklar DOI-grup-güvenli kalibrasyonla (tez Bölüm 4.10) hesaplanmıştır. "
         "Elle girilen tarifler holdout dağılımından gelmediği için (değişebilirlik varsayımı "
-        "sağlanmaz) bu aralıklar kesin bir %90 garantisi değil, **veriye dayalı belirsizlik "
-        "göstergesi** olarak okunmalıdır."
+        "sağlanmaz) bu aralıklar **veriye dayalı belirsizlik göstergesi** olarak "
+        "okunmalıdır; kesin bir %90 garantisi sunmaz."
     )

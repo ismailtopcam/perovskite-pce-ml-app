@@ -81,23 +81,23 @@ if gonder:
               "Holdout'ta gözlenen kapsama: %88,2 (tez Bölüm 4.10).")
     r3.metric(f"Nominal %90 aralık (bölgesel, {quart})", f"{tr(q_lo, 1)} – {tr(q_hi, 1)}",
               help="Aynı hesap, yalnızca bu tahmin düzeyindeki (çeyrekteki) kayıtların "
-                   "hatalarıyla yapılır (Mondrian conformal) — aralık bölgeye duyarlı hâle gelir.")
+                   "hatalarıyla yapılır (Mondrian conformal); aralık bölgeye duyarlı hâle gelir.")
     r4.metric("Eğitim-uzayına uzaklık", tr(dist, 2),
               f"eşik {tr(thr, 2)} — {'alan içi' if inside else 'alan DIŞI'}",
               delta_color="normal" if inside else "inverse")
 
     if not inside:
-        st.error("🚧 Bu tarif, eğitim verisinin yoğun bölgesinin **dışında** "
+        st.error("Bu tarif, eğitim verisinin yoğun bölgesinin **dışında** "
                  f"(kNN uzaklığı {tr(dist, 2)} > eşik {tr(thr, 2)}). Model bu bölgeyi "
                  "çok az örnekten öğrenmiştir; tahmini "
                  "yalnızca kaba bir yönlendirme olarak okuyun.")
     if pred > meta["train_pce_max"] * 0.6:
-        st.caption(f"Not: eğitimdeki en yüksek PCE {tr(meta['train_pce_max'], 1)} — ağaç "
+        st.caption(f"Not: eğitimdeki en yüksek PCE {tr(meta['train_pce_max'], 1)}. Ağaç "
                    "modeller gözlenmemiş bölgede güvenilir ekstrapolasyon yapamaz; "
                    "tahminler pratikte bu tavanın belirgin altında kalır (tez Bölüm 5.4).")
 
     # ---- Veri desteği: bu tarif eğitim verisinde ne kadar karşılık buluyor? ----
-    st.subheader("📚 Veri desteği")
+    st.subheader("Veri desteği")
     rec = data.records()
     egitim = rec[rec["bolme"] == "eğitim"]
     uclu_n = int(((egitim["mimari"] == arch[1]) & (egitim["ETL"] == etl[1]) &
@@ -111,16 +111,16 @@ if gonder:
     d2.metric("Çözücü sistemi eğitimde", f"{tr(solv_n, 0)} kayıt")
     d3.metric("En yakın 5 komşuya uzaklık", tr(dist, 2))
     if uclu_n == 0:
-        st.error("🚧 Seçtiğiniz mimari–ETL–HTL kombinasyonu eğitim verisinde **hiç "
+        st.error("Seçtiğiniz mimari–ETL–HTL kombinasyonu eğitim verisinde **hiç "
                  "gözlenmemiş**. Model bu birleşimin etkileşimini öğrenmiş olamaz; "
                  "tahmin, bileşenlerin tekil örüntülerinin toplamıdır (tez Bölüm 4.5'teki "
                  "birlikte-görülme denetiminin birebir karşılığı).")
     elif uclu_n < 5:
-        st.warning(f"⚠️ Bu üçlü eğitimde yalnızca {uclu_n} kez görüldü — tezin "
+        st.warning(f"Bu üçlü eğitimde yalnızca {uclu_n} kez görüldü; tezin "
                    "eğitim-desteği eşiğinin (≥5) altında (Bölüm 4.5).")
 
     if komsular:
-        with st.expander("🔍 Eğitimdeki en yakın 5 örnek (ölçekli özellik uzayında)"):
+        with st.expander("Eğitimdeki en yakın 5 örnek (ölçekli özellik uzayında)"):
             kdf = rec.set_index("row_id").loc[[k for k in komsular if k in
                                                rec["row_id"].values]]
             st.dataframe(
@@ -136,7 +136,7 @@ if gonder:
                        "verisindeki bağlamını gösterir (uygulanabilirlik-alanı teşhisi). "
                        "Komşuların gerçek PCE aralığı, tahmini tartmak için makul bir bağlamdır.")
 
-    with st.expander("⚙️ Bu tahminde kullanılan varsayımların tam dökümü"):
+    with st.expander("Bu tahminde kullanılan varsayımların tam dökümü"):
         med = meta["medians"]
         satirlar = [
             f"- A/B/X oranları: girdiğiniz değerler (toplamlar doğrulandı)",

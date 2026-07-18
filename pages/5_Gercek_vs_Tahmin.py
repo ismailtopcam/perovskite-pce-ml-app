@@ -75,7 +75,7 @@ with tab2:
                                             f"<−5 eksik tahmin %{tr(100 * (err < -5).mean(), 1)}")
         st.plotly_chart(fig, width="stretch")
         st.caption("Sağa çarpık kuyruk: model düşük verimli kayıtları zaman zaman olduğundan "
-                   "yüksek tahmin ediyor — reçete-içi etiket gürültüsünün beklenen izi "
+                   "yüksek tahmin ediyor; bu, reçete-içi etiket gürültüsünün beklenen izidir "
                    "(tez Bölüm 5.1, Tablo 5.1).")
 
 with tab3:
@@ -113,7 +113,7 @@ with tab3:
         "Br-ağırlıklı) MAE genel ortalamanın altındadır: bu alt kümelerde PCE değerleri dar ve "
         "görece düşük bir banda toplandığından mutlak hata küçülür; HTL-free kayıtlarda ise "
         "hata genel ortalamanın hafif üzerindedir. Düşük alt-grup MAE'si modelin o bölgede "
-        "güvenilir olduğu anlamına gelmez — kayıt sayısı azdır ve tez, özellik-uzayı "
+        "güvenilir olduğu anlamına gelmez: kayıt sayısı azdır ve tez, özellik-uzayı "
         "mesafesinin güvenilirliği ayırt etmediğini göstermiştir (Bölüm 4.10). Kanonik "
         "FA-Pb-I bölgesi, verinin büyük kısmını taşıdığı için genel hatayı belirler."
     )

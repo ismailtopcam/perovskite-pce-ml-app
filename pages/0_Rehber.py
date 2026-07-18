@@ -17,7 +17,7 @@ Model, geçmiş literatürdeki on binlerce perovskit güneş hücresi kaydından
 )
 
 st.divider()
-st.subheader("🗺️ Sayfa sayfa rehber")
+st.subheader("Sayfa sayfa rehber")
 
 REHBER = [
     ("🏠 Ana Sayfa", """
@@ -32,7 +32,7 @@ sayfalar bu sayıların nereden geldiğini açar.
 hangi kayıtlar neden elendi, hangi eksik değerler nasıl dolduruldu, veri neye
 benziyor.
 
-**Nasıl okunur?** "Kayıt gezgini" sekmesinde herhangi bir kayda tıklayın —
+**Nasıl okunur?** "Kayıt gezgini" sekmesinde herhangi bir kayda tıklayın;
 uygulama o kayda ne yapıldığını tek tek söyler ("band gap medyanla dolduruldu",
 "DOI grubu atandı"...). "Elenen kayıtlar" sekmesi ise hattın kimseyi sessizce
 silmediğinin kanıtıdır: 1.913 kaydın her birinin eleme nedeni yazılıdır.
@@ -40,15 +40,15 @@ silmediğinin kanıtıdır: 1.913 kaydın her birinin eleme nedeni yazılıdır.
 **Neden önemli?** Veri temizliği çoğu çalışmada kara kutudur; burada camdan bir
 kutudur.
 """),
-    ("2️⃣ Doğrulama Deneyleri — *tez Bölüm 3.13, 4.3* ⭐", """
+    ("2️⃣ Doğrulama Deneyleri — *tez Bölüm 3.13, 4.3*", """
 **Ne gösterir?** Tezin merkez bulgusunu: aynı veri ve aynı modelle, yalnızca
 **değerlendirme kararları** değiştirildiğinde skorun nasıl değiştiğini.
 
 **Nasıl okunur?** Üstteki iki seçimi değiştirin ve R²'yi izleyin:
-- *Rastgele bölme* seçince skor 0,481'e çıkar — ama bu bir ilerleme değil,
-  aynı yayının kardeş cihazlarının teste sızmasından kaynaklanan **yapay şişme**dir.
-- *+Voc, Jsc, FF* seçince skor 0,938 olur — model artık tahmin değil,
-  cevabı içeren değişkenlerden **kopyalama** yapmaktadır.
+- *Rastgele bölme* seçince skor 0,481'e çıkar; ama bu bir ilerleme sayılmaz:
+  artış, aynı yayının kardeş cihazlarının teste sızmasından kaynaklanan **yapay şişme**dir.
+- *+Voc, Jsc, FF* seçince skor 0,938 olur: model artık tahmin üretmez;
+  cevabı içeren değişkenlerden **kopyalama** yapar.
 
 **Neden önemli?** Literatürdeki 0,70+ skorlarla tezin 0,413'ü arasındaki farkın
 büyük bölümü model kalitesi değil, **protokol** farkıdır.
@@ -58,7 +58,7 @@ büyük bölümü model kalitesi değil, **protokol** farkıdır.
 Random Forest, Ridge) aynı kurallarla yarıştırılmasını.
 
 **Nasıl okunur?** İlk dört çubuğun neredeyse eşit olması sayfanın asıl mesajıdır:
-kazanan algoritma değil, **veri ve doğrulama tasarımıdır**. CatBoost'un farkı
+yarışı algoritma kazandırmaz; belirleyici olan **veri ve doğrulama tasarımıdır**. CatBoost'un farkı
 istatistiksel gürültü düzeyindedir.
 """),
     ("4️⃣ Tahmin Aracı — *tez Bölüm 3.12, 4.10*", """
@@ -82,16 +82,16 @@ tahminlerle gerçek ölçümlerin karşılaştırmasını.
 **Nasıl okunur?** "En isabetli / tipik / en hatalı" sekmeleriyle gezin;
 "Model nerede yanılıyor?" sekmesi hatanın hangi malzeme bölgelerinde
 yoğunlaştığını gösterir (Sn'li hücreler, geniş band gap...). Model kanonik
-FA-Pb-I bölgesinde güçlü, az örneklenmiş bölgelerde zayıftır — beklenen ve
-tezde tartışılan bir örüntü.
+FA-Pb-I bölgesinde güçlü, az örneklenmiş bölgelerde zayıftır; bu, beklenen ve
+tezde tartışılan bir örüntüdür.
 """),
     ("6️⃣ Aday Tarayıcı — *tez Bölüm 3.12, 4.5, 4.10*", """
 **Ne gösterir?** Modelin taradığı 756 hipotetik kompozisyonu; her biri tahmin,
 belirsizlik aralığı, eğitim-desteği ve veri-yoğunluğu bilgisiyle.
 
 **Nasıl okunur?** En yüksek tahmin 17,78'dir ve eğitim maksimumunun (34,8)
-çok altındadır — bu bir hata değil, ağaç tabanlı modellerin bilinen sınırıdır:
-liste **yeni keşif değil, bilinen iyi bölgenin yeniden bulunmasıdır** ve
+çok altındadır. Bu bir hata olmaktan çok ağaç tabanlı modellerin bilinen sınırıdır:
+liste **bilinen iyi bölgenin yeniden bulunmasıdır**, yeni keşif içermez ve
 deneysel taramayı daraltma aracı olarak okunmalıdır.
 """),
     ("7️⃣ DOI Gezgini — *tez Bölüm 3.8, 5.7*", """
@@ -100,7 +100,7 @@ kuralını: aynı DOI anahtarına sahip kayıtlar asla eğitim ile testin ikisin
 birden düşmez (ayrım ham anahtar düzeyindedir; tez Bölüm 5.7 bu anahtarın
 kendisini de denetler).
 
-**Nasıl okunur?** Bir yayın seçin — uygulama o yayının eğitimde mi holdout'ta
+**Nasıl okunur?** Bir yayın seçin; uygulama o yayının eğitimde mi holdout'ta
 mı olduğunu rozetle söyler. Alttaki genişletilebilir bölümde grup anahtarının
 kendisinin nasıl denetlendiği (44 çift-varyantlı DOI bulgusu dahil) anlatılır.
 """),
@@ -120,7 +120,7 @@ for baslik, metin in REHBER:
         st.markdown(metin)
 
 st.divider()
-st.subheader("📚 Küçük sözlük")
+st.subheader("Küçük sözlük")
 c1, c2 = st.columns(2)
 with c1:
     st.markdown(
@@ -154,7 +154,7 @@ with c2:
     )
 
 st.divider()
-st.subheader("❓ Sık sorulanlar")
+st.subheader("Sık sorulanlar")
 with st.expander("R² = 0,413 düşük değil mi?"):
     st.markdown(
         "Tek başına bakıldığında mütevazı görünür; ama bu değer **eğitimden ham DOI "
