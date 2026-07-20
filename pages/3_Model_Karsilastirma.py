@@ -25,8 +25,11 @@ with l:
                       margin=dict(t=10))
     st.plotly_chart(fig, width="stretch")
     st.caption("İlk dört boosting modeli standart sapma mertebesinde iç içedir; CatBoost'un "
-               "üstünlüğü **marjinaldir** (tez Bölüm 5.1). Salt-sklearn HistGBM'in dış "
-               "kütüphanelerle at başı gitmesi, kurulum-hafif tekrar üretim için önemlidir.")
+               "üstünlüğü **marjinaldir** (tez Bölüm 5.1). Aynı katların skorlarıyla yapılan "
+               "eşleştirilmiş t-testi de CatBoost–HistGBM farkının anlamlı olmadığını gösterir "
+               "(ΔR² ≈ 0,001; p = 0,495; tez Bölüm 4.2). Salt-sklearn HistGBM'in dış "
+               "kütüphanelerle at başı gitmesi, kurulum-hafif tekrar üretim için önemlidir. "
+               "Sıfır-bilgi tabanı (eğitim ortalaması) aynı protokolde R² ≈ 0,00 / MAE 4,32 verir.")
 
 with r:
     st.subheader("Sayısal tablo")
