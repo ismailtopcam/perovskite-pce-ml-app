@@ -71,6 +71,7 @@ Veri: **Perovskite Database** (Jacobsson vd., 2022, *Nature Energy*,
 DOI: 10.1038/s41560-021-00941-3) — CC BY 4.0. Uygulamadaki tüm türetilmiş sayılar,
 tezde raporlanan 43.398 kayıtlık anlık görüntüden üretilmiştir.
 
-> **Not (yayınlamadan önce):** Kayıt-düzeyi ham alanların (Sayfa 1 ve 7) herkese açık
-> sunumu, kaynak veritabanının CC BY lisansı kapsamında atıf gerektirir; sayfa
-> altbilgilerindeki atıf korunmalıdır.
+> **Not:** Kayıt-düzeyi ham alanların (Sayfa 1 ve 7) herkese açık sunumu, kaynak
+> veritabanının CC BY lisansı kapsamında atıf gerektirir. Bu atıf tüm sayfa
+> altbilgilerinde ve /hakkinda sayfasında yer almaktadır; gelecekteki düzenlemelerde
+> korunmalıdır.
