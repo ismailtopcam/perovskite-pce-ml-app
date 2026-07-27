@@ -46,7 +46,7 @@ kutudur.
 
 **Nasıl okunur?** Üstteki iki seçimi değiştirin ve R²'yi izleyin:
 - *Rastgele bölme* seçince skor 0,481'e çıkar; ama bu bir ilerleme sayılmaz:
-  artış, aynı yayının kardeş cihazlarının teste sızmasından kaynaklanan **yapay şişme**dir.
+  artış, aynı yayının kardeş cihazlarının teste sızması nedeniyle oluşan **iyimserlik**tir.
 - *+Voc, Jsc, FF* seçince skor 0,938 olur: model artık tahmin üretmez;
   cevabı içeren değişkenlerden **kopyalama** yapar.
 

@@ -33,11 +33,11 @@ safe = ozellik.startswith("Ölçüm-öncesi")
 
 if grup and safe:
     r2, std, yorum, renk = 0.4129, 0.0065, \
-        "**Tezin başlık sonucu.** Eğitimden ham DOI anahtarı düzeyinde ayrık tutulan " \
+        "**Tezin ana sonucu.** Eğitimden ham DOI anahtarı düzeyinde ayrık tutulan " \
         "yayınlara genellemenin dürüst ölçüsü.", "normal"
 elif not grup and safe:
     r2, std, yorum, renk = 0.4812, 0.0089, \
-        "**+0,068 yapay şişme:** kardeş cihazlar test kümesine sızdı. Skor arttı, " \
+        "**+0,068 iyimserlik:** kardeş cihazlar test kümesine sızdı. Skor arttı, " \
         "genelleme gücü artmadı (tez Deney A).", "inverse"
 elif grup and not safe:
     r2, std, yorum, renk = 0.9380, 0.0040, \
@@ -45,7 +45,7 @@ elif grup and not safe:
         "tahmin değil, kopyalama yapıyor (tez Deney B). Sentez ÖNCESİ bu değerler bilinemez.", "inverse"
 else:
     r2, std, yorum, renk = None, None, \
-        "Bu kombinasyon tezde koşulmadı: iki gevşemeyi birleştirmek yalnızca daha da " \
+        "Bu kombinasyon tezde koşulmadı: iki gevşek kararı birleştirmek yalnızca daha da " \
         "iyimser (ve daha da anlamsız) bir skor üretir.", "off"
 
 m1, m2, m3 = st.columns([1, 1, 2])
@@ -125,6 +125,6 @@ with r:
 st.info(
     "**Neden önemli?** Literatürde Perovskite Database üzerinde rastgele bölmeyle 0,70–0,75 "
     "bandında R² raporlanır (tez Tablo 2.1). Bu sayfadaki deney, aynı veri ve modelde yalnızca "
-    "protokol değişikliğinin skoru nasıl şişirdiğini nicel gösterir: raporlanan başarım, "
+    "protokol değişikliğinin skoru ne kadar iyimser gösterebildiğini nicel olarak ortaya koyar: raporlanan başarım, "
     "**doğrulama tasarımının** bir fonksiyonudur (Kapoor ve Narayanan, 2023)."
 )

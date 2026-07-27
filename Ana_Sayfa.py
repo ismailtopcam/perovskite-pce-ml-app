@@ -24,7 +24,7 @@ veriyle görünür kılmak için tasarlandı.
 c1, c2, c3, c4 = st.columns(4)
 c1.metric("Temiz kayıt", tr(meta["n_temiz"], 0), f"ham: {tr(meta['n_ham'], 0)}")
 c2.metric("Grup-güvenli R²", "0,413", "± 0,006 (5-kat CV)", delta_color="off")
-c3.metric("Rastgele bölme şişmesi", "+0,068", "0,481'e çıkarır", delta_color="inverse")
+c3.metric("Rastgele bölme iyimserliği", "+0,068", "0,481'e çıkarır", delta_color="inverse")
 c4.metric("Aday kompozisyon", "756", "504 eğitimde destekli")
 
 st.divider()
@@ -55,8 +55,8 @@ with col2:
   literatürden öğrenilen örüntülerle **önceliklendirme** yapar.
 - Grup-güvenli R² = 0,413 **bilinçli olarak muhafazakârdır**: eğitimden ham DOI
   anahtarı düzeyinde ayrık tutulan yayınlara genellemeyi ölçer. Daha yüksek görünen
-  skorlar (0,481; 0,938), bu çalışmada ölçülen iki metodolojik gevşemenin (rastgele
-  bölme; ölçüm-sonrası değişkenler) sonucudur; 2. sayfada kendiniz deneyin.
+  skorlar (0,481; 0,938), bu çalışmada ölçülen iki gevşek değerlendirme kararının
+  (rastgele bölme; ölçüm-sonrası değişkenler) sonucudur; 2. sayfada kendiniz deneyin.
 - Belirsizlik aralıkları DOI-grup-güvenli **conformal** kalibrasyonla üretilmiştir
   (tez Bölüm 4.10).
 """
