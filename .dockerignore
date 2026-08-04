@@ -1,0 +1,11 @@
+.git
+.gitignore
+.venv
+__pycache__
+**/__pycache__
+*.pyc
+.pytest_cache
+.streamlit/secrets.toml
+.dockerignore
+_site_yenile.bat
+_site_yenile.sh

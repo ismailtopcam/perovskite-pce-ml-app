@@ -100,9 +100,16 @@ if gonder:
     st.subheader("Veri desteği")
     rec = data.records()
     egitim = rec[rec["bolme"] == "eğitim"]
-    uclu_n = int(((egitim["mimari"] == arch[1]) & (egitim["ETL"] == etl[1]) &
-                  (egitim["HTL"] == htl[1])).sum())
-    solv_n = int((egitim["cozucu"] == solv[1]).sum())
+    # Sayim ham etiket yerine kova sutunlariyla yapilir: "Diğer (...)" ve NaN
+    # kovalari da modelin gordugu haliyle dogru sayilsin.
+    uclu_n = int(((egitim["kova_arch"] == arch[1]) & (egitim["kova_ETL"] == etl[1]) &
+                  (egitim["kova_HTL"] == htl[1])).sum())
+    solv_n = int((egitim["kova_solv"] == solv[1]).sum())
+    if any(s.startswith("Diğer (") or s in ("unknown", "Unknown")
+           for s in (arch[1], etl[1], htl[1], solv[1])):
+        st.caption("Not: 'Diğer (...)' ve 'unknown' seçenekleri tek bir malzemeyi değil, "
+                   "modelin aynı kovada topladığı tüm seyrek/bilinmeyen etiketleri temsil "
+                   "eder; aşağıdaki sayımlar bu kovanın toplamıdır.")
     d1, d2, d3 = st.columns(3)
     d1.metric("Mimari–ETL–HTL üçlüsü eğitimde", f"{tr(uclu_n, 0)} kayıt",
               "hiç görülmedi!" if uclu_n == 0 else

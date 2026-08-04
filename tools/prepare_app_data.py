@@ -109,12 +109,17 @@ FRAC = ["A_FA", "A_MA", "A_Cs", "A_Rb", "A_K", "A_other",
         "B_Pb", "B_Sn", "B_Ge", "B_other", "X_I", "X_Br", "X_Cl", "X_other"]
 
 
+def _oran(v):
+    s = f"{v:.2f}".rstrip("0").rstrip(".")
+    return s if s != "0" else f"{v:.3g}"  # 0,005 altindaki oranlar "0" diye gorunmesin
+
+
 def comp_label(row):
     parts = []
     for pre, keys in [("", ["A_FA", "A_MA", "A_Cs", "A_Rb", "A_K", "A_other"]),
                       (" | ", ["B_Pb", "B_Sn", "B_Ge", "B_other"]),
                       (" | ", ["X_I", "X_Br", "X_Cl", "X_other"])]:
-        seg = " ".join(f"{k.split('_')[1]}{row[k]:.2f}".rstrip("0").rstrip(".")
+        seg = " ".join(k.split("_")[1] + _oran(row[k])
                        for k in keys if row[k] > 1e-9)
         parts.append(pre + seg)
     return "".join(parts)
@@ -144,6 +149,16 @@ rec.loc[ho, "bolme"] = "holdout-test"
 rec["tahmin"] = np.nan
 rec.loc[ho, "tahmin"] = pred["y_pred"].values
 rec["mutlak_hata"] = (rec["tahmin"] - rec["PCE"]).abs()
+# Her kaydin one-hot kovasi: "Veri destegi" sayimlari ham etiketle degil, modelin
+# gercekte gordugu kovayla (_other ve NaN kovalari dahil) yapilabilsin diye
+# label_maps gorunum etiketleriyle yazilir.
+for prefix, _col in CAT_COLS:
+    cols = list(label_maps[prefix])
+    onehot = M[cols].to_numpy()
+    assert onehot.sum(axis=1).max() <= 1, f"{prefix}: coklu kova"
+    labels = np.array([label_maps[prefix][c] for c in cols], dtype=object)
+    rec[f"kova_{prefix}"] = np.where(onehot.sum(axis=1) == 1,
+                                     labels[onehot.argmax(axis=1)], "(kova yok)")
 rec.to_parquet(OUT / "records_clean.parquet", index=False)
 print(f"[prep] records_clean: {rec.shape}")
 
@@ -155,7 +170,7 @@ raw_cols = ["Ref_DOI_number", "JV_default_PCE", "Module", "Cell_architecture",
             "Perovskite_composition_b_ions", "Perovskite_composition_b_ions_coefficients",
             "Perovskite_composition_c_ions", "Perovskite_composition_c_ions_coefficients"]
 raw = pd.read_csv(PIPE / cfg["paths"]["raw_csv"], encoding="utf-8-sig",
-                  usecols=raw_cols, low_memory=False)
+                  usecols=raw_cols, low_memory=False)[raw_cols]  # usecols dosya sirasini korur; asagidaki konumsal adlandirma icin siraya getir
 ctx = raw.loc[rem["row_index"].values].reset_index(drop=True)
 rem_full = pd.concat([rem.reset_index(drop=True), ctx], axis=1)
 rem_full.columns = ["row_id", "neden", "DOI", "PCE_ham", "Modul", "mimari",
