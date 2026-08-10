@@ -14,10 +14,10 @@ Ana pipeline deposu: <https://github.com/ismailtopcam/perovskite-pce-ml-thesis>
 | — | Ana Sayfa | Tezin savı, başlık sonuçlar, provenans |
 | — | Kullanım Rehberi | Her ekranın açıklaması, küçük sözlük, SSS (uzman olmayan ziyaretçiler için) |
 | 1 | Veri Hattı | Ham→temiz dönüşüm, eleme nedenleri, **kayıt-düzeyi açıklama** ("bu kayıt neden elendi / hangi işlemler uygulandı") |
-| 2 | Doğrulama Deneyleri | Merkez ekran: bölme yöntemi ve özellik seti seçiminin R²'ye etkisi (0,263 ↔ 0,938) |
+| 2 | Doğrulama Deneyleri | Merkez ekran: bölme yöntemi ve özellik seti seçiminin R²'ye etkisi (0,261 ↔ 0,937) |
 | 3 | Model Karşılaştırma | 6 modelin DOI-grup CV / holdout başarımları |
 | 4 | Tahmin Aracı | Sanal cihaz tarifi → PCE + conformal %90 aralık + eğitim-uzayına uzaklık + **yerel SHAP** |
-| 5 | Gerçek vs Tahmin | 8.147 holdout kaydında hata analizi; segment bazlı "model nerede yanılıyor" |
+| 5 | Gerçek vs Tahmin | 8.355 holdout kaydında hata analizi; segment bazlı "model nerede yanılıyor" |
 | 6 | Aday Tarayıcı | 756 adayın aralıklı, eğitim-destekli ve dürüst-uyarılı keşfi |
 | 7 | DOI Gezgini | Yayın-düzeyi izlenebilirlik; grup-güvenli bölmenin somut görünümü |
 | 8 | Pipeline & Provenans | 14 koşu-manifesti, sürüm/seed kaydı, bağımsız denetim özetleri |

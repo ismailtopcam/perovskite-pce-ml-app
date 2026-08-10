@@ -89,11 +89,11 @@ st.markdown(f"""
 | Kod arşivi | [Zenodo DOI {meta.get('zenodo_doi', '10.5281/zenodo.20829027')}](https://doi.org/{meta.get('zenodo_doi', '10.5281/zenodo.20829027')}) |
 | Pipeline deposu | [{meta.get('github_pipeline', '').replace('https://', '')}]({meta.get('github_pipeline', '')}) |
 | Uygulama deposu | [{meta.get('github_app', '').replace('https://', '')}]({meta.get('github_app', '')}) |
-| DOI-grup CV sonucu | R² = 0,413 ± 0,006 (MAE 3,12 / RMSE 4,02) |
+| DOI-grup CV sonucu | R² = 0,410 ± 0,016 (MAE 3,12 / RMSE 4,02) |
 
 **Ölçüm-sonrası hiçbir değişken (Voc, Jsc, FF, EQE, stabilite alanları) modele dahil
 değildir.** Şema katmanı bunu her koşuda zorlar; dahil edilselerdi R² yapay olarak
-0,938'e çıkardı (tez Deney B).
+0,937'ye çıkardı (tez Deney B).
 
 Bu uygulamanın tüm dosyaları `tools/prepare_app_data.py` ile pipeline reposundan
 **deterministik** üretilir; betik, bölmeleri yeniden kurup bilinen değerlerle doğrular

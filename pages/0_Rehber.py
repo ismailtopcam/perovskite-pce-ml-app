@@ -21,7 +21,7 @@ st.subheader("Sayfa sayfa rehber")
 
 REHBER = [
     ("🏠 Ana Sayfa", """
-**Ne gösterir?** Tezin ana savı, başlık sonuçlar (41.485 kayıt, R² = 0,413) ve
+**Ne gösterir?** Tezin ana savı, başlık sonuçlar (41.485 kayıt, R² = 0,410) ve
 uygulamanın haritası.
 
 **Nasıl okunur?** Buradaki dört kutu tezin dört temel sayısıdır; diğer tüm
@@ -47,10 +47,10 @@ kutudur.
 **Nasıl okunur?** Üstteki iki seçimi değiştirin ve R²'yi izleyin:
 - *Rastgele bölme* seçince skor 0,481'e çıkar; ama bu bir ilerleme sayılmaz:
   artış, aynı yayının kardeş cihazlarının teste sızması nedeniyle oluşan **iyimserlik**tir.
-- *+Voc, Jsc, FF* seçince skor 0,938 olur: model artık tahmin üretmez;
+- *+Voc, Jsc, FF* seçince skor 0,937 olur: model artık tahmin üretmez;
   cevabı içeren değişkenlerden **kopyalama** yapar.
 
-**Neden önemli?** Literatürdeki 0,70+ skorlarla tezin 0,413'ü arasındaki farkın
+**Neden önemli?** Literatürdeki 0,70+ skorlarla tezin 0,410'u arasındaki farkın
 büyük bölümü model kalitesi değil, **protokol** farkıdır.
 """),
     ("3️⃣ Model Karşılaştırma — *tez Bölüm 3.9, 4.2*", """
@@ -76,7 +76,7 @@ Alttaki SHAP grafiği, *bu* tahmini hangi özelliklerin yükseltip düşürdüğ
 gösterir. **Hiçbir çıktı deneysel doğrulama yerine geçmez.**
 """),
     ("5️⃣ Gerçek vs Tahmin — *tez Bölüm 4.7*", """
-**Ne gösterir?** Modelin eğitimde hiç görmediği 8.147 kayıtta (holdout)
+**Ne gösterir?** Modelin eğitimde hiç görmediği 8.355 kayıtta (holdout)
 tahminlerle gerçek ölçümlerin karşılaştırmasını.
 
 **Nasıl okunur?** "En isabetli / tipik / en hatalı" sekmeleriyle gezin;
@@ -89,7 +89,7 @@ tezde tartışılan bir örüntüdür.
 **Ne gösterir?** Modelin taradığı 756 hipotetik kompozisyonu; her biri tahmin,
 belirsizlik aralığı, eğitim-desteği ve veri-yoğunluğu bilgisiyle.
 
-**Nasıl okunur?** En yüksek tahmin 17,78'dir ve eğitim maksimumunun (34,8)
+**Nasıl okunur?** En yüksek tahmin 17,95'tir ve eğitim maksimumunun (34,8)
 çok altındadır. Bu bir hata olmaktan çok ağaç tabanlı modellerin bilinen sınırıdır:
 liste **bilinen iyi bölgenin yeniden bulunmasıdır**, yeni keşif içermez ve
 deneysel taramayı daraltma aracı olarak okunmalıdır.
@@ -127,7 +127,7 @@ with c1:
         """
 - **PCE** — güç dönüşüm verimi: hücrenin ışığı elektriğe çevirme yüzdesi.
 - **R²** — modelin, verimdeki farklılıkların ne kadarını açıkladığı (1 = mükemmel,
-  0 = ortalamayı söylemekten farksız). 0,413 = farklılıkların ~%41'i.
+  0 = ortalamayı söylemekten farksız). 0,410 = farklılıkların ~%41'i.
 - **MAE / RMSE** — ortalama tahmin hatası (PCE puanı cinsinden); RMSE büyük
   hataları daha çok cezalandırır.
 - **Holdout** — eğitime alınmayan, yalnızca sınavda kullanılan kayıtlar (%20);
@@ -155,12 +155,12 @@ with c2:
 
 st.divider()
 st.subheader("Sık sorulanlar")
-with st.expander("R² = 0,413 düşük değil mi?"):
+with st.expander("R² = 0,410 düşük değil mi?"):
     st.markdown(
         "Tek başına bakıldığında mütevazı görünür; ama bu değer **eğitimden ham DOI "
         "anahtarı düzeyinde ayrık tutulan yayınlara genellemeyi** ölçer ve tez, literatür verisindeki reçete-içi "
         "gürültünün ulaşılabilir tavanı ~0,52'ye sınırladığını gösterir (Bölüm 5.1). "
-        "Yani 0,413, 'kötü bir model' değil; 'dürüst ölçülmüş, tavana yakın bir "
+        "Yani 0,410, 'kötü bir model' değil; 'dürüst ölçülmüş, tavana yakın bir "
         "model'dir. Daha yüksek görünen skorların nasıl üretildiğini 2. sayfada "
         "kendiniz deneyebilirsiniz."
     )

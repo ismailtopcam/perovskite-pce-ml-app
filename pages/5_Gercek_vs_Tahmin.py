@@ -8,7 +8,7 @@ from lib import data
 from lib.ui import page, tr, tez_notu, MAVI, KIRMIZI
 
 page("Gerçek Deney vs Model Tahmini", "5️⃣")
-tez_notu("Bölüm 4.7", "8.147 holdout kaydında (eğitimden ham DOI anahtarı düzeyinde ayrık "
+tez_notu("Bölüm 4.7", "8.355 holdout kaydında (eğitimden kanonik DOI anahtarı düzeyinde ayrık "
                       "tutulan yayınlar) kayıt düzeyinde hata analizi.")
 
 rec = data.records()
@@ -21,9 +21,9 @@ c1.metric("Holdout kayıt", tr(len(ho), 0))
 c2.metric("MAE", tr(ho["mutlak_hata"].mean(), 2) + " puan")
 c3.metric("Medyan mutlak hata", tr(ho["mutlak_hata"].median(), 2) + " puan")
 c4.metric("%90 bandın kapsaması", f"%{tr(100 * ho['kapsandi'].mean(), 1)}",
-          help="±6,42'lik bandın 8.147 holdout kaydının tamamında gerçek değeri kapsama "
-               "oranı. Tezin conformal-test alt kümesindeki (4.155 kayıt) ampirik kapsama "
-               "%88,2'dir (Bölüm 4.10); küçük fark, kalibrasyon yarısının da bu sayıma "
+          help="±6,66'lık bandın 8.355 holdout kaydının tamamında gerçek değeri kapsama "
+               "oranı. Tezin conformal-test alt kümesindeki (4.211 kayıt) ampirik kapsama "
+               "%89,9'dur (Bölüm 4.10); küçük fark, kalibrasyon yarısının da bu sayıma "
                "dahil olmasından gelir.")
 
 tab1, tab2, tab3 = st.tabs(["🎯 Kayıt bazında", "📉 Hata grupları", "🔬 Model nerede yanılıyor?"])

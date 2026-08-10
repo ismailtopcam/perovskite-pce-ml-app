@@ -1,291 +1,7 @@
 [
  {
   "stage": "stage10_conformal",
-  "timestamp_utc": "2026-06-28T22:04:55+00:00",
-  "seed": 42,
-  "target": "JV_default_PCE",
-  "group_col": "Ref_DOI_number",
-  "onehot_top_n": 15,
-  "versions": {
-   "python": "3.14.4",
-   "platform": "Windows-11-10.0.26200-SP0",
-   "numpy": "2.4.6",
-   "pandas": "3.0.3",
-   "scikit-learn": "1.8.0",
-   "scipy": "1.17.1",
-   "xgboost": "3.2.0",
-   "lightgbm": "4.6.0",
-   "catboost": "1.2.10",
-   "shap": "0.51.0"
-  },
-  "metrics": {
-   "marginal90_half_width": 6.4186,
-   "marginal90_coverage": 0.8818,
-   "ad_frac_inside": 0.8014
-  },
-  "outputs": []
- },
- {
-  "stage": "stage11_robustness",
-  "timestamp_utc": "2026-07-05T18:36:15+00:00",
-  "seed": 42,
-  "target": "JV_default_PCE",
-  "group_col": "Ref_DOI_number",
-  "onehot_top_n": 15,
-  "versions": {
-   "python": "3.14.4",
-   "platform": "Windows-11-10.0.26200-SP0",
-   "numpy": "2.4.6",
-   "pandas": "3.0.3",
-   "scikit-learn": "1.8.0",
-   "scipy": "1.17.1",
-   "xgboost": "3.2.0",
-   "lightgbm": "4.6.0",
-   "catboost": "1.2.10",
-   "shap": "0.51.0"
-  },
-  "metrics": {
-   "pce_gecerli_ham_kayit": 42391,
-   "max_PCE": 34.8,
-   "PCE_gt_30": 8,
-   "PCE_gt_30_yuzde": 0.019,
-   "PCE_gt_27": 12,
-   "gt30_module_TRUE": 0,
-   "gt30_certified_TRUE": 0,
-   "gt30_cell_area_median_cm2": 0.1,
-   "gt30_farkli_DOI": 4
-  },
-  "outputs": [
-   "outputs/robustness/pce_outlier_audit.csv",
-   "outputs/robustness/robustness_cv.csv"
-  ]
- },
- {
-  "stage": "stage12_catboost_tuning",
-  "timestamp_utc": "2026-06-24T22:17:43+00:00",
-  "seed": 42,
-  "target": "JV_default_PCE",
-  "group_col": "Ref_DOI_number",
-  "onehot_top_n": 15,
-  "versions": {
-   "python": "3.14.4",
-   "platform": "Windows-11-10.0.26200-SP0",
-   "numpy": "2.4.6",
-   "pandas": "3.0.3",
-   "scikit-learn": "1.8.0",
-   "scipy": "1.17.1",
-   "xgboost": "3.2.0",
-   "lightgbm": "4.6.0",
-   "catboost": "1.2.10",
-   "shap": "0.51.0"
-  },
-  "metrics": {
-   "default_cv_r2": 0.4129,
-   "tuned_cv_r2": 0.4129
-  },
-  "outputs": [
-   "outputs/tuning_catboost/best_params.json"
-  ]
- },
- {
-  "stage": "stage13_preproc_bandgap",
-  "timestamp_utc": "2026-06-24T22:25:06+00:00",
-  "seed": 42,
-  "target": "JV_default_PCE",
-  "group_col": "Ref_DOI_number",
-  "onehot_top_n": 15,
-  "versions": {
-   "python": "3.14.4",
-   "platform": "Windows-11-10.0.26200-SP0",
-   "numpy": "2.4.6",
-   "pandas": "3.0.3",
-   "scikit-learn": "1.8.0",
-   "scipy": "1.17.1",
-   "xgboost": "3.2.0",
-   "lightgbm": "4.6.0",
-   "catboost": "1.2.10",
-   "shap": "0.51.0"
-  },
-  "metrics": {
-   "band_gap_global_median": 1.6
-  },
-  "outputs": [
-   "outputs/robustness/fold_invariance.csv",
-   "outputs/robustness/band_gap_ablation.csv"
-  ]
- },
- {
-  "stage": "stage1_clean",
-  "timestamp_utc": "2026-06-28T21:54:02+00:00",
-  "seed": 42,
-  "target": "JV_default_PCE",
-  "group_col": "Ref_DOI_number",
-  "onehot_top_n": 15,
-  "versions": {
-   "python": "3.14.4",
-   "platform": "Windows-11-10.0.26200-SP0",
-   "numpy": "2.4.6",
-   "pandas": "3.0.3",
-   "scikit-learn": "1.8.0",
-   "scipy": "1.17.1",
-   "xgboost": "3.2.0",
-   "lightgbm": "4.6.0",
-   "catboost": "1.2.10",
-   "shap": "0.51.0"
-  },
-  "metrics": {
-   "n_clean": 41485
-  },
-  "outputs": [
-   "data/processed/cleaned_dataset.csv"
-  ]
- },
- {
-  "stage": "stage2_features",
-  "timestamp_utc": "2026-06-28T21:54:04+00:00",
-  "seed": 42,
-  "target": "JV_default_PCE",
-  "group_col": "Ref_DOI_number",
-  "onehot_top_n": 15,
-  "versions": {
-   "python": "3.14.4",
-   "platform": "Windows-11-10.0.26200-SP0",
-   "numpy": "2.4.6",
-   "pandas": "3.0.3",
-   "scikit-learn": "1.8.0",
-   "scipy": "1.17.1",
-   "xgboost": "3.2.0",
-   "lightgbm": "4.6.0",
-   "catboost": "1.2.10",
-   "shap": "0.51.0"
-  },
-  "metrics": {
-   "n_rows": 41485,
-   "n_features": 77
-  },
-  "outputs": [
-   "data/processed/model_ready_dataset.csv"
-  ]
- },
- {
-  "stage": "stage3_models",
-  "timestamp_utc": "2026-07-13T03:18:34+00:00",
-  "seed": 42,
-  "target": "JV_default_PCE",
-  "group_col": "Ref_DOI_number",
-  "onehot_top_n": 15,
-  "versions": {
-   "python": "3.14.4",
-   "platform": "Windows-11-10.0.26200-SP0",
-   "numpy": "2.4.6",
-   "pandas": "3.0.3",
-   "scikit-learn": "1.8.0",
-   "scipy": "1.17.1",
-   "xgboost": "3.2.0",
-   "lightgbm": "4.6.0",
-   "catboost": "1.2.10",
-   "shap": "0.51.0"
-  },
-  "metrics": {
-   "best_model": "CatBoost",
-   "best_cv_r2": 0.4129,
-   "best_holdout_r2": 0.3924
-  },
-  "outputs": [
-   "outputs/v4/model_comparison_holdout.csv",
-   "outputs/v4/model_comparison_groupkfold.csv",
-   "outputs/v4/best_model_holdout_predictions.csv"
-  ]
- },
- {
-  "stage": "stage4_validation",
-  "timestamp_utc": "2026-07-13T03:20:09+00:00",
-  "seed": 42,
-  "target": "JV_default_PCE",
-  "group_col": "Ref_DOI_number",
-  "onehot_top_n": 15,
-  "versions": {
-   "python": "3.14.4",
-   "platform": "Windows-11-10.0.26200-SP0",
-   "numpy": "2.4.6",
-   "pandas": "3.0.3",
-   "scikit-learn": "1.8.0",
-   "scipy": "1.17.1",
-   "xgboost": "3.2.0",
-   "lightgbm": "4.6.0",
-   "catboost": "1.2.10",
-   "shap": "0.51.0"
-  },
-  "metrics": {
-   "random_kfold_r2": 0.4812,
-   "group_kfold_r2": 0.4129,
-   "inflation_r2": 0.0683,
-   "experiment_b_done": true
-  },
-  "outputs": [
-   "outputs/v4/validation_experiments.csv"
-  ]
- },
- {
-  "stage": "stage5_shap",
-  "timestamp_utc": "2026-07-13T03:20:16+00:00",
-  "seed": 42,
-  "target": "JV_default_PCE",
-  "group_col": "Ref_DOI_number",
-  "onehot_top_n": 15,
-  "versions": {
-   "python": "3.14.4",
-   "platform": "Windows-11-10.0.26200-SP0",
-   "numpy": "2.4.6",
-   "pandas": "3.0.3",
-   "scikit-learn": "1.8.0",
-   "scipy": "1.17.1",
-   "xgboost": "3.2.0",
-   "lightgbm": "4.6.0",
-   "catboost": "1.2.10",
-   "shap": "0.51.0"
-  },
-  "metrics": {
-   "model": "CatBoost",
-   "shap_sample": 3000,
-   "top_feature": "A_FA"
-  },
-  "outputs": [
-   "outputs/shap_full/shap_top_features.csv"
-  ]
- },
- {
-  "stage": "stage6_candidates",
-  "timestamp_utc": "2026-07-13T03:20:17+00:00",
-  "seed": 42,
-  "target": "JV_default_PCE",
-  "group_col": "Ref_DOI_number",
-  "onehot_top_n": 15,
-  "versions": {
-   "python": "3.14.4",
-   "platform": "Windows-11-10.0.26200-SP0",
-   "numpy": "2.4.6",
-   "pandas": "3.0.3",
-   "scikit-learn": "1.8.0",
-   "scipy": "1.17.1",
-   "xgboost": "3.2.0",
-   "lightgbm": "4.6.0",
-   "catboost": "1.2.10",
-   "shap": "0.51.0"
-  },
-  "metrics": {
-   "model": "CatBoost",
-   "n_candidates": 756,
-   "pred_max": 17.7776
-  },
-  "outputs": [
-   "outputs/candidates_full/candidate_predictions.csv",
-   "outputs/candidates_full/top30_diverse.csv"
-  ]
- },
- {
-  "stage": "stage7_screening",
-  "timestamp_utc": "2026-07-27T08:42:27+00:00",
+  "timestamp_utc": "2026-08-10T08:09:03+00:00",
   "seed": 42,
   "target": "JV_default_PCE",
   "group_col": "Ref_DOI_number",
@@ -303,24 +19,477 @@
    "shap": "0.51.0"
   },
   "git": {
-   "commit": "cec6adb4a000f8fa89616880e20c00e0d240ad27",
+   "commit": "d6ce55f6a6f710ec2bf86a173ac825ab48cbeda1",
    "dirty": true
   },
   "metrics": {
-   "n_test": 8147,
-   "spearman": 0.6148,
+   "marginal90_half_width": 6.6618,
+   "marginal90_coverage": 0.8991,
+   "ad_frac_inside": 0.8409
+  },
+  "outputs": [],
+  "output_hashes": {}
+ },
+ {
+  "stage": "stage11_robustness",
+  "timestamp_utc": "2026-08-10T08:11:45+00:00",
+  "seed": 42,
+  "target": "JV_default_PCE",
+  "group_col": "Ref_DOI_number",
+  "onehot_top_n": 15,
+  "versions": {
+   "python": "3.14.4",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "numpy": "2.4.6",
+   "pandas": "3.0.3",
+   "scikit-learn": "1.8.0",
+   "scipy": "1.17.1",
+   "xgboost": "3.2.0",
+   "lightgbm": "4.6.0",
+   "catboost": "1.2.10",
+   "shap": "0.51.0"
+  },
+  "git": {
+   "commit": "d6ce55f6a6f710ec2bf86a173ac825ab48cbeda1",
+   "dirty": true
+  },
+  "metrics": {
+   "pce_gecerli_ham_kayit": 42391,
+   "max_PCE": 34.8,
+   "PCE_gt_30": 8,
+   "PCE_gt_30_yuzde": 0.019,
+   "PCE_gt_27": 12,
+   "gt30_module_TRUE": 0,
+   "gt30_certified_TRUE": 0,
+   "gt30_cell_area_median_cm2": 0.1,
+   "gt30_farkli_DOI": 4
+  },
+  "outputs": [
+   "outputs/robustness/pce_outlier_audit.csv",
+   "outputs/robustness/robustness_cv.csv"
+  ],
+  "output_hashes": {
+   "outputs/robustness/pce_outlier_audit.csv": "e32e5ee39f18cc00101e58d36f35862d6b045e39e3a3ff9ca980a204228f59c0",
+   "outputs/robustness/robustness_cv.csv": "2608c674be3d8b48104e52d6e5051d29c03088b53528c45d2ea983b0a571882c"
+  }
+ },
+ {
+  "stage": "stage12_catboost_tuning",
+  "timestamp_utc": "2026-08-10T08:15:04+00:00",
+  "seed": 42,
+  "target": "JV_default_PCE",
+  "group_col": "Ref_DOI_number",
+  "onehot_top_n": 15,
+  "versions": {
+   "python": "3.14.4",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "numpy": "2.4.6",
+   "pandas": "3.0.3",
+   "scikit-learn": "1.8.0",
+   "scipy": "1.17.1",
+   "xgboost": "3.2.0",
+   "lightgbm": "4.6.0",
+   "catboost": "1.2.10",
+   "shap": "0.51.0"
+  },
+  "git": {
+   "commit": "d6ce55f6a6f710ec2bf86a173ac825ab48cbeda1",
+   "dirty": true
+  },
+  "metrics": {
+   "default_cv_r2": 0.4101,
+   "tuned_cv_r2": 0.4101
+  },
+  "outputs": [
+   "outputs/tuning_catboost/best_params.json"
+  ],
+  "output_hashes": {
+   "outputs/tuning_catboost/best_params.json": "595129c90750c6dde7a1131966255cf7d1e5d32377d43fd95369fe82f9c77707"
+  }
+ },
+ {
+  "stage": "stage13_preproc_bandgap",
+  "timestamp_utc": "2026-08-10T08:17:00+00:00",
+  "seed": 42,
+  "target": "JV_default_PCE",
+  "group_col": "Ref_DOI_number",
+  "onehot_top_n": 15,
+  "versions": {
+   "python": "3.14.4",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "numpy": "2.4.6",
+   "pandas": "3.0.3",
+   "scikit-learn": "1.8.0",
+   "scipy": "1.17.1",
+   "xgboost": "3.2.0",
+   "lightgbm": "4.6.0",
+   "catboost": "1.2.10",
+   "shap": "0.51.0"
+  },
+  "git": {
+   "commit": "d6ce55f6a6f710ec2bf86a173ac825ab48cbeda1",
+   "dirty": true
+  },
+  "metrics": {
+   "band_gap_global_median": 1.6
+  },
+  "outputs": [
+   "outputs/robustness/fold_invariance.csv",
+   "outputs/robustness/band_gap_ablation.csv"
+  ],
+  "output_hashes": {
+   "outputs/robustness/fold_invariance.csv": "1b87461af4a4479fe91e32295195a1dccc7e2c20b0c7e02ff6724c601ea8e88d",
+   "outputs/robustness/band_gap_ablation.csv": "5eb452169d1e2b6031b53cd20f4bb7c91a02e7d49c520f4456541ef0f16711d1"
+  }
+ },
+ {
+  "stage": "stage16_nested",
+  "timestamp_utc": "2026-08-10T08:34:05+00:00",
+  "seed": 42,
+  "target": "JV_default_PCE",
+  "group_col": "Ref_DOI_number",
+  "onehot_top_n": 15,
+  "versions": {
+   "python": "3.14.4",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "numpy": "2.4.6",
+   "pandas": "3.0.3",
+   "scikit-learn": "1.8.0",
+   "scipy": "1.17.1",
+   "xgboost": "3.2.0",
+   "lightgbm": "4.6.0",
+   "catboost": "1.2.10",
+   "shap": "0.51.0"
+  },
+  "git": {
+   "commit": "d6ce55f6a6f710ec2bf86a173ac825ab48cbeda1",
+   "dirty": true
+  },
+  "metrics": {
+   "sealed_holdout_R2": 0.3936,
+   "nested_R2_mean": 0.4081
+  },
+  "outputs": [
+   "outputs/nested/nested_results.json"
+  ],
+  "output_hashes": {
+   "outputs/nested/nested_results.json": "f18863453f27ff18acc598d4371de5d00378e312776df85d6cac2a3abb214afb"
+  }
+ },
+ {
+  "stage": "stage17_gurultu_tabani_v2",
+  "timestamp_utc": "2026-08-10T08:21:29+00:00",
+  "seed": 42,
+  "target": "JV_default_PCE",
+  "group_col": "Ref_DOI_number",
+  "onehot_top_n": 15,
+  "versions": {
+   "python": "3.14.4",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "numpy": "2.4.6",
+   "pandas": "3.0.3",
+   "scikit-learn": "1.8.0",
+   "scipy": "1.17.1",
+   "xgboost": "3.2.0",
+   "lightgbm": "4.6.0",
+   "catboost": "1.2.10",
+   "shap": "0.51.0"
+  },
+  "git": {
+   "commit": "d6ce55f6a6f710ec2bf86a173ac825ab48cbeda1",
+   "dirty": true
+  },
+  "metrics": {},
+  "outputs": [
+   "outputs/robustness/gurultu_tabani_v2.json"
+  ],
+  "output_hashes": {
+   "outputs/robustness/gurultu_tabani_v2.json": "100c59de69826dcc4de2f4a690b9c3c9c637fa5ad7332d91be57027165ac62e0"
+  }
+ },
+ {
+  "stage": "stage18_group_conformal",
+  "timestamp_utc": "2026-08-10T08:22:06+00:00",
+  "seed": 42,
+  "target": "JV_default_PCE",
+  "group_col": "Ref_DOI_number",
+  "onehot_top_n": 15,
+  "versions": {
+   "python": "3.14.4",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "numpy": "2.4.6",
+   "pandas": "3.0.3",
+   "scikit-learn": "1.8.0",
+   "scipy": "1.17.1",
+   "xgboost": "3.2.0",
+   "lightgbm": "4.6.0",
+   "catboost": "1.2.10",
+   "shap": "0.51.0"
+  },
+  "git": {
+   "commit": "d6ce55f6a6f710ec2bf86a173ac825ab48cbeda1",
+   "dirty": true
+  },
+  "metrics": {},
+  "outputs": [
+   "outputs/conformal/group_conformal_results.json"
+  ],
+  "output_hashes": {
+   "outputs/conformal/group_conformal_results.json": "444d84154fe77cb48cf784ef3700ca46b11a21b5101bc126a37555a59a94f7a5"
+  }
+ },
+ {
+  "stage": "stage1_clean",
+  "timestamp_utc": "2026-08-10T08:06:12+00:00",
+  "seed": 42,
+  "target": "JV_default_PCE",
+  "group_col": "Ref_DOI_number",
+  "onehot_top_n": 15,
+  "versions": {
+   "python": "3.14.4",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "numpy": "2.4.6",
+   "pandas": "3.0.3",
+   "scikit-learn": "1.8.0",
+   "scipy": "1.17.1",
+   "xgboost": "3.2.0",
+   "lightgbm": "4.6.0",
+   "catboost": "1.2.10",
+   "shap": "0.51.0"
+  },
+  "git": {
+   "commit": "d6ce55f6a6f710ec2bf86a173ac825ab48cbeda1",
+   "dirty": true
+  },
+  "metrics": {
+   "n_clean": 41485
+  },
+  "outputs": [
+   "data/processed/cleaned_dataset.csv"
+  ],
+  "output_hashes": {
+   "data/processed/cleaned_dataset.csv": "759ce6c55af9c0d3a3f82f9ed65940f36625b7fd59d14339ab53503ff9d69de1"
+  }
+ },
+ {
+  "stage": "stage2_features",
+  "timestamp_utc": "2026-08-10T07:53:12+00:00",
+  "seed": 42,
+  "target": "JV_default_PCE",
+  "group_col": "Ref_DOI_number",
+  "onehot_top_n": 15,
+  "versions": {
+   "python": "3.14.4",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "numpy": "2.4.6",
+   "pandas": "3.0.3",
+   "scikit-learn": "1.8.0",
+   "scipy": "1.17.1",
+   "xgboost": "3.2.0",
+   "lightgbm": "4.6.0",
+   "catboost": "1.2.10",
+   "shap": "0.51.0"
+  },
+  "git": {
+   "commit": "d6ce55f6a6f710ec2bf86a173ac825ab48cbeda1",
+   "dirty": true
+  },
+  "metrics": {
+   "n_rows": 41485,
+   "n_features": 77
+  },
+  "outputs": [
+   "data/processed/model_ready_dataset.csv"
+  ],
+  "output_hashes": {
+   "data/processed/model_ready_dataset.csv": "3c42a5433261ecdd5ba3701eba2fb0889025069f6ec0ed359c3f1706ca9c82c9"
+  }
+ },
+ {
+  "stage": "stage3_models",
+  "timestamp_utc": "2026-08-10T07:56:32+00:00",
+  "seed": 42,
+  "target": "JV_default_PCE",
+  "group_col": "Ref_DOI_number",
+  "onehot_top_n": 15,
+  "versions": {
+   "python": "3.14.4",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "numpy": "2.4.6",
+   "pandas": "3.0.3",
+   "scikit-learn": "1.8.0",
+   "scipy": "1.17.1",
+   "xgboost": "3.2.0",
+   "lightgbm": "4.6.0",
+   "catboost": "1.2.10",
+   "shap": "0.51.0"
+  },
+  "git": {
+   "commit": "d6ce55f6a6f710ec2bf86a173ac825ab48cbeda1",
+   "dirty": true
+  },
+  "metrics": {
+   "best_model": "CatBoost",
+   "best_cv_r2": 0.4101,
+   "best_holdout_r2": 0.3936
+  },
+  "outputs": [
+   "outputs/v4/model_comparison_holdout.csv",
+   "outputs/v4/model_comparison_groupkfold.csv",
+   "outputs/v4/best_model_holdout_predictions.csv"
+  ],
+  "output_hashes": {
+   "outputs/v4/model_comparison_holdout.csv": "95bd4812e3924390231fddff1bf2068729babfbeb80d727015eee8183479c48f",
+   "outputs/v4/model_comparison_groupkfold.csv": "f76225d36df9204bbe098e9d3e5e3cdd18ee7ce8f95a8975b53e65b2c6003cae",
+   "outputs/v4/best_model_holdout_predictions.csv": "94679ff14f8f3930f2de6ac958535cc1c987d82f2b3b1fdb2349626717243d1c"
+  }
+ },
+ {
+  "stage": "stage4_validation",
+  "timestamp_utc": "2026-08-10T08:26:10+00:00",
+  "seed": 42,
+  "target": "JV_default_PCE",
+  "group_col": "Ref_DOI_number",
+  "onehot_top_n": 15,
+  "versions": {
+   "python": "3.14.4",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "numpy": "2.4.6",
+   "pandas": "3.0.3",
+   "scikit-learn": "1.8.0",
+   "scipy": "1.17.1",
+   "xgboost": "3.2.0",
+   "lightgbm": "4.6.0",
+   "catboost": "1.2.10",
+   "shap": "0.51.0"
+  },
+  "git": {
+   "commit": "d6ce55f6a6f710ec2bf86a173ac825ab48cbeda1",
+   "dirty": true
+  },
+  "metrics": {
+   "random_kfold_r2": 0.4812,
+   "group_kfold_r2": 0.4101,
+   "inflation_r2": 0.0711,
+   "experiment_b_done": true
+  },
+  "outputs": [
+   "outputs/v4/validation_experiments.csv"
+  ],
+  "output_hashes": {
+   "outputs/v4/validation_experiments.csv": "8afad86904e225066227a115a537ed73d086f5dd6a7e094a9fed61743eb92719"
+  }
+ },
+ {
+  "stage": "stage5_shap",
+  "timestamp_utc": "2026-08-10T08:00:16+00:00",
+  "seed": 42,
+  "target": "JV_default_PCE",
+  "group_col": "Ref_DOI_number",
+  "onehot_top_n": 15,
+  "versions": {
+   "python": "3.14.4",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "numpy": "2.4.6",
+   "pandas": "3.0.3",
+   "scikit-learn": "1.8.0",
+   "scipy": "1.17.1",
+   "xgboost": "3.2.0",
+   "lightgbm": "4.6.0",
+   "catboost": "1.2.10",
+   "shap": "0.51.0"
+  },
+  "git": {
+   "commit": "d6ce55f6a6f710ec2bf86a173ac825ab48cbeda1",
+   "dirty": true
+  },
+  "metrics": {
+   "model": "CatBoost",
+   "shap_sample": 3000,
+   "top_feature": "A_FA"
+  },
+  "outputs": [
+   "outputs/shap_full/shap_top_features.csv"
+  ],
+  "output_hashes": {
+   "outputs/shap_full/shap_top_features.csv": "cfb76c1469f8d397027c05d801d4d8a23df80c09af6aab6eab18b7a40b3f0f38"
+  }
+ },
+ {
+  "stage": "stage6_candidates",
+  "timestamp_utc": "2026-08-10T08:00:18+00:00",
+  "seed": 42,
+  "target": "JV_default_PCE",
+  "group_col": "Ref_DOI_number",
+  "onehot_top_n": 15,
+  "versions": {
+   "python": "3.14.4",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "numpy": "2.4.6",
+   "pandas": "3.0.3",
+   "scikit-learn": "1.8.0",
+   "scipy": "1.17.1",
+   "xgboost": "3.2.0",
+   "lightgbm": "4.6.0",
+   "catboost": "1.2.10",
+   "shap": "0.51.0"
+  },
+  "git": {
+   "commit": "d6ce55f6a6f710ec2bf86a173ac825ab48cbeda1",
+   "dirty": true
+  },
+  "metrics": {
+   "model": "CatBoost",
+   "n_candidates": 756,
+   "pred_max": 17.946
+  },
+  "outputs": [
+   "outputs/candidates_full/candidate_predictions.csv",
+   "outputs/candidates_full/top30_diverse.csv"
+  ],
+  "output_hashes": {
+   "outputs/candidates_full/candidate_predictions.csv": "e932c05e9a6a852fc939f233c26caf13f37562c2b3006bbc8d087b7ffc2bcb5e",
+   "outputs/candidates_full/top30_diverse.csv": "2712a1df0843a9b2a2142551c05d5279123fad9bf3ad36c5f26fba1eb0a90d01"
+  }
+ },
+ {
+  "stage": "stage7_screening",
+  "timestamp_utc": "2026-08-10T08:00:23+00:00",
+  "seed": 42,
+  "target": "JV_default_PCE",
+  "group_col": "Ref_DOI_number",
+  "onehot_top_n": 15,
+  "versions": {
+   "python": "3.14.4",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "numpy": "2.4.6",
+   "pandas": "3.0.3",
+   "scikit-learn": "1.8.0",
+   "scipy": "1.17.1",
+   "xgboost": "3.2.0",
+   "lightgbm": "4.6.0",
+   "catboost": "1.2.10",
+   "shap": "0.51.0"
+  },
+  "git": {
+   "commit": "d6ce55f6a6f710ec2bf86a173ac825ab48cbeda1",
+   "dirty": true
+  },
+  "metrics": {
+   "n_test": 8355,
+   "spearman": 0.6096,
    "gains_threshold": 18
   },
   "outputs": [
    "outputs/screening/enrichment.csv"
   ],
   "output_hashes": {
-   "outputs/screening/enrichment.csv": "a082dee28501ab86005d0435fae1f8d994365baad9d43c94503b6951ede3d725"
+   "outputs/screening/enrichment.csv": "62970ec1904ef67400967623842abcb8db5b2ba4b290c7327e7fd1f062b4a4a8"
   }
  },
  {
   "stage": "stage8_tuning",
-  "timestamp_utc": "2026-06-28T22:04:28+00:00",
+  "timestamp_utc": "2026-08-10T08:08:20+00:00",
   "seed": 42,
   "target": "JV_default_PCE",
   "group_col": "Ref_DOI_number",
@@ -337,17 +506,24 @@
    "catboost": "1.2.10",
    "shap": "0.51.0"
   },
+  "git": {
+   "commit": "d6ce55f6a6f710ec2bf86a173ac825ab48cbeda1",
+   "dirty": true
+  },
   "metrics": {
-   "default_cv_r2": 0.4122,
-   "tuned_cv_r2": 0.4124
+   "default_cv_r2": 0.4077,
+   "tuned_cv_r2": 0.4077
   },
   "outputs": [
    "outputs/tuning/best_params.json"
-  ]
+  ],
+  "output_hashes": {
+   "outputs/tuning/best_params.json": "f4b8c2a3f81bcaa4b393b3efb114148444f761beda955e227e4bcc44097f2726"
+  }
  },
  {
   "stage": "stage9_ablation",
-  "timestamp_utc": "2026-06-28T22:04:49+00:00",
+  "timestamp_utc": "2026-08-10T08:08:54+00:00",
   "seed": 42,
   "target": "JV_default_PCE",
   "group_col": "Ref_DOI_number",
@@ -363,25 +539,30 @@
    "lightgbm": "4.6.0",
    "catboost": "1.2.10",
    "shap": "0.51.0"
+  },
+  "git": {
+   "commit": "d6ce55f6a6f710ec2bf86a173ac825ab48cbeda1",
+   "dirty": true
   },
   "metrics": {
    "descriptor_yok": {
-    "r2": 0.4122,
-    "std": 0.0052,
+    "r2": 0.4077,
+    "std": 0.0164,
     "n_feat": 77
    },
    "descriptor_var": {
-    "r2": 0.4093,
-    "std": 0.0058,
+    "r2": 0.408,
+    "std": 0.0173,
     "n_feat": 81
    },
-   "delta_r2": -0.0028
+   "delta_r2": 0.0003
   },
-  "outputs": []
+  "outputs": [],
+  "output_hashes": {}
  },
  {
   "stage": "14_pipeline_cv",
-  "timestamp_utc": "2026-06-26T18:21:00+00:00",
+  "timestamp_utc": "2026-08-10T08:18:13+00:00",
   "seed": 42,
   "target": "JV_default_PCE",
   "group_col": "Ref_DOI_number",
@@ -398,29 +579,34 @@
    "catboost": "1.2.10",
    "shap": "0.51.0"
   },
+  "git": {
+   "commit": "d6ce55f6a6f710ec2bf86a173ac825ab48cbeda1",
+   "dirty": true
+  },
   "metrics": {
-   "global_mean": 0.4128724715701157,
-   "global_std": 0.006457042722070404,
-   "foldlocal_mean": 0.4126550339759742,
-   "foldlocal_std": 0.006375660105998738,
-   "delta": -0.00021743759414150077,
+   "global_mean": 0.4100925038413473,
+   "global_std": 0.01647135763615967,
+   "foldlocal_mean": 0.40885659659359,
+   "foldlocal_std": 0.01577659684164263,
+   "delta": -0.0012359072477572952,
    "global_folds": [
-    0.42081726780095463,
-    0.41101997618059516,
-    0.4109287413479269,
-    0.40275045145540667,
-    0.4188459210656953
+    0.4211294198622966,
+    0.4137743707916117,
+    0.4198741553100739,
+    0.3775279800485467,
+    0.41815659319420817
    ],
    "foldlocal_folds": [
-    0.4218072129646415,
-    0.41074263820815526,
-    0.4085271538100701,
-    0.4042454627425732,
-    0.41795270215443103
+    0.4209291634905672,
+    0.41028553415789815,
+    0.4142898720354746,
+    0.37831869551322805,
+    0.42045971777078206
    ]
   },
   "outputs": [
    "results.json"
-  ]
+  ],
+  "output_hashes": {}
  }
 ]

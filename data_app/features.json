@@ -83,6 +83,6 @@
   "anneal_temp": 100.0,
   "anneal_time": 20.0
  },
- "train_pce_max": 34.8,
- "n_train": 33338
+ "train_pce_max": 33.0,
+ "n_train": 33130
 }

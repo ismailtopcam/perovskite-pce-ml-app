@@ -74,7 +74,7 @@ assert len(feat_names) == 77
 gss = GroupShuffleSplit(n_splits=1, test_size=0.2, random_state=SEED)
 tr, ho = next(gss.split(X, y, groups))
 assert set(groups[tr]).isdisjoint(set(groups[ho]))
-assert len(ho) == 8147, f"holdout {len(ho)}"
+assert len(ho) == 8355, f"holdout {len(ho)}"
 
 fold_of = np.full(len(M), -1)
 for f_i, (_, vai) in enumerate(GroupKFold(n_splits=5).split(X, y, groups)):
@@ -186,8 +186,8 @@ doi = rec.groupby("DOI").agg(
     test_mae=("mutlak_hata", "mean"),
 ).reset_index()
 doi.to_parquet(OUT / "doi_summary.parquet", index=False)
-print(f"[prep] doi_summary: {doi.shape} (7.397 grup bekleniyor)")
-assert len(doi) == 7397
+print(f"[prep] doi_summary: {doi.shape} (7.353 grup bekleniyor)")
+assert len(doi) == 7353
 
 # ---------------- 5) Conformal (kalibrasyon ceyrek sinirlari dahil) ----------------
 conf = json.load(open(outs / "conformal" / "conformal_results.json"))
@@ -197,7 +197,7 @@ cal_rel, cte_rel = next(GroupShuffleSplit(n_splits=1, test_size=0.5,
 yhat_ho, ytrue_ho = pred["y_pred"].values, y[ho]
 yhat_cal, ytrue_cal = yhat_ho[cal_rel], ytrue_ho[cal_rel]
 res = np.abs(ytrue_cal - yhat_cal)
-assert len(res) == conf["n_calibration"] == 3992, "kalibrasyon bolmesi hizasiz"
+assert len(res) == conf["n_calibration"] == 4144, "kalibrasyon bolmesi hizasiz"
 q90 = conformal_quantile(res, 0.90)
 assert abs(q90 - conf["marginal"]["90"]["half_width"]) < 1e-3, f"q90={q90}"
 edges = np.quantile(yhat_cal, np.linspace(0, 1, N_BINS + 1))

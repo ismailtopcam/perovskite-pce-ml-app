@@ -63,7 +63,7 @@ with r:
     st.markdown(f"""
 ### Bu sayfayı dürüst okumak
 
-- **Tavan 17,78:** hiçbir aday eğitim maksimumuna (34,8) yaklaşamaz. Üç etken
+- **Tavan 17,95 (birincil filtreli listede 17,93):** hiçbir aday eğitim maksimumuna (34,8) yaklaşamaz. Üç etken
   birlikte çalışır: ağaç tabanlı modelin eğitim aralığı dışına çıkamaması, 756
   adaylık **kısıtlı eksen uzayı** ve band gap/tavlama gibi bağlam değişkenlerinin
   eğitim medyanlarına **sabitlenmesi**. Liste **bilinen yüksek-verim bölgesinin

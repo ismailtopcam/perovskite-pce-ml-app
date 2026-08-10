@@ -10,7 +10,7 @@ from lib.ui import page, tr, tez_notu, MAVI, KIRMIZI, GRI
 page("Doğrulama Deneyleri — Tezin Merkez Bulgusu", "2️⃣")
 tez_notu("Bölüm 3.13 ve 4.3",
          "Aynı veri, aynı model: yalnızca bölme yöntemi ve özellik seti değiştirildiğinde "
-         "R² 0,263 ile 0,938 arasında değişir. Başarım, algoritmadan çok bu kararların ürünüdür.")
+         "R² 0,261 ile 0,937 arasında değişir. Başarım, algoritmadan çok bu kararların ürünüdür.")
 
 val = data.csv("validation_experiments.csv")
 rec = data.records()
@@ -37,7 +37,7 @@ if grup and safe:
         "yayınlara genellemenin dürüst ölçüsü.", "normal"
 elif not grup and safe:
     r2, std, yorum, renk = 0.4812, 0.0089, \
-        "**+0,068 iyimserlik:** kardeş cihazlar test kümesine sızdı. Skor arttı, " \
+        "**+0,071 iyimserlik:** kardeş cihazlar test kümesine sızdı. Skor arttı, " \
         "genelleme gücü artmadı (tez Deney A).", "inverse"
 elif grup and not safe:
     r2, std, yorum, renk = 0.9380, 0.0040, \
@@ -84,8 +84,8 @@ with l:
     fig.update_traces(marker_color=MAVI, textposition="outside")
     fig.update_layout(height=300, yaxis_range=[0, 0.5], margin=dict(t=10))
     st.plotly_chart(fig, width="stretch")
-    st.caption("PCE yalnızca kompozisyonla açıklanamıyor (0,263); cihaz (0,362) ve süreç "
-               "(0,413) bilgisi anlamlı katkı veriyor (tez Bölüm 4.3).")
+    st.caption("PCE yalnızca kompozisyonla açıklanamıyor (0,261); cihaz (0,358) ve süreç "
+               "(0,410) bilgisi anlamlı katkı veriyor (tez Bölüm 4.3).")
 
 with r:
     st.subheader("Başlık kurulumun holdout görünümü")
@@ -109,7 +109,7 @@ with r:
                   line=dict(color=KIRMIZI, width=1, dash="dash"))
     n_neg = int((plot_df["tahmin"] < 0).sum())
     fig.update_layout(height=380,
-                      title=f"Gerçek vs tahmin (kesikli: ±6,42 = %90 bandı; "
+                      title=f"Gerçek vs tahmin (kesikli: ±6,66 = %90 bandı; "
                             f"negatif tahminler dahil, örneklemde {n_neg} adet)",
                       xaxis_range=[-4, 30], yaxis_range=[0, 32], margin=dict(t=40))
     st.plotly_chart(fig, width="stretch")
