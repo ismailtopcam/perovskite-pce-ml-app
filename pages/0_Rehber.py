@@ -1,180 +1,109 @@
 # -*- coding: utf-8 -*-
+"""Kullanım Rehberi — her ekranın ne gösterdiği, nasıl okunacağı; sözlük; sık sorulanlar."""
 import streamlit as st
 
-from lib.ui import page
+from lib import data, ui
+from lib.ui import tr
 
-page("Kullanım Rehberi", "📖")
+meta = data.js("app_meta.json")
 
-st.markdown(
-    """
-Bu sayfa; her ekranın *ne gösterdiğini*, *nasıl okunması gerektiğini* ve
-*tezin hangi bölümüne dayandığını* açıklar.
-
-Model, geçmiş literatürdeki on binlerce perovskit güneş hücresi kaydından verim
-(PCE) tahmin etmeyi öğrenir; tezin asıl katkısı ise bu tahminin **dürüstçe nasıl
-ölçüleceğini** göstermektir.
-"""
+ui.page_header(
+    "Kullanım Rehberi",
+    "Her ekran ne gösterir, nasıl okunur?",
+    "Model, geçmiş literatürdeki on binlerce perovskit güneş hücresi kaydından verim (PCE) tahmin "
+    "etmeyi öğrenir; tezin asıl katkısı bu tahminin <strong>dürüstçe nasıl ölçüleceğini</strong> "
+    "göstermektir. Bu sayfa; her ekranın <em>ne gösterdiğini</em>, <em>nasıl okunması gerektiğini</em> ve "
+    "<em>tezin hangi bölümüne dayandığını</em> açıklar.",
 )
 
-st.divider()
-st.subheader("Sayfa sayfa rehber")
+left, right = st.columns([7, 5], gap="large")
 
-REHBER = [
-    ("🏠 Ana Sayfa", """
-**Ne gösterir?** Tezin ana savı, başlık sonuçlar (41.485 kayıt, R² = 0,410) ve
-uygulamanın haritası.
+with left:
+    st.html('<div style="height:8px"></div>')
+    ui.list_rows([
+        ("—", "Genel Bakış", "",
+         "Tezin ana savı ve dört temel sayı; diğer tüm sayfalar bu sayıların nereden geldiğini açar."),
+        ("01", "Veri Hattı", "· Bölüm 3.4–3.6, 4.1",
+         f"{tr(meta['n_ham'], 0)} ham kaydın {tr(meta['n_temiz'], 0)} temiz kayda dönüşümü. Kayıt gezgininde bir "
+         "kayda tıklayın; uygulama o kayda ne yapıldığını tek tek söyler (\"band gap medyanla dolduruldu\", "
+         "\"DOI grubu atandı\"…). Elenen kayıtlar sekmesi hattın kimseyi sessizce silmediğinin kanıtıdır: "
+         f"{tr(meta['n_elenen'], 0)} kaydın her birinin eleme nedeni yazılıdır. Veri temizliği burada camdan bir kutudur."),
+        ("02", "Doğrulama Deneyleri", "· Bölüm 3.13, 4.3",
+         "Merkez bulgu: aynı veri ve aynı modelle yalnızca değerlendirme kararları değiştirildiğinde skor "
+         "nasıl değişir? Rastgele bölme skoru 0,481'e çıkarır (kardeş-cihaz sızıntısından gelen iyimserlik); "
+         "+Voc/Jsc/FF 0,937 yapar (cevabı içeren değişkenlerden kopyalama). Literatürdeki 0,70+ skorlarla "
+         "tezin 0,410'u arasındaki farkın büyük bölümü model kalitesi değil, <strong>protokol</strong> farkıdır."),
+        ("03", "Model Karşılaştırma", "· Bölüm 3.9, 4.2",
+         "Altı algoritma (CatBoost, HistGBM, XGBoost, LightGBM, Random Forest, Ridge) aynı kurallarla yarışır. "
+         "İlk dört çubuğun neredeyse eşit olması sayfanın asıl mesajıdır: yarışı algoritma kazandırmaz; "
+         "belirleyici olan <strong>veri ve doğrulama tasarımıdır</strong>. CatBoost'un farkı istatistiksel "
+         "gürültü düzeyindedir."),
+        ("04", "Tahmin Aracı", "· Bölüm 3.12, 4.10",
+         "Kendi sanal hücre tarifinizi kurup modelden tahmin alın. Üç şeye birden bakın: tahmini PCE (tek "
+         "sayı, tek başına yanıltıcı); %90 aralık (± ~6,7 puan geniştir — bu genişlik modelin değil, literatür "
+         "verisindeki gürültünün eseridir); eğitim-uzayına uzaklık uyarısı (tarif modelin hiç görmediği "
+         "bölgedeyse uygulama sizi kırmızı kutuyla uyarır). SHAP satırları bu tahmini neyin yükseltip "
+         "düşürdüğünü gösterir. <strong>Hiçbir çıktı deneysel doğrulama yerine geçmez.</strong>"),
+        ("05", "Gerçek – Tahmin", "· Bölüm 4.7",
+         f"Modelin eğitimde hiç görmediği {tr(meta['n_holdout'], 0)} kayıtta (holdout) tahminlerle gerçek "
+         "ölçümlerin karşılaştırması. En isabetli / tipik / en hatalı kayıtlarla gezin; \"Model nerede "
+         "yanılıyor?\" hatanın hangi malzeme bölgelerinde yoğunlaştığını gösterir. Model kanonik FA-Pb-I "
+         "bölgesinde güçlü, az örneklenmiş bölgelerde zayıftır — beklenen ve tezde tartışılan örüntü."),
+        ("06", "Aday Tarayıcı", "· Bölüm 3.12, 4.5, 4.10",
+         "Modelin taradığı 756 hipotetik kompozisyon; her biri tahmin, belirsizlik aralığı, eğitim desteği ve "
+         "veri-yoğunluğu bilgisiyle. En yüksek tahmin 17,95 — eğitim maksimumunun (34,8) çok altında. Bu bir "
+         "hata değil, ağaç tabanlı modellerin bilinen sınırıdır: liste <strong>bilinen iyi bölgenin yeniden "
+         "bulunmasıdır</strong>; deneysel taramayı daraltma aracı olarak okunmalıdır."),
+        ("07", "DOI Gezgini", "· Bölüm 3.8, 5.7",
+         "Verinin yayın (DOI) düzeyindeki yapısı ve tezin en kritik kuralı: aynı kanonik DOI anahtarını taşıyan "
+         "kayıtlar asla eğitim ile testin ikisine birden düşmez. Bir yayın seçin; uygulama eğitimde mi "
+         "holdout'ta mı olduğunu rozetle söyler. Grup anahtarının kendisinin nasıl denetlendiği "
+         "(44 çift-varyantlı DOI bulgusu dâhil) de burada anlatılır."),
+        ("08", "Pipeline & Provenans", "· Bölüm 3.15",
+         "Yazılım mühendisliği katmanı: her aşamanın kaydettiği koşu-manifestleri (hangi seed, hangi paket "
+         "sürümleri, hangi metrikler), akış diyagramı ve bağımsız denetim özetleri. \"Bu sayılar tekrar "
+         "üretilebilir mi?\" sorusunun cevabı: manifestlerin tamamı aynı ortamı gösterir ve uygulamadaki her "
+         "veri dosyası pipeline'dan deterministik olarak türetilir."),
+    ], numbered=True)
 
-**Nasıl okunur?** Buradaki dört kutu tezin dört temel sayısıdır; diğer tüm
-sayfalar bu sayıların nereden geldiğini açar.
-"""),
-    ("1️⃣ Veri Hattı — *tez Bölüm 3.4–3.6, 4.1*", """
-**Ne gösterir?** 43.398 ham kaydın 41.485 temiz kayda nasıl dönüştüğünü:
-hangi kayıtlar neden elendi, hangi eksik değerler nasıl dolduruldu, veri neye
-benziyor.
-
-**Nasıl okunur?** "Kayıt gezgini" sekmesinde herhangi bir kayda tıklayın;
-uygulama o kayda ne yapıldığını tek tek söyler ("band gap medyanla dolduruldu",
-"DOI grubu atandı"...). "Elenen kayıtlar" sekmesi ise hattın kimseyi sessizce
-silmediğinin kanıtıdır: 1.913 kaydın her birinin eleme nedeni yazılıdır.
-
-**Neden önemli?** Veri temizliği çoğu çalışmada kara kutudur; burada camdan bir
-kutudur.
-"""),
-    ("2️⃣ Doğrulama Deneyleri — *tez Bölüm 3.13, 4.3*", """
-**Ne gösterir?** Tezin merkez bulgusunu: aynı veri ve aynı modelle, yalnızca
-**değerlendirme kararları** değiştirildiğinde skorun nasıl değiştiğini.
-
-**Nasıl okunur?** Üstteki iki seçimi değiştirin ve R²'yi izleyin:
-- *Rastgele bölme* seçince skor 0,481'e çıkar; ama bu bir ilerleme sayılmaz:
-  artış, aynı yayının kardeş cihazlarının teste sızması nedeniyle oluşan **iyimserlik**tir.
-- *+Voc, Jsc, FF* seçince skor 0,937 olur: model artık tahmin üretmez;
-  cevabı içeren değişkenlerden **kopyalama** yapar.
-
-**Neden önemli?** Literatürdeki 0,70+ skorlarla tezin 0,410'u arasındaki farkın
-büyük bölümü model kalitesi değil, **protokol** farkıdır.
-"""),
-    ("3️⃣ Model Karşılaştırma — *tez Bölüm 3.9, 4.2*", """
-**Ne gösterir?** Altı algoritmanın (CatBoost, HistGBM, XGBoost, LightGBM,
-Random Forest, Ridge) aynı kurallarla yarıştırılmasını.
-
-**Nasıl okunur?** İlk dört çubuğun neredeyse eşit olması sayfanın asıl mesajıdır:
-yarışı algoritma kazandırmaz; belirleyici olan **veri ve doğrulama tasarımıdır**. CatBoost'un farkı
-istatistiksel gürültü düzeyindedir.
-"""),
-    ("4️⃣ Tahmin Aracı — *tez Bölüm 3.12, 4.10*", """
-**Ne gösterir?** Kendi sanal hücre tarifinizi kurup modelden tahmin almanızı
-sağlar.
-
-**Nasıl okunur?** Üç şeye birden bakın:
-1. **Tahmini PCE** — tek sayı, ama tek başına yanıltıcıdır;
-2. **%90 aralık** — modelin dürüst belirsizliği (± ~6,4 puan geniştir; bu
-   genişlik modelin değil, literatür verisindeki gürültünün eseridir);
-3. **Eğitim-uzayına uzaklık** — tarifiniz modelin hiç görmediği bölgedeyse
-   uygulama sizi kırmızı kutuyla uyarır.
-
-Alttaki SHAP grafiği, *bu* tahmini hangi özelliklerin yükseltip düşürdüğünü
-gösterir. **Hiçbir çıktı deneysel doğrulama yerine geçmez.**
-"""),
-    ("5️⃣ Gerçek vs Tahmin — *tez Bölüm 4.7*", """
-**Ne gösterir?** Modelin eğitimde hiç görmediği 8.355 kayıtta (holdout)
-tahminlerle gerçek ölçümlerin karşılaştırmasını.
-
-**Nasıl okunur?** "En isabetli / tipik / en hatalı" sekmeleriyle gezin;
-"Model nerede yanılıyor?" sekmesi hatanın hangi malzeme bölgelerinde
-yoğunlaştığını gösterir (Sn'li hücreler, geniş band gap...). Model kanonik
-FA-Pb-I bölgesinde güçlü, az örneklenmiş bölgelerde zayıftır; bu, beklenen ve
-tezde tartışılan bir örüntüdür.
-"""),
-    ("6️⃣ Aday Tarayıcı — *tez Bölüm 3.12, 4.5, 4.10*", """
-**Ne gösterir?** Modelin taradığı 756 hipotetik kompozisyonu; her biri tahmin,
-belirsizlik aralığı, eğitim-desteği ve veri-yoğunluğu bilgisiyle.
-
-**Nasıl okunur?** En yüksek tahmin 17,95'tir ve eğitim maksimumunun (34,8)
-çok altındadır. Bu bir hata olmaktan çok ağaç tabanlı modellerin bilinen sınırıdır:
-liste **bilinen iyi bölgenin yeniden bulunmasıdır**, yeni keşif içermez ve
-deneysel taramayı daraltma aracı olarak okunmalıdır.
-"""),
-    ("7️⃣ DOI Gezgini — *tez Bölüm 3.8, 5.7*", """
-**Ne gösterir?** Verinin yayın (DOI) düzeyindeki yapısını ve tezin en kritik
-kuralını: aynı DOI anahtarına sahip kayıtlar asla eğitim ile testin ikisine
-birden düşmez (ayrım ham anahtar düzeyindedir; tez Bölüm 5.7 bu anahtarın
-kendisini de denetler).
-
-**Nasıl okunur?** Bir yayın seçin; uygulama o yayının eğitimde mi holdout'ta
-mı olduğunu rozetle söyler. Alttaki genişletilebilir bölümde grup anahtarının
-kendisinin nasıl denetlendiği (44 çift-varyantlı DOI bulgusu dahil) anlatılır.
-"""),
-    ("8️⃣ Pipeline & Provenans — *tez Bölüm 3.15*", """
-**Ne gösterir?** Yazılım mühendisliği katmanını: her aşamanın kaydettiği
-koşu-manifestleri (hangi seed, hangi paket sürümleri, hangi metrikler),
-akış diyagramı ve bağımsız denetim özetleri.
-
-**Nasıl okunur?** Bu sayfa "bu sayılar tekrar üretilebilir mi?" sorusunun
-cevabıdır: 14 manifestin tamamı aynı ortamı gösterir ve uygulamadaki her veri
-dosyası pipeline'dan deterministik olarak türetilir.
-"""),
-]
-
-for baslik, metin in REHBER:
-    with st.expander(baslik):
-        st.markdown(metin)
-
-st.divider()
-st.subheader("Küçük sözlük")
-c1, c2 = st.columns(2)
-with c1:
-    st.markdown(
-        """
-- **PCE** — güç dönüşüm verimi: hücrenin ışığı elektriğe çevirme yüzdesi.
-- **R²** — modelin, verimdeki farklılıkların ne kadarını açıkladığı (1 = mükemmel,
-  0 = ortalamayı söylemekten farksız). 0,410 = farklılıkların ~%41'i.
-- **MAE / RMSE** — ortalama tahmin hatası (PCE puanı cinsinden); RMSE büyük
-  hataları daha çok cezalandırır.
-- **Holdout** — eğitime alınmayan, yalnızca sınavda kullanılan kayıtlar (%20);
-  ayrım ham DOI anahtarı düzeyinde yapılır.
-- **Veri sızıntısı** — cevabın bir kopyasının soruya karışması; skoru gerçek
-  dışı şişirir.
-"""
-    )
-with c2:
-    st.markdown(
-        """
-- **DOI-grup bölme** — aynı ham DOI anahtarını taşıyan tüm kayıtları aynı tarafta
-  (ya eğitim ya test) tutan bölme; kardeş-cihaz sızıntısını büyük ölçüde azaltır.
-- **Conformal aralık** — tekrarlı kullanımda aralıkların gerçek değeri **nominal
-  %90 sıklıkla** kapsamasını hedefleyen, dağılım-varsayımsız yöntem; tek bir
-  tahmine "%90 olasılık" garantisi vermez. Tezde DOI-grup-güvenli kalibre edilmiştir.
-- **SHAP** — bir tahmini, özelliklerin katkılarına adilce bölüştüren
-  açıklanabilirlik yöntemi (nedensellik değil, ilişki gösterir).
-- **Eğitim-uzayına uzaklık** — tarifin, modelin gördüğü veriye ne kadar
-  benzediği; güven skoru değil, yoğunluk bilgisidir.
-- **Koşu-manifesti** — her aşamanın seed + paket sürümü + metrik kaydı;
-  tekrar üretilebilirliğin makbuzu.
-"""
+    ui.kicker("Sık sorulanlar", tone="ink")
+    ui.text(
+        "<p><strong>R² = 0,410 düşük değil mi?</strong> Tek başına bakıldığında mütevazı görünür; ama bu değer "
+        "eğitimden kanonik DOI anahtarı düzeyinde ayrık tutulan yayınlara genellemeyi ölçer ve tez, literatür "
+        "verisindeki reçete-içi gürültünün ulaşılabilir tavanı ~0,52'ye sınırladığını gösterir (Bölüm 5.1). "
+        "0,410 \"kötü bir model\" değil; dürüst ölçülmüş, tavana yakın bir modeldir. Daha yüksek görünen "
+        "skorların nasıl üretildiğini 02'de kendiniz deneyebilirsiniz.</p>"
+        "<p><strong>Tahmin Aracı'ndaki sonuca ne kadar güvenebilirim?</strong> Üç göstergeyi birlikte okuyun: "
+        "aralık genişliği, eğitim-uzayına uzaklık uyarısı ve SHAP açıklaması. Sonuç bir "
+        "<strong>önceliklendirme</strong> çıktısıdır: hangi tarifin denenmeye değer olduğuna dair veri-destekli "
+        "bir işaret; laboratuvar doğrulamasının yerine geçmez.</p>"
+        "<p><strong>Sayılar tezle birebir aynı mı?</strong> Evet. Uygulamanın tüm veri dosyaları tezin kod "
+        "deposundan (<span class='m-mono'>perovskite-pce-ml-thesis</span>) deterministik olarak üretilir; üretim "
+        "betiği bölmeleri yeniden kurup bilinen değerlerle doğrular, uyuşmazlıkta durur. 08 Provenans hangi "
+        "commit'ten üretildiğini gösterir.</p>"
     )
 
-st.divider()
-st.subheader("Sık sorulanlar")
-with st.expander("R² = 0,410 düşük değil mi?"):
-    st.markdown(
-        "Tek başına bakıldığında mütevazı görünür; ama bu değer **eğitimden ham DOI "
-        "anahtarı düzeyinde ayrık tutulan yayınlara genellemeyi** ölçer ve tez, literatür verisindeki reçete-içi "
-        "gürültünün ulaşılabilir tavanı ~0,52'ye sınırladığını gösterir (Bölüm 5.1). "
-        "Yani 0,410, 'kötü bir model' değil; 'dürüst ölçülmüş, tavana yakın bir "
-        "model'dir. Daha yüksek görünen skorların nasıl üretildiğini 2. sayfada "
-        "kendiniz deneyebilirsiniz."
-    )
-with st.expander("Tahmin Aracı'ndaki sonuca ne kadar güvenebilirim?"):
-    st.markdown(
-        "Üç göstergeyi birlikte okuyun: aralık genişliği, eğitim-uzayına uzaklık "
-        "uyarısı ve SHAP açıklaması. Sonuç bir **önceliklendirme** çıktısıdır: "
-        "hangi tarifin denenmeye değer olduğuna dair veri-destekli bir işaret; "
-        "laboratuvar doğrulamasının yerine geçmez."
-    )
-with st.expander("Bu uygulamadaki sayılar tezle birebir aynı mı?"):
-    st.markdown(
-        "Evet. Uygulamanın tüm veri dosyaları, tezin kod deposundan "
-        "(`perovskite-pce-ml-thesis`) deterministik olarak üretilir; üretim betiği "
-        "bölmeleri yeniden kurup bilinen değerlerle doğrular, uyuşmazlıkta durur. "
-        "Pipeline & Provenans sayfası hangi commit'ten üretildiğini gösterir."
-    )
+with right:
+    st.html('<div style="height:8px"></div>')
+    ui.kicker("Küçük sözlük", tone="ink")
+    ui.list_rows([
+        ("PCE", "Güç dönüşüm verimi: hücrenin ışığı elektriğe çevirme yüzdesi."),
+        ("R²", "Modelin, verimdeki farklılıkların ne kadarını açıkladığı (1 = mükemmel, 0 = ortalamayı "
+               "söylemekten farksız). 0,410 ≈ farklılıkların %41'i."),
+        ("MAE / RMSE", "Ortalama tahmin hatası (PCE puanı); RMSE büyük hataları daha çok cezalandırır."),
+        ("Holdout", "Eğitime alınmayan, yalnızca sınavda kullanılan kayıtlar (%20); ayrım kanonik DOI "
+                    "anahtarı düzeyinde."),
+        ("Veri sızıntısı", "Cevabın bir kopyasının soruya karışması; skoru gerçek dışı şişirir."),
+        ("DOI-grup bölme", "Aynı kanonik DOI anahtarını taşıyan tüm kayıtları aynı tarafta (ya eğitim ya "
+                           "test) tutan bölme; kardeş-cihaz sızıntısını büyük ölçüde azaltır."),
+        ("Conformal aralık", "Tekrarlı kullanımda gerçek değeri nominal %90 sıklıkla kapsamayı hedefleyen, "
+                             "dağılım-varsayımsız yöntem; tek tahmine olasılık garantisi vermez. Tezde "
+                             "DOI-grup-güvenli kalibre edilmiştir."),
+        ("SHAP", "Bir tahmini, özelliklerin katkılarına adilce bölüştüren açıklanabilirlik yöntemi "
+                 "(nedensellik değil, ilişki)."),
+        ("Eğitim-uzayına uzaklık", "Tarifin, modelin gördüğü veriye benzerliği; güven skoru değil, yoğunluk "
+                                   "bilgisi."),
+        ("Koşu-manifesti", "Her aşamanın seed + paket sürümü + metrik kaydı; tekrar üretilebilirliğin makbuzu."),
+    ])
+
+ui.footer()

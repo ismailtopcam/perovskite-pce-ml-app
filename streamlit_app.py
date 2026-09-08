@@ -1,47 +1,53 @@
 # -*- coding: utf-8 -*-
-"""Giris noktasi: st.navigation ile tam Turkce kenar cubugu.
+"""Giriş noktası: st.navigation ile sol ray (kenar çubuğu) ve Türkçe sayfa adları.
 
-Sayfa dosya adlari (ve URL'ler) ASCII kalir; kenar cubugunda gorunen
-basliklar burada tanimlanir.
+Sayfa dosya adları (ve URL'ler) ASCII kalır; rayda görünen başlıklar burada
+tanımlanır. Ray düzeni (İKÇÜ kimliği → numaralı sayfa listesi → tez sahibi ve
+provenans bloğu) "Modernist" tasarımından gelir; numaralar CSS ile eklenir
+(lib/ui.py, sıra bu listeyle aynıdır).
 """
 import streamlit as st
+
+from lib import data, ui
 
 st.set_page_config(page_title="Perovskit PCE — İKÇÜ", page_icon="🔬", layout="wide",
                    initial_sidebar_state="auto")
 
-# Universite kimligi: kenar cubugunun EN USTUNDE metin olarak (logo yerine).
-# CSS, kullanici icerigini nav'in uzerine tasir; uyumsuz bir Streamlit
-# surumunde blok zarifce nav'in altina duser.
-st.sidebar.markdown(
-    """
-<style>
-  [data-testid="stSidebarContent"] { display: flex; flex-direction: column; }
-  [data-testid="stSidebarUserContent"] { order: -1; padding-bottom: 0; }
-</style>
-<div style="padding:0.1rem 0 0.3rem 0; line-height:1.35">
-  <div style="color:#ab162c; font-weight:700; font-size:1.06rem">
-    İzmir Kâtip Çelebi Üniversitesi</div>
-  <div style="font-size:0.8rem; color:#666">
-    Fen Bilimleri Enstitüsü · Yazılım Mühendisliği</div>
-  <div style="font-size:0.8rem; color:#666">
-    Yüksek Lisans Tezi — Etkileşimli Uygulama</div>
-</div>
-<hr style="margin:0.5rem 0 0 0; border:none; border-top:1px solid #e4d5d8">
-""",
-    unsafe_allow_html=True,
+ui.inject_css()
+
+meta = data.js("app_meta.json")
+
+# --- ray: üst kimlik bloğu (CSS ile navigasyonun üstüne taşınır)
+st.sidebar.html(
+    '<div class="rail-brand">'
+    '<div class="kurum">İzmir Kâtip Çelebi Üniversitesi</div>'
+    '<div class="ens">Fen Bilimleri Enstitüsü · Yazılım Mühendisliği</div>'
+    '<div class="marka">Perovskit<br>PCE</div>'
+    '<div class="alt">Makine öğrenmesi tabanlı verim tahmini — DOI-grup-ayrık doğrulama hattı</div>'
+    '</div>'
+)
+
+# --- ray: alt blok (tez sahibi + provenans mikro bloğu; CSS ile en alta taşınır)
+st.sidebar.html(
+    '<div class="rail-foot">'
+    '<div class="k">Yüksek lisans tezi</div>'
+    '<div class="ad">İsmail Topçam</div>'
+    f'<div class="m">R² 0,410 ± 0,016 · {ui.tr(meta["n_temiz"], 0)} kayıt<br>'
+    f'seed {meta["seed"]} · commit {meta["pipeline_git_commit"][:8]} · {meta["hazirlama_zamani_utc"][:10]}</div>'
+    '</div>'
 )
 
 pages = [
-    st.Page("Ana_Sayfa.py", title="Ana Sayfa", icon="🏠", default=True),
-    st.Page("pages/0_Rehber.py", title="Kullanım Rehberi", icon="📖"),
-    st.Page("pages/1_Veri_Hatti.py", title="Veri Hattı", icon="1️⃣"),
-    st.Page("pages/2_Dogrulama_Deneyleri.py", title="Doğrulama Deneyleri", icon="2️⃣"),
-    st.Page("pages/3_Model_Karsilastirma.py", title="Model Karşılaştırma", icon="3️⃣"),
-    st.Page("pages/4_Tahmin_Araci.py", title="Tahmin Aracı", icon="4️⃣"),
-    st.Page("pages/5_Gercek_vs_Tahmin.py", title="Gerçek vs Tahmin", icon="5️⃣"),
-    st.Page("pages/6_Aday_Tarayici.py", title="Aday Tarayıcı", icon="6️⃣"),
-    st.Page("pages/7_DOI_Gezgini.py", title="DOI Gezgini", icon="7️⃣"),
-    st.Page("pages/8_Pipeline_Provenance.py", title="Pipeline & Provenans", icon="8️⃣"),
+    st.Page("Ana_Sayfa.py", title="Genel Bakış", default=True),
+    st.Page("pages/0_Rehber.py", title="Rehber"),
+    st.Page("pages/1_Veri_Hatti.py", title="Veri Hattı"),
+    st.Page("pages/2_Dogrulama_Deneyleri.py", title="Doğrulama"),
+    st.Page("pages/3_Model_Karsilastirma.py", title="Modeller"),
+    st.Page("pages/4_Tahmin_Araci.py", title="Tahmin Aracı"),
+    st.Page("pages/5_Gercek_vs_Tahmin.py", title="Gerçek – Tahmin"),
+    st.Page("pages/6_Aday_Tarayici.py", title="Aday Tarayıcı"),
+    st.Page("pages/7_DOI_Gezgini.py", title="DOI Gezgini"),
+    st.Page("pages/8_Pipeline_Provenance.py", title="Provenans"),
 ]
 
 st.navigation(pages).run()

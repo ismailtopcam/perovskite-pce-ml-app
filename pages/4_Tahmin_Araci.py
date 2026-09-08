@@ -1,199 +1,214 @@
 # -*- coding: utf-8 -*-
+"""04 Tahmin Aracı — sanal cihaz tarifi → PCE tahmini, %90 aralık, eğitim-uzayına uzaklık, yerel SHAP."""
 import numpy as np
 import pandas as pd
-import plotly.graph_objects as go
 import streamlit as st
 
-from lib import data, encode
-from lib.ui import page, tr, tez_notu, bilim_uyarisi, conformal_uyarisi, MAVI, KIRMIZI
-
-page("Tahmin Aracı — Sanal Cihaz Tarifi", "4️⃣")
-tez_notu("Bölüm 3.12 ve 4.10",
-         "Tarif, modelin eğitimde gördüğü 77-özellik sözleşmesine kodlanır. Belirsizlik "
-         "aralığı, eğitimden ham DOI anahtarı düzeyinde ayrık tutulan yayınlardaki gerçek "
-         "hataların dağılımından türetilir (conformal kestirim). Aralıklar nominal %90 "
-         "düzeyindedir; holdout'ta gözlenen kapsama %89,9'dur (tez Bölüm 4.10).")
+from lib import data, encode, ui
+from lib.ui import tr, pct
 
 maps = encode.categorical_options()
-meta = data.js("features.json")
+fmeta = data.js("features.json")
+conf = data.js("conformal.json")
+HW = float(conf["marginal"]["90"]["half_width"])
+THR = float(conf["applicability_domain"]["threshold"])
+COV = 100 * float(conf["marginal"]["90"]["empirical_coverage"])
 
-with st.form("tarif"):
-    st.subheader("🧪 Kompozisyon (her site toplamı 1,00 olmalı)")
+ui.page_header(
+    "04 — Tahmin Aracı · Tez Bölüm 3.12 ve 4.10",
+    "Sanal cihaz tarifi.",
+    "Tarif, modelin eğitimde gördüğü 77-özellik sözleşmesine kodlanır. Belirsizlik aralığı, eğitimden kanonik "
+    "DOI anahtarı düzeyinde ayrık tutulan yayınlardaki gerçek hataların dağılımından türetilir (conformal "
+    f"kestirim; nominal %90, holdout kapsaması %{tr(COV, 1)}).",
+)
+
+left, right = st.columns([5, 7], gap="large")
+
+# ---------------------------------------------------------------- tarif formu
+with left:
+    ui.kicker("Kompozisyon", "· her site toplamı 1,00 olmalı", tone="ink")
     c = st.columns(3)
-    with c[0]:
-        st.markdown("**A-site**")
-        a = {i: st.number_input(f"A: {i}", 0.0, 1.0,
-                                {"FA": 0.80, "MA": 0.10, "Cs": 0.10}.get(i, 0.0), 0.01)
-             for i in ["FA", "MA", "Cs", "Rb", "K"]}
-    with c[1]:
-        st.markdown("**B-site**")
-        b = {i: st.number_input(f"B: {i}", 0.0, 1.0, 1.0 if i == "Pb" else 0.0, 0.01)
-             for i in ["Pb", "Sn", "Ge"]}
-    with c[2]:
-        st.markdown("**X-site**")
-        x = {i: st.number_input(f"X: {i}", 0.0, 1.0,
-                                {"I": 0.83, "Br": 0.17}.get(i, 0.0), 0.01)
-             for i in ["I", "Br", "Cl"]}
+    heads = []
+    sites = {}
+    for col, (site, ions, defaults) in zip(c, [
+        ("A", ["FA", "MA", "Cs", "Rb", "K"], {"FA": 0.80, "MA": 0.10, "Cs": 0.10}),
+        ("B", ["Pb", "Sn", "Ge"], {"Pb": 1.00}),
+        ("X", ["I", "Br", "Cl"], {"I": 0.83, "Br": 0.17}),
+    ]):
+        with col:
+            heads.append(st.empty())
+            sites[site] = {i: st.number_input(i, 0.0, 1.0, defaults.get(i, 0.0), 0.01, key=f"p4_{site}_{i}")
+                           for i in ions}
+    a, b, x = sites["A"], sites["B"], sites["X"]
+    sums = {s: sum(v.values()) for s, v in sites.items()}
+    oks = {s: abs(v - 1.0) <= 0.011 for s, v in sums.items()}
+    for h, s in zip(heads, ["A", "B", "X"]):
+        h.html(f'<div style="display:flex; justify-content:space-between; align-items:baseline; '
+               f'border-bottom:2px solid var(--ink); padding-bottom:4px; margin:6px 0 2px">'
+               f'<span style="font-weight:800; font-size:13px">{s}-site</span>'
+               f'<span style="font-size:11px; font-weight:700; color:{"var(--n700)" if oks[s] else "var(--acc)"}">'
+               f'Σ {tr(sums[s], 2)}</span></div>')
 
-    st.subheader("🏗️ Cihaz yığını ve süreç")
-    d = st.columns(4)
-    arch = d[0].selectbox("Mimari", list(maps["arch"].items()),
-                          format_func=lambda kv: kv[1],
-                          index=list(maps["arch"].values()).index("nip")
-                          if "nip" in maps["arch"].values() else 0)
+    ui.kicker("Cihaz yığını ve süreç", tone="ink")
+    d = st.columns(2)
+    arch = d[0].selectbox("Mimari", list(maps["arch"].items()), format_func=lambda kv: kv[1],
+                          index=list(maps["arch"].values()).index("nip") if "nip" in maps["arch"].values() else 0)
     etl = d[1].selectbox("ETL", list(maps["ETL"].items()), format_func=lambda kv: kv[1])
-    htl = d[2].selectbox("HTL", list(maps["HTL"].items()), format_func=lambda kv: kv[1])
-    solv = d[3].selectbox("Çözücü sistemi", list(maps["solv"].items()),
-                          format_func=lambda kv: kv[1])
+    htl = d[0].selectbox("HTL", list(maps["HTL"].items()), format_func=lambda kv: kv[1])
+    solv = d[1].selectbox("Çözücü sistemi", list(maps["solv"].items()), format_func=lambda kv: kv[1])
     e = st.columns(3)
     with e[0]:
-        bg_unk = st.checkbox("Band gap bilinmiyor")
-        bg = st.number_input("Band gap (eV)", 1.0, 3.6, 1.60, 0.01, disabled=bg_unk)
+        ph = st.empty()
+        bg_unk = st.checkbox("bilinmiyor", key="p4_bg_unk")
+        bg = ph.number_input("Band gap (eV)", 1.0, 3.6, 1.60, 0.01, disabled=bg_unk)
     with e[1]:
-        at_unk = st.checkbox("Tavlama sıcaklığı bilinmiyor")
-        at = st.number_input("Tavlama sıcaklığı (°C)", 20.0, 500.0, 100.0, 5.0,
-                             disabled=at_unk)
+        ph = st.empty()
+        at_unk = st.checkbox("bilinmiyor", key="p4_at_unk")
+        at = ph.number_input("Tavlama (°C)", 20.0, 500.0, 100.0, 5.0, disabled=at_unk)
     with e[2]:
-        ati_unk = st.checkbox("Tavlama süresi bilinmiyor")
-        ati = st.number_input("Tavlama süresi (dk)", 0.0, 600.0, 20.0, 5.0,
-                              disabled=ati_unk)
-    gonder = st.form_submit_button("🔮 PCE tahmini al", width="stretch")
+        ph = st.empty()
+        ati_unk = st.checkbox("bilinmiyor", key="p4_ati_unk")
+        ati = ph.number_input("Tavlama (dk)", 0.0, 600.0, 20.0, 5.0, disabled=ati_unk)
 
-if gonder:
-    hatalar = [s for s, v in (("A", a), ("B", b), ("X", x))
-               if abs(sum(v.values()) - 1.0) > 0.011]
-    if hatalar:
-        st.error(f"{', '.join(hatalar)}-site katsayı toplamı 1,00 olmalı "
-                 f"(şu an: {', '.join(tr(sum(dict(zip(['A','B','X'],[a,b,x]))[h].values()), 2) for h in hatalar)}).")
-        st.stop()
+    if st.button("PCE tahmini al  →", type="primary", width="stretch"):
+        st.session_state["p4_submitted"] = True
+    submitted = st.session_state.get("p4_submitted", False)
+    if submitted and not all(oks.values()):
+        hatalar = [s for s, ok in oks.items() if not ok]
+        ui.box(f"<strong>Katsayı toplamı hatası:</strong> {', '.join(hatalar)}-site katsayı toplamı 1,00 olmalı "
+               f"(şu an: {', '.join(tr(sums[h], 2) for h in hatalar)}).", accent=True)
 
-    enc = encode.encode(a, b, x, arch[0], etl[0], htl[0], solv[0],
-                        bg, at, ati, bg_unk, at_unk, ati_unk)
-    pred = float(data.model().predict(enc)[0])
-    m_lo, m_hi, q_lo, q_hi, quart = encode.conformal_interval(pred)
-    dist, thr, inside, komsular = encode.ad_distance(enc)
+# ---------------------------------------------------------------- sonuç
+with right:
+    if not submitted:
+        st.html('<div style="padding:26px 0 0"></div>')
+        ui.box("<p>Sol taraftaki tarifi kurun ve <strong>PCE tahmini al</strong> düğmesine basın. Sonuç, tahmini "
+               "PCE ile birlikte %90 belirsizlik aralığını, tarifin eğitim verisine yakınlığını ve tahmini "
+               "belirleyen özellik katkılarını (yerel SHAP) gösterir.</p>"
+               "<p>Tahmin değerleri canlı CatBoost modelinden (v0.4.0 eğitim bölmesi) üretilir; aralık matematiği "
+               f"tezin gerçek kalibrasyonudur (±{tr(HW, 2)} marjinal / Mondrian çeyrekleri).</p>",
+               k="Nasıl çalışır")
+    elif all(oks.values()):
+        enc = encode.encode(a, b, x, arch[0], etl[0], htl[0], solv[0], bg, at, ati, bg_unk, at_unk, ati_unk)
+        pred = float(data.model().predict(enc)[0])
+        m_lo, m_hi, q_lo, q_hi, quart = encode.conformal_interval(pred)
+        dist, thr, inside, komsular = encode.ad_distance(enc)
+        fg = "var(--ink)" if inside else "var(--acc)"
 
-    r1, r2, r3, r4 = st.columns(4)
-    r1.metric("Tahmini PCE", tr(pred, 2) + " %")
-    r2.metric("Nominal %90 aralık (genel)", f"{tr(m_lo, 1)} – {tr(m_hi, 1)}",
-              help="Eğitim dışı (DOI düzeyinde ayrık) yayınlardaki gerçek hataların %90'ını "
-                   "kapsayan genişlik (marginal conformal): tüm kalibrasyon kayıtları birlikte. "
-              "Holdout'ta gözlenen kapsama: %89,9 (tez Bölüm 4.10).")
-    r3.metric(f"Nominal %90 aralık (bölgesel, {quart})", f"{tr(q_lo, 1)} – {tr(q_hi, 1)}",
-              help="Aynı hesap, yalnızca bu tahmin düzeyindeki (çeyrekteki) kayıtların "
-                   "hatalarıyla yapılır (Mondrian conformal); aralık bölgeye duyarlı hâle gelir.")
-    r4.metric("Eğitim-uzayına uzaklık", tr(dist, 2),
-              f"eşik {tr(thr, 2)} — {'alan içi' if inside else 'alan DIŞI'}",
-              delta_color="normal" if inside else "inverse")
+        ui.stats([
+            ("Tahmini PCE", f"{tr(pred, 2)}<small>%</small>", "", "acc"),
+            ("%90 aralık — genel", f"{tr(m_lo, 1)} – {tr(m_hi, 1)}", f"marjinal conformal · ±{tr(HW, 2)}"),
+            (f"%90 aralık — bölgesel {quart}", f"{tr(q_lo, 1)} – {tr(q_hi, 1)}", "Mondrian conformal · çeyreğe duyarlı"),
+            ("Eğitim-uzayına uzaklık", f'<span style="color:{fg}">{tr(dist, 2)}</span>',
+             f'eşik {tr(thr, 2)} — <strong style="color:{fg}">{"alan içi" if inside else "alan DIŞI"}</strong>'),
+        ], border=False, small=True)
 
-    if not inside:
-        st.error("Bu tarif, eğitim verisinin yoğun bölgesinin **dışında** "
-                 f"(kNN uzaklığı {tr(dist, 2)} > eşik {tr(thr, 2)}). Model bu bölgeyi "
-                 "çok az örnekten öğrenmiştir; tahmini "
-                 "yalnızca kaba bir yönlendirme olarak okuyun.")
-    if pred > meta["train_pce_max"] * 0.6:
-        st.caption(f"Not: eğitimdeki en yüksek PCE {tr(meta['train_pce_max'], 1)}. Ağaç "
-                   "modeller gözlenmemiş bölgede güvenilir ekstrapolasyon yapamaz; "
-                   "tahminler pratikte bu tavanın belirgin altında kalır (tez Bölüm 5.4).")
+        st.html(
+            '<div class="m-band">'
+            f'<div class="mb" style="left:{pct(m_lo):.2f}%; width:{pct(m_hi) - pct(m_lo):.2f}%"></div>'
+            f'<div class="qb" style="left:{pct(q_lo):.2f}%; width:{pct(q_hi) - pct(q_lo):.2f}%"></div>'
+            f'<div class="pt" style="left:{pct(pred):.2f}%"></div>'
+            f'<div class="pl" style="left:{pct(pred):.2f}%">{tr(pred, 2)}</div></div>'
+            '<div class="m-axis"><span>0</span><span>PCE (%) — açık bant: marjinal %90 · koyu bant: Mondrian %90</span>'
+            '<span>30</span></div>'
+        )
 
-    # ---- Veri desteği: bu tarif eğitim verisinde ne kadar karşılık buluyor? ----
-    st.subheader("Veri desteği")
-    rec = data.records()
-    egitim = rec[rec["bolme"] == "eğitim"]
-    # Sayim ham etiket yerine kova sutunlariyla yapilir: "Diğer (...)" ve NaN
-    # kovalari da modelin gordugu haliyle dogru sayilsin.
-    uclu_n = int(((egitim["kova_arch"] == arch[1]) & (egitim["kova_ETL"] == etl[1]) &
-                  (egitim["kova_HTL"] == htl[1])).sum())
-    solv_n = int((egitim["kova_solv"] == solv[1]).sum())
-    if any(s.startswith("Diğer (") or s in ("unknown", "Unknown")
-           for s in (arch[1], etl[1], htl[1], solv[1])):
-        st.caption("Not: 'Diğer (...)' ve 'unknown' seçenekleri tek bir malzemeyi değil, "
-                   "modelin aynı kovada topladığı tüm seyrek/bilinmeyen etiketleri temsil "
-                   "eder; aşağıdaki sayımlar bu kovanın toplamıdır.")
-    d1, d2, d3 = st.columns(3)
-    d1.metric("Mimari–ETL–HTL üçlüsü eğitimde", f"{tr(uclu_n, 0)} kayıt",
-              "hiç görülmedi!" if uclu_n == 0 else
-              ("seyrek (<5)" if uclu_n < 5 else "destekli"),
-              delta_color="inverse" if uclu_n < 5 else "normal")
-    d2.metric("Çözücü sistemi eğitimde", f"{tr(solv_n, 0)} kayıt")
-    d3.metric("En yakın 5 komşuya uzaklık", tr(dist, 2))
-    if uclu_n == 0:
-        st.error("Seçtiğiniz mimari–ETL–HTL kombinasyonu eğitim verisinde **hiç "
-                 "gözlenmemiş**. Model bu birleşimin etkileşimini öğrenmiş olamaz; "
-                 "tahmin, bileşenlerin tekil örüntülerinin toplamıdır (tez Bölüm 4.5'teki "
-                 "birlikte-görülme denetiminin birebir karşılığı).")
-    elif uclu_n < 5:
-        st.warning(f"Bu üçlü eğitimde yalnızca {uclu_n} kez görüldü; tezin "
-                   "eğitim-desteği eşiğinin (≥5) altında (Bölüm 4.5).")
+        if not inside:
+            ui.box(f"Bu tarif, eğitim verisinin yoğun bölgesinin <strong>dışında</strong> (kNN uzaklığı "
+                   f"{tr(dist, 2)} &gt; eşik {tr(thr, 2)}). Model bu bölgeyi çok az örnekten öğrenmiştir; tahmini "
+                   "yalnızca kaba bir yönlendirme olarak okuyun.", chip="Alan dışı", accent=True)
+        if pred > fmeta["train_pce_max"] * 0.6:
+            ui.text(f"Not: eğitimdeki en yüksek PCE {tr(fmeta['train_pce_max'], 1)}. Ağaç modeller gözlenmemiş "
+                    "bölgede güvenilir ekstrapolasyon yapamaz; tahminler pratikte bu tavanın belirgin altında kalır "
+                    "(tez Bölüm 5.4).", mute=True)
 
-    if komsular:
-        with st.expander("Eğitimdeki en yakın 5 örnek (ölçekli özellik uzayında)"):
-            kdf = rec.set_index("row_id").loc[[k for k in komsular if k in
-                                               rec["row_id"].values]]
-            st.dataframe(
-                kdf[["kompozisyon", "mimari", "ETL", "HTL", "cozucu", "band_gap",
-                     "PCE", "DOI"]].rename(columns={
-                    "kompozisyon": "Kompozisyon", "cozucu": "Çözücü",
-                    "PCE": "Gerçek PCE"}),
-                hide_index=True, width="stretch",
-                column_config={"Gerçek PCE": st.column_config.NumberColumn(format="%.2f"),
-                               "band_gap": st.column_config.NumberColumn(format="%.2f")})
-            st.caption("Bu komşular tahminin kaynağı değildir: CatBoost tahmini doğrudan "
-                       "77-özellik vektöründen üretir; komşular yalnızca tarifin eğitim "
-                       "verisindeki bağlamını gösterir (uygulanabilirlik-alanı teşhisi). "
-                       "Komşuların gerçek PCE aralığı, tahmini tartmak için makul bir bağlamdır.")
+        # --- veri desteği
+        rec = data.records()
+        egitim = rec[rec["bolme"] == "eğitim"]
+        uclu_n = int(((egitim["kova_arch"] == arch[1]) & (egitim["kova_ETL"] == etl[1]) &
+                      (egitim["kova_HTL"] == htl[1])).sum())
+        solv_n = int((egitim["kova_solv"] == solv[1]).sum())
+        st.html('<div style="border-top:1px solid var(--div); margin-top:8px"></div>')
+        ui.kicker("Veri desteği", tone="ink")
+        u_fg = "var(--acc)" if uclu_n == 0 else ("var(--acc700)" if uclu_n < 5 else "var(--ink)")
+        ui.stats([
+            ("Mimari–ETL–HTL üçlüsü eğitimde", f'<span style="color:{u_fg}">{tr(uclu_n, 0)}<small> kayıt</small></span>',
+             "hiç gözlenmedi" if uclu_n == 0 else ("seyrek (&lt;5)" if uclu_n < 5 else "≥ 5 · destekli (Bölüm 4.5)")),
+            ("Çözücü sistemi eğitimde", f"{tr(solv_n, 0)}<small> kayıt</small>", "çözücü sisteminin eğitimdeki sıklığı"),
+            ("En yakın 5 komşuya uzaklık", tr(dist, 2), "ölçekli özellik uzayında"),
+        ], border=False, small=True)
+        if any(s.startswith("Diğer (") or s in ("unknown", "Unknown") for s in (arch[1], etl[1], htl[1], solv[1])):
+            ui.text("Not: \"Diğer (…)\" ve \"unknown\" seçenekleri tek bir malzemeyi değil, modelin aynı kovada "
+                    "topladığı tüm seyrek/bilinmeyen etiketleri temsil eder; yukarıdaki sayımlar bu kovanın "
+                    "toplamıdır.", mute=True)
+        if uclu_n == 0:
+            ui.box("<strong>Bu üçlü eğitimde hiç gözlenmemiş.</strong> Model bu birleşimin etkileşimini öğrenmiş "
+                   "olamaz; tahmin, bileşenlerin tekil örüntülerinin toplamıdır (tez Bölüm 4.5'teki birlikte-görülme "
+                   "denetiminin birebir karşılığı).", accent=True)
+        elif uclu_n < 5:
+            ui.box(f"Bu üçlü eğitimde yalnızca {uclu_n} kez görüldü; tezin eğitim-desteği eşiğinin (≥5) altında "
+                   "(Bölüm 4.5).", accent=True)
 
-    with st.expander("Bu tahminde kullanılan varsayımların tam dökümü"):
-        med = meta["medians"]
-        satirlar = [
-            f"- A/B/X oranları: girdiğiniz değerler (toplamlar doğrulandı)",
-            f"- Mimari / ETL / HTL / çözücü: `{arch[1]}` / `{etl[1]}` / `{htl[1]}` / `{solv[1]}`",
-            (f"- Band gap: **bilinmiyor işaretlendi → eğitim medyanı {tr(med['band_gap'], 2)} eV "
-             f"kullanıldı + eksiklik bayrağı = 1**" if bg_unk
-             else f"- Band gap: {tr(bg, 2)} eV (girdiğiniz değer)"),
-            (f"- Tavlama sıcaklığı: **bilinmiyor → medyan {tr(med['anneal_temp'], 0)} °C + bayrak**"
-             if at_unk else f"- Tavlama sıcaklığı: {tr(at, 0)} °C"),
-            (f"- Tavlama süresi: **bilinmiyor → medyan {tr(med['anneal_time'], 0)} dk + bayrak**"
-             if ati_unk else f"- Tavlama süresi: {tr(ati, 0)} dk"),
-            "- Esnek/yarı-saydam: hayır (0) — tarif formunda sorulmaz, aday uzayıyla aynı varsayım",
-            "- Ölçüm-sonrası hiçbir değişken (Voc, Jsc, FF...) modele girmez (hedef-sızıntısı denetimli sözleşme)",
-        ]
-        st.markdown("\n".join(satirlar))
+        # --- yerel SHAP
+        st.html('<div style="border-top:1px solid var(--div); margin-top:8px"></div>')
+        ui.kicker("Bu tahmini ne belirledi? — yerel katkılar", "(SHAP, PCE puanı)", tone="ink")
+        sv = data.explainer().shap_values(enc)[0]
+        imp = pd.DataFrame({"özellik": enc.columns, "katkı": sv})
+        imp = imp[imp["katkı"].abs() > 1e-4].sort_values("katkı")
+        top = pd.concat([imp.head(8), imp.tail(8)]).drop_duplicates().sort_values("katkı")
+        mx = max(0.01, float(top["katkı"].abs().max()))
+        rows = []
+        for r in top.itertuples():
+            w = abs(r.katkı) / mx * 50
+            left_ = f"{50 - w:.2f}%" if r.katkı < 0 else "50%"
+            col = "var(--acc)" if r.katkı < 0 else "var(--ink)"
+            fgc = "var(--acc700)" if r.katkı < 0 else "var(--ink)"
+            sign = "−" if r.katkı < 0 else "+"
+            rows.append(f'<div><div class="nm" title="{ui.esc(r.özellik)}">{ui.esc(r.özellik)}</div>'
+                        f'<div class="tr"><div class="z"></div><div class="b" style="left:{left_}; width:{w:.2f}%; '
+                        f'background:{col}"></div></div><div class="vl" style="color:{fgc}">{sign}{tr(abs(r.katkı), 2)}</div></div>')
+        st.html(f'<div class="m-shap">{"".join(rows)}</div>')
+        g = data.csv("shap_top_features.csv")
+        ui.text("Sola uzanan (kırmızı) katkılar tahmini düşürür, sağa uzananlar (mürekkep) yükseltir. Küresel "
+                f"önem sıralaması (model geneli): {' · '.join(ui.esc(f) for f in g['feature'].head(5))} "
+                "(tez Tablo 4.6).", mute=True)
+        with st.expander("Küresel önem sıralaması (model geneli, tez Tablo 4.6)"):
+            st.dataframe(g.head(15), hide_index=True, width="stretch",
+                         column_config={"feature": "Özellik", "mean_abs_shap": st.column_config.NumberColumn(
+                             "ort |SHAP|", format="%.4f")})
 
-    fig = go.Figure()
-    fig.add_shape(type="rect", x0=m_lo, x1=m_hi, y0=-0.3, y1=0.3,
-                  fillcolor=MAVI, opacity=0.25, line_width=0)
-    fig.add_shape(type="rect", x0=q_lo, x1=q_hi, y0=-0.15, y1=0.15,
-                  fillcolor=MAVI, opacity=0.45, line_width=0)
-    fig.add_trace(go.Scatter(x=[pred], y=[0], mode="markers+text",
-                             marker=dict(color=KIRMIZI, size=14, symbol="diamond"),
-                             text=[tr(pred, 2)], textposition="top center",
-                             showlegend=False))
-    fig.update_layout(height=140, xaxis_title="PCE (%)", yaxis_visible=False,
-                      xaxis_range=[max(0, m_lo - 2), m_hi + 2],
-                      margin=dict(t=10, b=10),
-                      title="Açık bant: marginal %90 · koyu bant: Mondrian %90")
-    st.plotly_chart(fig, width="stretch")
+        if komsular:
+            with st.expander("Eğitimdeki en yakın 5 örnek (ölçekli özellik uzayında)"):
+                kdf = rec.set_index("row_id").loc[[k for k in komsular if k in rec["row_id"].values]]
+                st.dataframe(
+                    kdf[["kompozisyon", "mimari", "ETL", "HTL", "cozucu", "band_gap", "PCE", "DOI"]].rename(
+                        columns={"kompozisyon": "Kompozisyon", "cozucu": "Çözücü", "PCE": "Gerçek PCE"}),
+                    hide_index=True, width="stretch",
+                    column_config={"Gerçek PCE": st.column_config.NumberColumn(format="%.2f"),
+                                   "band_gap": st.column_config.NumberColumn(format="%.2f")})
+                ui.text("Bu komşular tahminin kaynağı değildir: CatBoost tahmini doğrudan 77-özellik vektöründen "
+                        "üretir; komşular yalnızca tarifin eğitim verisindeki bağlamını gösterir "
+                        "(uygulanabilirlik-alanı teşhisi). Komşuların gerçek PCE aralığı, tahmini tartmak için makul "
+                        "bir bağlamdır.", mute=True)
 
-    st.subheader("🧠 Bu tahmini ne belirledi? (yerel SHAP)")
-    sv = data.explainer().shap_values(enc)[0]
-    imp = pd.DataFrame({"özellik": enc.columns, "katkı": sv})
-    imp = imp[imp["katkı"].abs() > 1e-4].sort_values("katkı")
-    top = pd.concat([imp.head(8), imp.tail(8)]).drop_duplicates()
-    fig = go.Figure(go.Bar(
-        x=top["katkı"], y=top["özellik"], orientation="h",
-        marker_color=[KIRMIZI if v < 0 else MAVI for v in top["katkı"]],
-        text=[f"{v:+.2f}" for v in top["katkı"]], textposition="outside"))
-    fig.update_layout(height=420, xaxis_title="PCE katkısı (puan)",
-                      title="Yükselten (mavi) / düşüren (kırmızı) özellikler",
-                      margin=dict(t=40))
-    st.plotly_chart(fig, width="stretch")
+        with st.expander("Bu tahminde kullanılan varsayımların tam dökümü"):
+            med = fmeta["medians"]
+            satirlar = [
+                "A/B/X oranları: girdiğiniz değerler (toplamlar doğrulandı)",
+                f"Mimari / ETL / HTL / çözücü: <span class='m-mono'>{ui.esc(arch[1])}</span> / "
+                f"<span class='m-mono'>{ui.esc(etl[1])}</span> / <span class='m-mono'>{ui.esc(htl[1])}</span> / "
+                f"<span class='m-mono'>{ui.esc(solv[1])}</span>",
+                (f"Band gap: <strong>bilinmiyor işaretlendi → eğitim medyanı {tr(med['band_gap'], 2)} eV kullanıldı "
+                 f"+ eksiklik bayrağı = 1</strong>" if bg_unk else f"Band gap: {tr(bg, 2)} eV (girdiğiniz değer)"),
+                (f"Tavlama sıcaklığı: <strong>bilinmiyor → medyan {tr(med['anneal_temp'], 0)} °C + bayrak</strong>"
+                 if at_unk else f"Tavlama sıcaklığı: {tr(at, 0)} °C"),
+                (f"Tavlama süresi: <strong>bilinmiyor → medyan {tr(med['anneal_time'], 0)} dk + bayrak</strong>"
+                 if ati_unk else f"Tavlama süresi: {tr(ati, 0)} dk"),
+                "Esnek / yarı saydam: hayır (0) — tarif formunda sorulmaz, aday uzayıyla aynı varsayım",
+                "Ölçüm-sonrası hiçbir değişken (Voc, Jsc, FF…) modele girmez (hedef sızıntısı denetimli sözleşme)",
+            ]
+            ui.steps([(str(i + 1), s) for i, s in enumerate(satirlar)])
 
-    with st.expander("🌍 Küresel önem sıralaması (model geneli, tez Tablo 4.6)"):
-        g = data.csv("shap_top_features.csv").head(15)
-        st.dataframe(g, hide_index=True, width="stretch",
-                     column_config={"mean_abs_shap": st.column_config.NumberColumn(
-                         "ort |SHAP|", format="%.4f")})
+        ui.sci_limit_box()
 
-    bilim_uyarisi()
-    conformal_uyarisi()
+ui.footer()

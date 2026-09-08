@@ -4,84 +4,97 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Perovskit PCE Tahmini — İKÇÜ Yüksek Lisans Tezi Uygulaması</title>
-<meta name="description" content="Perovskit güneş hücrelerinde makine öğrenmesiyle hedef-sızıntısı denetimli PCE tahmini: 41.485 kayıt, DOI-grup-ayrık doğrulama (R²=0,413), conformal belirsizlik aralıkları ve 756 aday kompozisyonun etkileşimli keşfi. İzmir Kâtip Çelebi Üniversitesi yüksek lisans tezi eşlik uygulaması.">
+<meta name="description" content="Perovskit güneş hücrelerinde makine öğrenmesiyle hedef sızıntısı denetimli PCE tahmini: 41.485 kayıt, DOI-grup-ayrık doğrulama (R² = 0,410), conformal belirsizlik aralıkları ve 756 aday kompozisyonun etkileşimli keşfi. İzmir Kâtip Çelebi Üniversitesi yüksek lisans tezi eşlik uygulaması.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Perovskit PCE Tahmini — DOI-Grup-Ayrık ML Hattı">
-<meta property="og:description" content="Aynı veri, aynı model: yalnızca doğrulama kararları değişince R² 0,263–0,938 arasında değişiyor. Tezin merkez bulgusunu kendiniz deneyin.">
+<meta property="og:description" content="Aynı veri, aynı model: yalnızca doğrulama kararları değişince R² 0,261–0,937 arasında değişiyor. Tezin merkez bulgusunu kendiniz deneyin.">
 <meta property="og:url" content="https://tez.ismailtopcam.dev/hakkinda">
 <meta property="og:image" content="https://tez.ismailtopcam.dev/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <style>
-  :root { --bordo: #ab162c; --gri: #5c6570; }
+  /* "Modernist" tasarım sistemi jetonları (uygulamayla aynı) */
+  @font-face { font-family: "Archivo"; font-weight: 100 900; font-style: normal; font-display: swap;
+               src: url(/app/static/fonts/archivo-latin-wght-normal.woff2) format("woff2-variations");
+               unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+  @font-face { font-family: "Archivo"; font-weight: 100 900; font-style: normal; font-display: swap;
+               src: url(/app/static/fonts/archivo-latin-ext-wght-normal.woff2) format("woff2-variations");
+               unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+  :root { --ink:#201e1d; --bg:#f3f2f2; --acc:#ec3013; --acc600:#dd2b0f; --acc700:#ae1800; --acc100:#fff2ef;
+          --n200:#eae7e7; --n700:#605d5d; --n800:#444141; --div:#9f9d9d; }
   * { box-sizing: border-box; }
-  body { font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-         margin: 0; color: #1a1f24; line-height: 1.6; }
-  .wrap { max-width: 760px; margin: 0 auto; padding: 2.2rem 1.2rem 3rem; }
-  h1 { color: var(--bordo); font-size: 1.7rem; line-height: 1.3; margin: 0.4rem 0 0.2rem; }
-  .kurum { color: var(--gri); font-size: 0.95rem; }
-  h2 { font-size: 1.15rem; margin-top: 1.8rem; border-bottom: 2px solid #eee;
-       padding-bottom: 0.3rem; }
-  .cta { display: inline-block; background: var(--bordo); color: #fff; font-weight: 600;
-         padding: 0.7rem 1.6rem; border-radius: 8px; text-decoration: none;
-         margin: 1.2rem 0 0.4rem; }
-  .cta:hover { background: #8d1224; }
-  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
-  td, th { border: 1px solid #e3e6ea; padding: 0.45rem 0.7rem; text-align: left; }
-  th { background: #f7f3f4; }
-  .uyar { background: #fdf3e7; border-left: 4px solid #e0a145; padding: 0.8rem 1rem;
-          border-radius: 4px; font-size: 0.95rem; }
-  a { color: var(--bordo); }
-  footer { color: var(--gri); font-size: 0.85rem; margin-top: 2.4rem;
-           border-top: 1px solid #eee; padding-top: 1rem; }
+  body { font-family: "Archivo", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; margin: 0;
+         background: var(--bg); color: var(--ink); line-height: 1.55; font-size: 15px; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 2.4rem 1.4rem 3rem; }
+  .kurum { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--acc700); }
+  .ens { font-size: 12px; color: var(--n700); margin-top: 2px; }
+  h1 { font-weight: 800; font-size: clamp(28px, 4vw, 40px); line-height: 1.08; letter-spacing: -.01em; margin: 18px 0 6px; }
+  h1 .acc { color: var(--acc); }
+  .alt { font-size: 14px; color: var(--n800); max-width: 70ch; }
+  .rule { border-top: 2px solid var(--div); margin: 22px 0 0; }
+  h2 { font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--ink); margin: 26px 0 10px; }
+  p { margin: 0 0 10px; font-size: 14px; color: var(--n800); }
+  p strong, li strong { color: var(--ink); }
+  .cta { display: inline-flex; justify-content: space-between; gap: 24px; min-width: 240px; background: var(--acc); color: #fff;
+         font-weight: 700; font-size: 13px; padding: 12px 16px; text-decoration: none; margin: 18px 0 4px; }
+  .cta:hover { background: var(--acc600); }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); border-top: 2px solid var(--div); border-bottom: 2px solid var(--div); margin-top: 8px; }
+  .stats > div { padding: 16px 18px 18px; border-left: 1px solid var(--div); }
+  .stats > div:first-child { border-left: 0; padding-left: 0; }
+  .stats .l { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--n700); }
+  .stats .v { font-weight: 800; font-size: 34px; line-height: 1.1; }
+  .stats .v.acc { color: var(--acc); }
+  .stats .s { font-size: 12px; color: var(--n700); margin-top: 2px; }
+  .box { border: 2px solid var(--ink); padding: 14px 16px; font-size: 13.5px; color: var(--n800); }
+  .box .chip { font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; background: var(--ink); color: var(--bg);
+               display: inline-block; padding: 2px 8px; margin-bottom: 8px; }
+  ul { padding-left: 1.1rem; font-size: 14px; color: var(--n800); }
+  li { margin-bottom: 4px; }
+  a { color: var(--acc700); text-decoration: none; }
+  a:hover { color: var(--acc600); text-decoration: underline; }
+  footer { color: var(--n700); font-size: 11.5px; margin-top: 2.4rem; border-top: 2px solid var(--div); padding-top: 14px; }
+  footer .kurum2 { color: var(--acc700); font-weight: 700; }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="kurum">İzmir Kâtip Çelebi Üniversitesi · Fen Bilimleri Enstitüsü · Yazılım Mühendisliği</div>
-  <h1>Perovskit Güneş Hücrelerinde Makine Öğrenmesi Tabanlı PCE Tahmini</h1>
-  <div class="kurum">Yüksek lisans tezi eşlik uygulaması — İsmail Topçam</div>
+  <div class="kurum">İzmir Kâtip Çelebi Üniversitesi</div>
+  <div class="ens">Fen Bilimleri Enstitüsü · Yazılım Mühendisliği · Yüksek lisans tezi eşlik uygulaması — İsmail Topçam</div>
+  <h1>Raporlanan model başarımını algoritma kadar <span class="acc">doğrulama ve özellik kararları</span> belirler.</h1>
+  <p class="alt">Açık erişimli <a href="https://www.perovskitedatabase.com">Perovskite Database</a>'in 43.398 kayıtlık anlık
+  görüntüsünden başlayarak veri temizliğini, makine öğrenmesi deneylerini ve bulguları etkileşimli ve denetlenebilir
+  biçimde sunar. Perovskit güneş hücrelerinde makine öğrenmesi tabanlı güç dönüşüm verimi (PCE) tahmini.</p>
+  <a class="cta" href="/"><span>Uygulamayı aç</span><span>→</span></a>
 
-  <a class="cta" href="/">🔬 Uygulamayı aç</a>
-
-  <h2>Bu uygulama ne yapar?</h2>
-  <p>Açık erişimli <a href="https://www.perovskitedatabase.com">Perovskite Database</a>'in
-  43.398 kayıtlık anlık görüntüsünden başlayarak; veri temizliğini, makine öğrenmesi
-  deneylerini ve bulguları <strong>etkileşimli ve denetlenebilir</strong> biçimde sunar.
-  Tezin ana savı: <em>raporlanan model başarımını algoritmanın yanı sıra doğrulama
-  ve özellik kararları da belirler.</em></p>
-
+  <div class="rule"></div>
   <h2>Ana bulgular</h2>
-  <table>
-    <tr><th>Bulgu</th><th>Değer</th></tr>
-    <tr><td>Temiz veri</td><td>41.485 kayıt (77 özellik)</td></tr>
-    <tr><td>DOI-grup-güvenli R² (dürüst ölçüm)</td><td><strong>0,413 ± 0,006</strong></td></tr>
-    <tr><td>Rastgele bölme (kardeş-cihaz sızıntısı)</td><td>0,481 — iyimserlik +0,068</td></tr>
-    <tr><td>Ölçüm-sonrası Voc/Jsc/FF eklenirse</td><td>0,938 — hedef sızıntısı</td></tr>
-    <tr><td>%90 conformal aralık (ampirik kapsama %88,2)</td><td>±6,42 PCE puanı</td></tr>
-    <tr><td>Aday tarama uzayı</td><td>756 kompozisyon–cihaz konfigürasyonu</td></tr>
-  </table>
+  <div class="stats">
+    <div><div class="l">Temiz kayıt</div><div class="v">41.485</div><div class="s">77 özellik; 1.913 eleme loglandı</div></div>
+    <div><div class="l">Grup-güvenli R²</div><div class="v">0,410</div><div class="s">± 0,016 · yayın-ayrık 5-kat CV</div></div>
+    <div><div class="l">Rastgele bölme iyimserliği</div><div class="v acc">+0,071</div><div class="s">kardeş-cihaz sızıntısı skoru 0,481'e çıkarır</div></div>
+    <div><div class="l">+ Voc / Jsc / FF</div><div class="v acc">0,937</div><div class="s">hedef sızıntısı — sentez öncesi bilinemez</div></div>
+    <div><div class="l">%90 conformal aralık</div><div class="v">±6,66</div><div class="s">PCE puanı; gözlenen kapsama %89,9</div></div>
+    <div><div class="l">Aday tarama uzayı</div><div class="v">756</div><div class="s">kompozisyon–cihaz yapılandırması; 504'ü eğitimde destekli</div></div>
+  </div>
 
-  <h2>Bilimsel sorumluluk reddi</h2>
-  <div class="uyar">Bu uygulamanın hiçbir çıktısı <strong>deneysel doğrulama yerine
-  geçmez</strong>. Model, geçmiş literatür kayıtlarından öğrenilen gözlemsel örüntülerle
-  <strong>aday önceliklendirmesi</strong> yapar; kesin PCE söylemez, nedensel öneri
-  vermez ve eğitim dağılımının dışına ekstrapolasyon yapamaz. Belirsizlik aralıkları,
-  eğitimden ham DOI anahtarı düzeyinde ayrık tutulan yayın gruplarında ölçülmüş
-  ampirik kapsama aralıklarıdır; kesin garanti sunmaz.</div>
+  <h2>Bilimsel sınır</h2>
+  <div class="box"><div class="chip">Bilimsel sınır</div>
+  Bu uygulamanın hiçbir çıktısı <strong>deneysel doğrulama yerine geçmez</strong>. Model, geçmiş literatür kayıtlarından
+  öğrenilen gözlemsel örüntülerle <strong>aday önceliklendirmesi</strong> yapar; kesin PCE söylemez, nedensel öneri vermez ve
+  eğitim dağılımının dışına ekstrapolasyon yapamaz. Belirsizlik aralıkları, eğitimden kanonik DOI anahtarı düzeyinde ayrık
+  tutulan yayın gruplarında ölçülmüş ampirik kapsama aralıklarıdır; kesin garanti sunmaz.</div>
 
   <h2>Kod, veri ve arşiv</h2>
   <ul>
-    <li>Pipeline (tez kodu): <a href="https://github.com/ismailtopcam/perovskite-pce-ml-thesis">github.com/ismailtopcam/perovskite-pce-ml-thesis</a></li>
+    <li>Pipeline (tez kodu): <a href="https://github.com/ismailtopcam/perovskite-pce-ml-thesis">github.com/ismailtopcam/perovskite-pce-ml-thesis</a> — arşivlenen sürüm v0.4.0</li>
     <li>Uygulama kaynak kodu: <a href="https://github.com/ismailtopcam/perovskite-pce-ml-app">github.com/ismailtopcam/perovskite-pce-ml-app</a></li>
     <li>Kod arşivi (tüm sürümler): <a href="https://doi.org/10.5281/zenodo.20829027">DOI 10.5281/zenodo.20829027</a></li>
     <li>Veri: Perovskite Database (Jacobsson vd., 2022, <em>Nature Energy</em>) — CC BY 4.0</li>
   </ul>
 
-  <a class="cta" href="/">🔬 Uygulamayı aç</a>
+  <a class="cta" href="/"><span>Uygulamayı aç</span><span>→</span></a>
 
-  <footer>© 2026 İsmail Topçam — İzmir Kâtip Çelebi Üniversitesi. Uygulamadaki tüm
-  sayılar, tez kod deposundan deterministik olarak üretilmiştir; provenans ayrıntıları
-  uygulamanın "Pipeline &amp; Provenans" sayfasındadır.</footer>
+  <footer>© 2026 İsmail Topçam — <span class="kurum2">İzmir Kâtip Çelebi Üniversitesi</span>. Uygulamadaki tüm sayılar, tez kod
+  deposundan deterministik olarak üretilmiştir; provenans ayrıntıları uygulamanın "08 Pipeline &amp; Provenans" sayfasındadır.</footer>
 </div>
 </body>
 </html>

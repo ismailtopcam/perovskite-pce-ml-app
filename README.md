@@ -11,16 +11,34 @@ Ana pipeline deposu: <https://github.com/ismailtopcam/perovskite-pce-ml-thesis>
 
 | # | Sayfa | İçerik |
 |---|---|---|
-| — | Ana Sayfa | Tezin savı, başlık sonuçlar, provenans |
-| — | Kullanım Rehberi | Her ekranın açıklaması, küçük sözlük, SSS (uzman olmayan ziyaretçiler için) |
-| 1 | Veri Hattı | Ham→temiz dönüşüm, eleme nedenleri, **kayıt-düzeyi açıklama** ("bu kayıt neden elendi / hangi işlemler uygulandı") |
-| 2 | Doğrulama Deneyleri | Merkez ekran: bölme yöntemi ve özellik seti seçiminin R²'ye etkisi (0,261 ↔ 0,937) |
-| 3 | Model Karşılaştırma | 6 modelin DOI-grup CV / holdout başarımları |
-| 4 | Tahmin Aracı | Sanal cihaz tarifi → PCE + conformal %90 aralık + eğitim-uzayına uzaklık + **yerel SHAP** |
-| 5 | Gerçek vs Tahmin | 8.355 holdout kaydında hata analizi; segment bazlı "model nerede yanılıyor" |
-| 6 | Aday Tarayıcı | 756 adayın aralıklı, eğitim-destekli ve dürüst-uyarılı keşfi |
-| 7 | DOI Gezgini | Yayın-düzeyi izlenebilirlik; grup-güvenli bölmenin somut görünümü |
-| 8 | Pipeline & Provenans | 14 koşu-manifesti, sürüm/seed kaydı, bağımsız denetim özetleri |
+| — | Genel Bakış | Tezin savı, dört temel sayı, sayfa dizini, provenans |
+| R | Rehber | Her ekranın açıklaması, küçük sözlük, SSS (uzman olmayan ziyaretçiler için) |
+| 01 | Veri Hattı | Ham→temiz dönüşüm, eleme nedenleri, **kayıt-düzeyi açıklama** ("bu kayıt neden elendi / hangi işlemler uygulandı") |
+| 02 | Doğrulama | Merkez ekran: bölme yöntemi ve özellik kümesi seçiminin R²'ye etkisi (0,261 ↔ 0,937) |
+| 03 | Modeller | 6 modelin DOI-grup CV / holdout başarımları |
+| 04 | Tahmin Aracı | Sanal cihaz tarifi → PCE + conformal %90 aralık + eğitim-uzayına uzaklık + **yerel SHAP** |
+| 05 | Gerçek – Tahmin | 8.355 holdout kaydında hata analizi; segment bazlı "model nerede yanılıyor" |
+| 06 | Aday Tarayıcı | 756 adayın aralıklı, eğitim-destekli ve dürüst-uyarılı keşfi |
+| 07 | DOI Gezgini | Yayın-düzeyi izlenebilirlik; grup-güvenli bölmenin somut görünümü |
+| 08 | Provenans | Koşu-manifestleri, sürüm/seed kaydı, bağımsız denetim özetleri, model ve veri kimliği |
+
+Sayfa dosya adları ve URL'ler (`/Veri_Hatti`, `/Dogrulama_Deneyleri`, …) değişmez; rayda görünen
+başlıklar `streamlit_app.py` içinde tanımlanır.
+
+## Tasarım
+
+Arayüz, Claude Design'da hazırlanan **"Tez Uygulamasi (Modernist)"** tasarımını uygular: sol sabit
+ray (İKÇÜ kimliği → numaralı sayfa listesi → tez sahibi/provenans bloğu), Archivo yazı tipi, mürekkep
+`#201e1d` / zemin `#f3f2f2` / vurgu `#ec3013`, sıfır köşe yarıçapı, 2 px çizgiler, büyük sayı
+şeritleri ve mürekkep çerçeveli kutular.
+
+- Tema jetonları: `.streamlit/config.toml` (`[theme]`, `[[theme.fontFaces]]`).
+- Bileşen CSS'i ve HTML yardımcıları (`page_header`, `stats`, `bar_rows`, `box`, `table`, `flow`,
+  `chart` …): `lib/ui.py`. Her sayfa `ui.page_header(...)` ile başlar, `ui.footer()` ile biter.
+- Yazı tipi uygulamayla birlikte sunulur: `static/fonts/` (Archivo, SIL OFL 1.1 — lisans dosyası
+  aynı klasörde); `server.enableStaticServing = true` gerektirir.
+- Etkileşimli parçalar (segmentli seçim, sayı girişleri, tablolar, Plotly grafikleri) Streamlit
+  bileşenleridir; `lib/ui.py` içindeki CSS onları aynı dile çeker.
 
 ## Yerel çalıştırma
 
@@ -31,7 +49,7 @@ streamlit run streamlit_app.py
 ```
 
 Uygulama `data_app/` altındaki **önceden üretilmiş** kompakt dosyalarla çalışır
-(bu depoya dahildir); ham 83 MB'lık Perovskite Database CSV'sine ihtiyaç duymaz.
+(bu depoya dâhildir); ham 83 MB'lık Perovskite Database CSV'sine ihtiyaç duymaz.
 
 ## Docker ile dağıtım (kendi sunucunuz)
 
@@ -72,6 +90,6 @@ DOI: 10.1038/s41560-021-00941-3) — CC BY 4.0. Uygulamadaki tüm türetilmiş s
 tezde raporlanan 43.398 kayıtlık anlık görüntüden üretilmiştir.
 
 > **Not:** Kayıt-düzeyi ham alanların (Sayfa 1 ve 7) herkese açık sunumu, kaynak
-> veritabanının CC BY lisansı kapsamında atıf gerektirir. Bu atıf tüm sayfa
+> veri tabanının CC BY lisansı kapsamında atıf gerektirir. Bu atıf tüm sayfa
 > altbilgilerinde ve /hakkinda sayfasında yer almaktadır; gelecekteki düzenlemelerde
 > korunmalıdır.

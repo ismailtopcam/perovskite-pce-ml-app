@@ -1,7 +1,7 @@
 # Uygulama calisma zamani bagimliliklari
 # Ust sinirlar: her dagitim imaji sifirdan cozuldugu icin kirici bir majör surum
 # dogrudan uretime inmesin (bilinen-iyi surumler: data_app/manifests.json).
-streamlit>=1.50,<2
+streamlit>=1.63,<2
 pandas>=2.2,<4
 numpy>=1.26,<3
 plotly>=5.20,<7

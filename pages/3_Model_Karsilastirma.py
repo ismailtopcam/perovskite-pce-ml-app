@@ -1,60 +1,62 @@
 # -*- coding: utf-8 -*-
-import plotly.graph_objects as go
+"""03 Model Karşılaştırma — altı modelin DOI-grup CV ve holdout başarımları."""
 import streamlit as st
 
-from lib import data
-from lib.ui import page, tr, tez_notu, MAVI
-
-page("Model Karşılaştırma", "3️⃣")
-tez_notu("Bölüm 3.9 ve 4.2",
-         "Altı model aynı protokolle (aynı bölmeler, aynı 77 özellik, sabit hiperparametreler) "
-         "karşılaştırıldı; hiçbir modele test verisine bakan ayar yapılmadı.")
+from lib import data, ui
+from lib.ui import tr
 
 cv = data.csv("model_comparison_groupkfold.csv").sort_values("R2_mean", ascending=False)
-holdout = data.csv("model_comparison_holdout.csv").sort_values("R2", ascending=False)
+holdout = data.csv("model_comparison_holdout.csv")
+abl = data.js("descriptor_ablation.json")
+tune = data.js("tuning_best_params.json")
 
-l, r = st.columns([6, 5])
-with l:
-    st.subheader("DOI-grup 5-kat CV (ana ölçüt)")
-    fig = go.Figure(go.Bar(
-        x=cv["R2_mean"][::-1], y=cv["model"][::-1], orientation="h",
-        error_x=dict(array=cv["R2_std"][::-1]),
-        marker_color=[MAVI if m != "CatBoost" else "#2c5f8a" for m in cv["model"][::-1]],
-        text=[tr(v, 3) for v in cv["R2_mean"][::-1]], textposition="outside"))
-    fig.update_layout(height=340, xaxis_title="R² (ort ± std)", xaxis_range=[0, 0.5],
-                      margin=dict(t=10))
-    st.plotly_chart(fig, width="stretch")
-    st.caption("İlk dört boosting modeli standart sapma mertebesinde iç içedir; CatBoost'un "
-               "üstünlüğü **marjinaldir** (tez Bölüm 5.1). Aynı katların skorlarıyla yapılan "
-               "eşleştirilmiş t-testi de CatBoost–HistGBM farkının anlamlı olmadığını gösterir "
-               "(ΔR² ≈ 0,001; p = 0,495; tez Bölüm 4.2). Salt-sklearn HistGBM'in dış "
-               "kütüphanelerle at başı gitmesi, kurulum-hafif tekrar üretim için önemlidir. "
-               "Sıfır-bilgi tabanı (eğitim ortalaması) aynı protokolde R² ≈ 0,00 / MAE 4,32 verir.")
-
-with r:
-    st.subheader("Sayısal tablo")
-    tab = cv.merge(holdout, on="model", suffixes=("_cv", "_holdout"))
-    tab = tab[["model", "R2_mean", "R2_std", "MAE_mean", "RMSE_mean", "R2", "MAE", "RMSE"]]
-    tab.columns = ["Model", "CV R²", "± std", "CV MAE", "CV RMSE",
-                   "Holdout R²", "Holdout MAE", "Holdout RMSE"]
-    st.dataframe(tab, hide_index=True, width="stretch",
-                 column_config={c: st.column_config.NumberColumn(c, format="%.3f")
-                                for c in tab.columns if c != "Model"})
-    st.markdown(
-        """
-**Ayar duyarlılığı (tez Bölüm 4.8):** grup-güvenli ızgara aramaları hem HistGBM'de
-(+0,0002) hem CatBoost'ta (fark 0,000) baştan kullanılan temel yapılandırmayı seçti —
-başarım hiperparametreyle değil **veri yapısıyla** sınırlı.
-
-**Fiziksel tanımlayıcı ablasyonu (Bölüm 4.9):** Goldschmidt *t* / oktahedral *μ* /
-Bartel *τ* eklemek başarımı artırmadı (Δ = −0,003): ağaç modeller aynı bilgiyi ham
-oranlardan zaten öğreniyor.
-"""
-    )
-
-st.divider()
-st.caption(
-    "🔭 *Yol haritası:* eğitim süresi / tahmin süresi / model boyutu bu koşularda "
-    "kaydedilmediği için operasyonel maliyet (Pareto) görünümü henüz verilemiyor; "
-    "pipeline'a enstrümantasyon eklendiğinde bu sayfaya R²-vs-maliyet grafiği eklenecek."
+ui.page_header(
+    "03 — Model Karşılaştırma · Tez Bölüm 3.9 ve 4.2",
+    "Yarışı algoritma kazandırmıyor.",
+    "Altı model aynı protokolle (aynı bölmeler, aynı 77 özellik, sabit hiperparametreler) karşılaştırıldı; "
+    "hiçbir modele test verisine bakan ayar yapılmadı.",
 )
+
+NOT = {"CatBoost": "— seçilen model", "HistGBM": "— salt scikit-learn", "Ridge": "— doğrusal taban"}
+AD = {"RandomForest": "Random Forest"}
+
+left, right = st.columns(2, gap="large")
+with left:
+    ui.kicker("DOI-grup 5-kat CV — ana ölçüt", "(R² ort ± std, eksen 0–0,5)", tone="ink")
+    ui.bar_rows([
+        dict(name=(f'<span style="color:var(--acc700)">{AD.get(r.model, r.model)}</span>' if r.model == "CatBoost"
+                   else AD.get(r.model, r.model)),
+             sub=NOT.get(r.model, ""), value=r.R2_mean, value_str=tr(r.R2_mean, 3),
+             value_sub=f"±{tr(r.R2_std, 3)}", std=r.R2_std, tone="acc" if r.model == "CatBoost" else "ink",
+             bold=(r.model == "CatBoost"))
+        for r in cv.itertuples()
+    ], vmax=0.5)
+    top = cv.iloc[0]; second = cv.iloc[1]
+    ui.text(f"İlk dört boosting modeli standart sapma mertebesinde iç içedir; CatBoost'un üstünlüğü "
+            f"<strong>marjinaldir</strong>: eşleştirilmiş t-testinde CatBoost–HistGBM farkı anlamsız "
+            f"(ΔR² ≈ {tr(top.R2_mean - second.R2_mean, 3)}; p = 0,495; tez Bölüm 4.2). Salt-scikit-learn "
+            "HistGBM'in dış kütüphanelerle at başı gitmesi, kurulum-hafif tekrar üretim için önemlidir. "
+            "Sıfır-bilgi tabanı (eğitim ortalaması) aynı protokolde R² ≈ 0,00 / MAE 4,32 verir.", mute=True)
+
+with right:
+    ui.kicker("Sayısal tablo", tone="ink")
+    tab = cv.merge(holdout, on="model", suffixes=("_cv", "_holdout"))
+    rows = [[AD.get(r.model, r.model), tr(r.R2_mean, 3), tr(r.R2_std, 3), tr(r.MAE_mean, 3),
+             tr(r.RMSE_mean, 3), tr(r.R2, 3), tr(r.MAE, 3)] for r in tab.itertuples()]
+    ui.table(["Model", "CV R²", "± std", "CV MAE", "CV RMSE", "Hold. R²", "Hold. MAE"], rows,
+             right_cols=(1, 2, 3, 4, 5, 6), hi_row=0)
+    ui.text(
+        "<p><strong>Ayar duyarlılığı (Bölüm 4.8):</strong> grup-güvenli ızgara aramaları hem HistGBM'de "
+        "(+0,0002) hem CatBoost'ta (fark 0,000) baştan kullanılan temel yapılandırmayı seçti — başarım "
+        "hiperparametreyle değil <strong>veri yapısıyla</strong> sınırlı.</p>"
+        f"<p><strong>Fiziksel tanımlayıcı ablasyonu (Bölüm 4.9):</strong> Goldschmidt <em>t</em> / oktahedral "
+        f"<em>μ</em> / Bartel <em>τ</em> eklemek başarımı artırmadı (Δ = +{tr(abl['delta_r2'], 4)}; "
+        f"{tr(abl['descriptor_yok']['r2'], 4)} → {tr(abl['descriptor_var']['r2'], 4)}, kat gürültüsünün çok "
+        "altında): ağaç modeller aynı bilgiyi ham oranlardan zaten öğreniyor.</p>")
+
+ui.rule(thin=True)
+ui.text("Yol haritası: eğitim süresi / tahmin süresi / model boyutu bu koşularda kaydedilmediği için "
+        "operasyonel maliyet (Pareto) görünümü henüz verilemiyor; pipeline'a enstrümantasyon eklendiğinde bu "
+        "sayfaya R²–maliyet grafiği eklenecek.", mute=True)
+
+ui.footer()
