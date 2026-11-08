@@ -1,14 +1,14 @@
-# Uygulama calisma zamani bagimliliklari
-# Ust sinirlar: her dagitim imaji sifirdan cozuldugu icin kirici bir majör surum
-# dogrudan uretime inmesin (bilinen-iyi surumler: data_app/manifests.json).
-streamlit>=1.63,<2
-pandas>=2.2,<4
-numpy>=1.26,<3
-plotly>=5.20,<7
-pyarrow>=15,<25
-catboost>=1.2,<2
-shap>=0.46,<1
-scikit-learn>=1.4,<2
+# Uygulama calisma zamani bagimliliklari.
+# Surumler sabittir: kayitli CatBoost modeli ve conformal kalibrasyon bu surumlerle uretildi/dogrulandi.
+# Guncelleme bilincli yapilir (yerelde dene, sonra surumu degistir). Dolayli bagimliliklar constraints.txt'te.
+streamlit==1.63.0
+pandas==3.0.5
+numpy==2.5.3
+plotly==6.9.0
+pyarrow==24.0.0
+catboost==1.2.10
+shap==0.52.0
+scikit-learn==1.9.0
 
 # Not: tools/prepare_app_data.py ayrica pipeline reposunu (perovskite-pce-ml)
 # ve onun bagimliliklarini gerektirir; uygulamanin kendisi gerektirmez.

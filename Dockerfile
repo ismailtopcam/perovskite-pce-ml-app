@@ -1,12 +1,12 @@
-FROM python:3.12-slim
+FROM python:3.12.14-slim
 
 # catboost/shap icin OpenMP calisma zamani
 RUN apt-get update && apt-get install -y --no-install-recommends libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY requirements.txt constraints.txt ./
+RUN pip install --no-cache-dir -r requirements.txt -c constraints.txt
 
 COPY . .
 
