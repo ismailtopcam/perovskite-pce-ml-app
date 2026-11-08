@@ -7,6 +7,9 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: unless-stopped
+    environment:
+      # GlitchTip projesi 'tez'; değer Coolify'da tanımlı.
+      - SENTRY_DSN=${SENTRY_DSN}
 
   statik:
     build:

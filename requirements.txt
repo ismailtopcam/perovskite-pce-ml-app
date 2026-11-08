@@ -9,6 +9,8 @@ pyarrow==24.0.0
 catboost==1.2.10
 shap==0.52.0
 scikit-learn==1.9.0
+# Hata takibi (GlitchTip); lib/hatalar.py
+sentry-sdk==2.73.0
 
 # Not: tools/prepare_app_data.py ayrica pipeline reposunu (perovskite-pce-ml)
 # ve onun bagimliliklarini gerektirir; uygulamanin kendisi gerektirmez.

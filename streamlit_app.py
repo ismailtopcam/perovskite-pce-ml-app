@@ -8,7 +8,9 @@ provenans bloğu) "Modernist" tasarımından gelir; numaralar CSS ile eklenir
 """
 import streamlit as st
 
-from lib import data, ui
+from lib import data, hatalar, ui
+
+hatalar.baslat()
 
 st.set_page_config(page_title="Perovskit PCE — İKÇÜ", page_icon="🔬", layout="wide",
                    initial_sidebar_state="auto")
@@ -50,4 +52,5 @@ pages = [
     st.Page("pages/8_Pipeline_Provenance.py", title="Provenans"),
 ]
 
-st.navigation(pages).run()
+with hatalar.yakala():
+    st.navigation(pages).run()
