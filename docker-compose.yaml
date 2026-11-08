@@ -1,0 +1,24 @@
+# Yayın: Coolify bu dosyayla derler ve çalıştırır (master'a her push'ta otomatik deploy).
+# tez: Streamlit uygulaması. Alan adı Coolify'da bu servise verilir (https://tez.ismailtopcam.dev, port 8501).
+# statik: /hakkinda ve /og.png — Streamlit kök dışı dosya sunamadığı için yanında küçük bir nginx.
+services:
+  tez:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+
+  statik:
+    build:
+      context: .
+      dockerfile: deploy/statik/Dockerfile
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.tez-statik.loadbalancer.server.port=80
+      - "traefik.http.routers.tez-statik-https.rule=Host(`tez.ismailtopcam.dev`) && (Path(`/hakkinda`) || Path(`/og.png`))"
+      - traefik.http.routers.tez-statik-https.entrypoints=https
+      - traefik.http.routers.tez-statik-https.tls=true
+      - traefik.http.routers.tez-statik-https.tls.certresolver=letsencrypt
+      - traefik.http.routers.tez-statik-https.priority=1000
+      - traefik.http.routers.tez-statik-https.service=tez-statik
