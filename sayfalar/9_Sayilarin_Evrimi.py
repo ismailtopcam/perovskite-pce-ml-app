@@ -13,9 +13,10 @@ import streamlit as st
 from lib import data, ui
 from lib.ui import tr
 
-# Eski → yeni sıralı iki adım (tek ton). dataviz doğrulayıcısı (--ordinal, zemin #f3f2f2): tüm kontroller geçti.
-ESKI = "#f0806b"   # v0.3.x · ham DOI anahtarı (açık adım; içi boş işaretle de ayrışır)
-YENI = ui.ACC700   # v0.4.0 · kanonik DOI anahtarı = tez (koyu adım)
+# Eski → yeni: nötr gri (v0.3.x, içi boş işaret) → "Kafes" mavisi (v0.4.0 = tez, dolu işaret).
+# İki adım açıklıkta da ayrışır; renk tek başına bilgi taşımaz (işaret dolgusu + eksen etiketi).
+ESKI = ui.N600     # v0.3.x · ham DOI anahtarı
+YENI = ui.BLUE     # v0.4.0 · kanonik DOI anahtarı = tez
 
 # Tez Bölüm 5.8: bildiride ve sunumunda yer alan v0.3.x değerleri
 BILDIRI = {"iyimserlik": 0.068, "kompozisyon": 0.263, "tavan": 17.78}
@@ -67,8 +68,8 @@ ui.page_header(
 ui.stats([
     ("Birleşen DOI varyantı", str(HAM["varyant"]), f"{tr(ham['n_groups'], 0)} → {tr(kan['n_groups'], 0)} yayın grubu"),
     ("Ham anahtarda kat sınırını aşan", tr(HAM["cv_kayit"], 0),
-     f"kayıt (%{tr(HAM['cv_oran'], 2)}) · {HAM['cv_yayin']} yayın"),
-    ("Kanonik anahtarda", tr(asim1, 0), "sınırı aşan kayıt", "acc"),
+     f"kayıt (%{tr(HAM['cv_oran'], 2)}) · {HAM['cv_yayin']} yayın", "acc"),
+    ("Kanonik anahtarda", tr(asim1, 0), "sınırı aşan kayıt", "blue"),
     ("CV R² farkı", fark(cv0, cv1), f"katlar arası s.s. ({tr(s1, 3)}) altında"),
 ], big=True)
 

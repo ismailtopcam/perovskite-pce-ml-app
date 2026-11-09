@@ -12,53 +12,63 @@
 <meta property="og:image" content="https://tez.ismailtopcam.dev/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <style>
-  /* "Modernist" tasarım sistemi jetonları (uygulamayla aynı) */
-  @font-face { font-family: "Archivo"; font-weight: 100 900; font-style: normal; font-display: swap;
-               src: url(/app/static/fonts/archivo-latin-wght-normal.woff2) format("woff2-variations");
+  /* "Kafes" tasarım dili jetonları (uygulamayla aynı; lib/ui.py) */
+  @font-face { font-family: "Inter"; font-weight: 100 900; font-style: normal; font-display: swap;
+               src: url(/app/static/fonts/inter-latin-wght-normal.woff2) format("woff2-variations");
                unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
-  @font-face { font-family: "Archivo"; font-weight: 100 900; font-style: normal; font-display: swap;
-               src: url(/app/static/fonts/archivo-latin-ext-wght-normal.woff2) format("woff2-variations");
+  @font-face { font-family: "Inter"; font-weight: 100 900; font-style: normal; font-display: swap;
+               src: url(/app/static/fonts/inter-latin-ext-wght-normal.woff2) format("woff2-variations");
                unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
-  :root { --ink:#201e1d; --bg:#f3f2f2; --acc:#ec3013; --acc600:#dd2b0f; --acc700:#ae1800; --acc100:#fff2ef;
-          --n200:#eae7e7; --n700:#605d5d; --n800:#444141; --div:#9f9d9d; }
+  @font-face { font-family: "Space Grotesk"; font-weight: 300 700; font-style: normal; font-display: swap;
+               src: url(/app/static/fonts/space-grotesk-latin-wght-normal.woff2) format("woff2-variations");
+               unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+  @font-face { font-family: "Space Grotesk"; font-weight: 300 700; font-style: normal; font-display: swap;
+               src: url(/app/static/fonts/space-grotesk-latin-ext-wght-normal.woff2) format("woff2-variations");
+               unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+  :root { --ink:#0E1A2B; --bg:#F4F5F7; --blue:#1F4FD1; --blue700:#163BA0; --acc:#D9530F; --acc700:#B84308;
+          --n200:#EEF1F5; --n700:#5B6878; --n800:#33435A; --div:#DCE0E6; }
   * { box-sizing: border-box; }
-  body { font-family: "Archivo", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; margin: 0;
-         background: var(--bg); color: var(--ink); line-height: 1.55; font-size: 15px; }
-  .wrap { max-width: 860px; margin: 0 auto; padding: 2.4rem 1.4rem 3rem; }
-  .kurum { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--acc700); }
-  .ens { font-size: 12px; color: var(--n700); margin-top: 2px; }
-  h1 { font-weight: 800; font-size: clamp(28px, 4vw, 40px); line-height: 1.08; letter-spacing: -.01em; margin: 18px 0 6px; }
-  h1 .acc { color: var(--acc); }
-  .alt { font-size: 14px; color: var(--n800); max-width: 70ch; }
-  .rule { border-top: 2px solid var(--div); margin: 22px 0 0; }
-  h2 { font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--ink); margin: 26px 0 10px; }
-  p { margin: 0 0 10px; font-size: 14px; color: var(--n800); }
+  body { font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; margin: 0;
+         background: var(--bg); color: var(--ink); line-height: 1.6; font-size: 15px; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 2.4rem 1rem 3rem; }
+  .marka { display: flex; align-items: center; gap: 12px; }
+  .kurum { font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--blue); }
+  .ens { font-size: 12.5px; color: var(--n700); margin-top: 2px; }
+  h1 { font-family: "Space Grotesk", "Inter", sans-serif; font-weight: 600; font-size: clamp(30px, 4.4vw, 46px); line-height: 1.05;
+       letter-spacing: -.02em; margin: 22px 0 10px; }
+  h1 .acc { color: var(--blue); }
+  .alt { font-size: 16px; color: var(--n800); max-width: 66ch; }
+  .rule { border-top: 1px solid var(--div); margin: 26px 0 0; }
+  h2 { font-family: "Space Grotesk", "Inter", sans-serif; font-size: 20px; font-weight: 600; letter-spacing: -.01em; color: var(--ink); margin: 28px 0 12px; }
+  p { margin: 0 0 10px; font-size: 14.5px; color: var(--n800); }
   p strong, li strong { color: var(--ink); }
-  .cta { display: inline-flex; justify-content: space-between; gap: 24px; min-width: 240px; background: var(--acc); color: #fff;
-         font-weight: 700; font-size: 13px; padding: 12px 16px; text-decoration: none; margin: 18px 0 4px; }
-  .cta:hover { background: var(--acc600); }
-  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); border-top: 2px solid var(--div); border-bottom: 2px solid var(--div); margin-top: 8px; }
-  .stats > div { padding: 16px 18px 18px; border-left: 1px solid var(--div); }
-  .stats > div:first-child { border-left: 0; padding-left: 0; }
-  .stats .l { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--n700); }
-  .stats .v { font-weight: 800; font-size: 34px; line-height: 1.1; }
-  .stats .v.acc { color: var(--acc); }
-  .stats .s { font-size: 12px; color: var(--n700); margin-top: 2px; }
-  .box { border: 2px solid var(--ink); padding: 14px 16px; font-size: 13.5px; color: var(--n800); }
-  .box .chip { font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; background: var(--ink); color: var(--bg);
-               display: inline-block; padding: 2px 8px; margin-bottom: 8px; }
-  ul { padding-left: 1.1rem; font-size: 14px; color: var(--n800); }
+  .cta { display: inline-flex; align-items: center; justify-content: space-between; gap: 24px; min-width: 240px; min-height: 46px;
+         background: var(--ink); color: #fff; font-weight: 600; font-size: 15px; padding: 12px 20px; border-radius: 10px;
+         text-decoration: none; margin: 18px 0 4px; }
+  .cta:hover { background: #1E3150; color: #fff; text-decoration: none; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-top: 8px; }
+  .stats > div { background: #fff; border: 1px solid var(--div); border-radius: 14px; padding: 16px 18px; }
+  .stats .l { font-size: 11.5px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--n700); }
+  .stats .v { font-family: "Space Grotesk", "Inter", sans-serif; font-weight: 600; font-size: 34px; line-height: 1.1; letter-spacing: -.02em; }
+  .stats .v.acc { color: var(--acc700); }
+  .stats .v.blue { color: var(--blue); }
+  .stats .s { font-size: 13px; color: var(--n700); margin-top: 2px; }
+  .box { background: #fff; border: 1px solid var(--div); border-radius: 14px; padding: 16px 18px; font-size: 14px; color: var(--n800); }
+  .box .chip { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; background: var(--ink); color: #fff;
+               display: inline-block; padding: 3px 9px; border-radius: 6px; margin-bottom: 10px; }
+  ul { padding-left: 1.1rem; font-size: 14.5px; color: var(--n800); }
   li { margin-bottom: 4px; }
-  a { color: var(--acc700); text-decoration: none; }
-  a:hover { color: var(--acc600); text-decoration: underline; }
-  footer { color: var(--n700); font-size: 11.5px; margin-top: 2.4rem; border-top: 2px solid var(--div); padding-top: 14px; }
-  footer .kurum2 { color: var(--acc700); font-weight: 700; }
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { color: var(--blue700); text-decoration: underline; }
+  footer { color: var(--n700); font-size: 12.5px; margin-top: 2.4rem; border-top: 1px solid var(--div); padding-top: 16px; }
+  footer .kurum2 { color: var(--n800); font-weight: 600; }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="kurum">İzmir Kâtip Çelebi Üniversitesi</div>
-  <div class="ens">Fen Bilimleri Enstitüsü · Yazılım Mühendisliği · Yüksek lisans tezi eşlik uygulaması — İsmail Topçam</div>
+  <div class="marka"><img src="/app/static/logo-kafes.svg" width="42" height="42" alt="Perovskit ABX3 kafes simgesi">
+  <div><div class="kurum">İzmir Kâtip Çelebi Üniversitesi</div>
+  <div class="ens">Fen Bilimleri Enstitüsü · Yazılım Mühendisliği · Yüksek lisans tezi eşlik uygulaması — İsmail Topçam</div></div></div>
   <h1>Raporlanan model başarımını algoritma kadar <span class="acc">doğrulama ve özellik kararları</span> belirler.</h1>
   <p class="alt">Açık erişimli <a href="https://www.perovskitedatabase.com">Perovskite Database</a>'in 43.398 kayıtlık anlık
   görüntüsünden başlayarak veri temizliğini, makine öğrenmesi deneylerini ve bulguları etkileşimli ve denetlenebilir
@@ -69,7 +79,7 @@
   <h2>Ana bulgular</h2>
   <div class="stats">
     <div><div class="l">Temiz kayıt</div><div class="v">41.485</div><div class="s">77 özellik; 1.913 eleme loglandı</div></div>
-    <div><div class="l">Grup-güvenli R²</div><div class="v">0,410</div><div class="s">± 0,016 · yayın-ayrık 5-kat CV</div></div>
+    <div><div class="l">Grup-güvenli R²</div><div class="v blue">0,410</div><div class="s">± 0,016 · yayın-ayrık 5-kat CV</div></div>
     <div><div class="l">Rastgele bölme iyimserliği</div><div class="v acc">+0,071</div><div class="s">kardeş-cihaz sızıntısı skoru 0,481'e çıkarır</div></div>
     <div><div class="l">+ Voc / Jsc / FF</div><div class="v acc">0,937</div><div class="s">hedef sızıntısı — sentez öncesi bilinemez</div></div>
     <div><div class="l">%90 conformal aralık</div><div class="v">±6,66</div><div class="s">PCE puanı; gözlenen kapsama %89,9</div></div>

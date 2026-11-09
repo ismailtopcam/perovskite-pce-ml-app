@@ -6,7 +6,7 @@ import plotly.express as px
 import streamlit as st
 
 from lib import data, ui
-from lib.ui import tr, INK, ACC
+from lib.ui import tr, ACC, N900
 
 rec = data.records()
 conf = data.js("conformal.json")
@@ -25,10 +25,10 @@ ui.page_header(
 )
 
 ui.stats([
-    ("Holdout kayıt", tr(len(ho), 0)),
+    ("Holdout kayıt", tr(len(ho), 0), f"{tr(ho['DOI'].nunique(), 0)} yayın grubundan"),
     ("MAE", f"{tr(ho['mutlak_hata'].mean(), 2)} <small>puan</small>",
      f"medyan mutlak hata {tr(ho['mutlak_hata'].median(), 2)}"),
-    ("Holdout R²", tr(1 - ssr / sst, 3)),
+    ("Holdout R²", tr(1 - ssr / sst, 3), "grup-CV ile tutarlı", "blue"),
     ("%90 bandın kapsaması", f"%{tr(100 * ho['kapsandi'].mean(), 1)}",
      f"tüm holdout; conformal test alt kümesinde (n = {tr(conf['n_conformal_test'], 0)}) %{tr(COV, 1)}"),
 ])
@@ -60,15 +60,16 @@ with tab1:
             f"<strong>{'kapsıyor' if r['kapsandi'] else 'kapsamıyor'}</strong>.", mute=True)
 
 with tab2:
-    l, rr = st.columns(2, gap="large")
-    with l:
-        ui.kicker("Hata büyüklüğü dağılımı", "(mutlak hata, PCE puanı)", tone="ink")
+    l, rr = st.columns(2, gap="medium")
+    with l, ui.card():
+        ui.kicker("Hata büyüklüğü dağılımı", "mutlak hata, PCE puanı", tone="ink")
         bins = [0, 1, 2, 3, 5, 10, 40]
         labels = ["≤1", "1–2", "2–3", "3–5", "5–10", ">10"]
+        tones = ["blue", "blue", "blue2", "mid", "soft", "acc"]
         d = pd.cut(ho["mutlak_hata"], bins, labels=labels).value_counts().reindex(labels)
         share = 100 * d.values / len(ho)
         ui.bar_rows([dict(name=f"{lab} puan", value=v, value_str=f"%{tr(v, 1)}", value_sub=f"({tr(int(n), 0)} kayıt)",
-                          bold=False) for lab, v, n in zip(labels, share, d.values)],
+                          tone=t, bold=False) for lab, v, n, t in zip(labels, share, d.values, tones)],
                     vmax=float(max(share)), slim=True)
         ui.text(f"Kayıtların %{tr(100 * (ho['mutlak_hata'] <= 2).mean(), 0)}'ı ≤2 puan, "
                 f"%{tr(100 * (ho['mutlak_hata'] <= 3).mean(), 0)}'i ≤3 puan hatayla tahmin ediliyor (tez Bölüm 4.7).",
@@ -76,7 +77,7 @@ with tab2:
     with rr:
         err = ho["tahmin"] - ho["PCE"]
         fig = px.histogram(err, nbins=80, labels={"value": "İşaretli hata (tahmin − gerçek)"})
-        fig.update_traces(marker_color=INK, showlegend=False)
+        fig.update_traces(marker_color=N900, showlegend=False)
         fig.add_vline(x=0, line_color=ACC)
         fig.update_layout(yaxis_title="Kayıt")
         ui.chart(fig, height=340, title=f"Yön: >+5 aşırı tahmin %{tr(100 * (err > 5).mean(), 1)} · "
@@ -85,7 +86,7 @@ with tab2:
                 "reçete-içi etiket gürültüsünün beklenen izidir (tez Bölüm 5.1, Tablo 5.1).", mute=True)
 
 with tab3:
-    l, rr = st.columns([7, 5], gap="large")
+    l, rr = st.columns([7, 5], gap="medium")
     seg = pd.DataFrame([
         ("Tümü", ho["mutlak_hata"].mean(), len(ho)),
         ("Sn içeren (B_Sn > 0)", ho.loc[ho["B_Sn"] > 0, "mutlak_hata"].mean(), int((ho["B_Sn"] > 0).sum())),
@@ -98,15 +99,15 @@ with tab3:
          int(((ho["A_FA"] > 0.5) & (ho["B_Pb"] > 0.9) & (ho["X_I"] > 0.7) & (ho["mimari"] == "nip")).sum())),
     ], columns=["Segment", "MAE", "n"])
     tum = float(seg.loc[0, "MAE"])
-    with l:
-        ui.kicker("Segmentlere göre MAE", "(tezdeki 'giderilemeyen gürültü' savının kayıt-düzeyi görünümü)", tone="ink")
+    with l, ui.card():
+        ui.kicker("Segmentlere göre MAE", "tezdeki 'giderilemeyen gürültü' savının kayıt-düzeyi görünümü", tone="ink")
         ss = seg.sort_values("MAE")
         ui.bar_rows([dict(name=r.Segment, value=r.MAE, value_str=tr(r.MAE, 2), value_sub=f"(n = {tr(int(r.n), 0)})",
-                          tone="acc" if (r.Segment != "Tümü" and r.MAE > tum) else ("mid" if r.Segment == "Tümü" else "ink"),
+                          tone="acc" if (r.Segment != "Tümü" and r.MAE > tum) else ("ink" if r.Segment == "Tümü" else "blue"),
                           bold=(r.Segment == "Tümü")) for r in ss.itertuples()],
                     vmax=float(ss["MAE"].max()) * 1.05, slim=True)
-        ui.text("Kırmızı: genel ortalamanın üzerinde; mürekkep: altında; gri: tüm holdout.", mute=True)
-    with rr:
+        ui.text("Turuncu: genel ortalamanın üzerinde; mavi: altında; koyu: tüm holdout.", mute=True)
+    with rr, ui.card():
         ui.kicker("Tezin kayıt-düzeyi bulgusu", tone="ink")
         ad = conf["applicability_domain"]
         ustte = [r.Segment for r in seg.itertuples() if r.Segment != "Tümü" and r.MAE > tum]

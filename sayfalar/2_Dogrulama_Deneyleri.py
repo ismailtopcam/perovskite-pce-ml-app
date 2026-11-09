@@ -27,15 +27,15 @@ ui.page_header(
     "kararların ürünüdür.",
 )
 
-left, right = st.columns([5, 7], gap="large")
+left, right = st.columns([5, 7], gap="medium")
 
-with left:
-    ui.kicker("Bölme yöntemi", tone="ink")
+with left, ui.card():
+    ui.kicker("1 · Bölme yöntemi", "Deney A", tone="ink")
     bolme = st.segmented_control("Bölme yöntemi", ["DOI-grup (yayın-ayrık)", "Rastgele KFold"],
                                  default="DOI-grup (yayın-ayrık)", label_visibility="collapsed")
     ui.text("Aynı yayının kardeş cihazları eğitim+test'e birlikte düşerse model \"görmediği\" veriyi dolaylı "
             "görmüş olur.", mute=True)
-    ui.kicker("Özellik kümesi", tone="ink")
+    ui.kicker("2 · Özellik kümesi", "Deney B", tone="ink")
     ozellik = st.segmented_control("Özellik kümesi", ["Ölçüm-öncesi 77 özellik", "+ Voc, Jsc, FF"],
                                    default="Ölçüm-öncesi 77 özellik", label_visibility="collapsed")
     ui.text("Voc × Jsc × FF ≈ PCE: bu üçlü, hedefin kendisini dolaylı taşır — sentez öncesi bilinemez.",
@@ -44,70 +44,85 @@ with left:
     grup = (bolme or "DOI").startswith("DOI")
     safe = (ozellik or "Ölçüm").startswith("Ölçüm")
     if grup and safe:
-        r2, std, delta, dfg, r2fg = grup_r2, grup_std, "· taban değer", "var(--n700)", "var(--ink)"
+        r2, std, delta, cip, r2fg = grup_r2, grup_std, "taban değer", "blue", "var(--blue)"
         yb, y = "Tezin ana sonucu.", ("Eğitimden kanonik DOI anahtarı düzeyinde ayrık tutulan yayınlara "
                                      "genellemenin dürüst ölçüsü.")
     elif not grup and safe:
         r2, std = rast_r2, rast_std
-        delta, dfg, r2fg = f"+{tr(r2 - grup_r2, 3)} taban değere göre", "var(--acc)", "var(--ink)"
+        delta, cip, r2fg = f"+{tr(r2 - grup_r2, 3)} tabana göre", "acc", "var(--acc700)"
         yb, y = f"+{tr(r2 - grup_r2, 3)} iyimserlik:", ("kardeş cihazlar test kümesine sızdı. Skor arttı, "
                                                           "genelleme gücü artmadı (tez Deney A).")
     elif grup and not safe:
         r2, std = leak_r2, leak_std
-        delta, dfg, r2fg = f"+{tr(r2 - grup_r2, 3)} taban değere göre", "var(--acc)", "var(--acc)"
+        delta, cip, r2fg = f"+{tr(r2 - grup_r2, 3)} tabana göre", "acc", "var(--acc700)"
         yb, y = "Hedef sızıntısı.", ("Voc×Jsc×FF, PCE'yi neredeyse doğrudan verir: model artık tahmin değil, "
                                      "kopyalama yapıyor (tez Deney B). Sentez ÖNCESİ bu değerler bilinemez.")
     else:
-        r2, std, delta, dfg, r2fg = None, None, "· tezde koşulmadı", "var(--n700)", "var(--ink)"
+        r2, std, delta, cip, r2fg = None, None, "tezde koşulmadı", "", "var(--n700)"
         yb, y = "Bu kombinasyon tezde koşulmadı:", ("iki gevşek kararı birleştirmek yalnızca daha da iyimser "
                                                     "(ve daha da anlamsız) bir skor üretir.")
+    cip_css = {"blue": "background:var(--blue100); color:var(--blue)",
+               "acc": "background:var(--acc100); color:var(--acc700)",
+               "": "background:var(--n200); color:var(--n700)"}[cip]
     st.html(
-        '<div style="border-top:1px solid var(--div); padding-top:18px; margin-top:8px">'
-        f'<div class="m-kicker mute">Grup-CV R² <span style="color:{dfg}">{delta}</span></div>'
-        '<div style="display:flex; align-items:baseline; gap:14px">'
-        f'<div style="font-weight:800; font-size:clamp(52px,6vw,76px); line-height:1.05; color:{r2fg}">'
-        f'{tr(r2, 3) if r2 is not None else "—"}</div>'
-        f'<div style="font-size:13px; color:var(--n700)">{("± " + tr(std, 3) + " (5 kat)") if std is not None else ""}</div>'
+        '<div aria-live="polite" style="border-top:1px solid var(--n200); padding-top:16px; margin-top:6px; '
+        'display:flex; flex-direction:column; gap:10px">'
+        '<div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap">'
+        '<span class="m-kicker mute">5-kat CV R²</span>'
+        f'<span style="font-size:12px; font-weight:600; padding:4px 10px; border-radius:999px; {cip_css}">{delta}</span></div>'
+        '<div style="display:flex; align-items:baseline; gap:12px">'
+        f'<div style="font-family:var(--hfont); font-weight:600; font-size:clamp(56px,6vw,84px); line-height:1; '
+        f'letter-spacing:-0.03em; color:{r2fg}">{tr(r2, 3) if r2 is not None else "—"}</div>'
+        f'<div class="num" style="font-size:14px; color:var(--n700)">{("± " + tr(std, 3) + " (5 kat)") if std is not None else ""}</div>'
         '</div>'
-        f'<div class="m-text" style="margin-top:8px; max-width:52ch"><strong>{yb}</strong> {y}</div></div>'
+        f'<div class="m-text" style="max-width:52ch"><strong>{yb}</strong> {y}</div></div>'
     )
 
 with right:
-    ui.kicker("Deney A + B — bölme ve sızıntının etkisi", "(R², 5-kat CV, eksen 0–1)", tone="ink")
-    ui.bar_rows([
-        dict(name="DOI-grup", sub="— başlık sonuç", value=grup_r2, value_str=tr(grup_r2, 3),
-             value_sub=f"±{tr(grup_std, 3)}", tone="ink", sel="şu anki seçiminiz" if (grup and safe) else ""),
-        dict(name="Rastgele bölme", sub="— kardeş-cihaz sızıntısı", value=rast_r2, value_str=tr(rast_r2, 3),
-             value_sub=f"±{tr(rast_std, 3)}", tone="mid", sel="şu anki seçiminiz" if (not grup and safe) else ""),
-        dict(name="+ Voc / Jsc / FF", sub="— hedef sızıntısı", value=leak_r2,
-             value_str=f'<span style="color:var(--acc)">{tr(leak_r2, 3)}</span>',
-             value_sub=f"±{tr(leak_std, 3)}", tone="acc", sel="şu anki seçiminiz" if (grup and not safe) else ""),
-    ], vmax=1.0)
+    with ui.card():
+        ui.kicker("Deney A + B — bölme ve sızıntının etkisi", "R², 5-kat CV · eksen 0–1", tone="ink")
+        ui.bar_rows([
+            dict(name="DOI-grup", sub="başlık sonuç", value=grup_r2,
+                 value_str=f'<span style="color:var(--blue)">{tr(grup_r2, 3)}</span>',
+                 value_sub=f"±{tr(grup_std, 3)}", tone="blue", sel="seçiminiz" if (grup and safe) else ""),
+            dict(name="Rastgele bölme", sub="kardeş-cihaz sızıntısı", value=rast_r2,
+                 value_str=f'<span style="color:var(--acc700)">{tr(rast_r2, 3)}</span>',
+                 value_sub=f"±{tr(rast_std, 3)}", tone="soft", sel="seçiminiz" if (not grup and safe) else ""),
+            dict(name="+ Voc / Jsc / FF", sub="hedef sızıntısı", value=leak_r2,
+                 value_str=f'<span style="color:var(--acc700)">{tr(leak_r2, 3)}</span>',
+                 value_sub=f"±{tr(leak_std, 3)}", tone="acc", sel="seçiminiz" if (grup and not safe) else ""),
+        ], vmax=1.0)
+        st.html('<div class="m-axis num"><span>0</span><span>0,25</span><span>0,50</span><span>0,75</span>'
+                '<span>1,00</span></div>')
 
-    ui.kicker("Deney C — özellik kapsamı", "(R², DOI-grup CV, eksen 0–0,5)", tone="ink")
-    ui.bar_rows([
-        dict(name="Kompozisyon", sub="(14 özellik)", value=c14[0], value_str=tr(c14[0], 3), bold=False),
-        dict(name="+ Cihaz", sub="(57 özellik)", value=c57[0], value_str=tr(c57[0], 3), bold=False),
-        dict(name="+ Süreç", sub="(77 özellik)", value=c77[0], value_str=tr(c77[0], 3), bold=False),
-    ], vmax=0.5)
-    ui.text(f"PCE yalnızca kompozisyonla açıklanamıyor ({tr(c14[0], 3)}); cihaz ({tr(c57[0], 3)}) ve süreç "
-            f"({tr(c77[0], 3)}) bilgisi anlamlı katkı veriyor (tez Bölüm 4.3).", mute=True)
+    with ui.card():
+        ui.kicker("Deney C — özellik kapsamı", "R², DOI-grup CV · eksen 0–0,5", tone="ink")
+        ui.bar_rows([
+            dict(name="Kompozisyon", sub="(14 özellik)", value=c14[0], value_str=tr(c14[0], 3), bold=False,
+                 tone="mid"),
+            dict(name="+ Cihaz", sub="(57 özellik)", value=c57[0], value_str=tr(c57[0], 3), bold=False,
+                 tone="blue2"),
+            dict(name="+ Süreç", sub="(77 özellik)", value=c77[0],
+                 value_str=f'<span style="color:var(--blue)">{tr(c77[0], 3)}</span>', tone="blue"),
+        ], vmax=0.5)
+        ui.text(f"PCE yalnızca kompozisyonla açıklanamıyor ({tr(c14[0], 3)}); cihaz ({tr(c57[0], 3)}) ve süreç "
+                f"({tr(c77[0], 3)}) bilgisi anlamlı katkı veriyor (tez Bölüm 4.3).", mute=True)
 
-    mae = float(ho["mutlak_hata"].mean())
-    rmse = float(np.sqrt(((ho["tahmin"] - ho["PCE"]) ** 2).mean()))
-    ssr = ((ho["PCE"] - ho["tahmin"]) ** 2).sum()
-    sst = ((ho["PCE"] - ho["PCE"].mean()) ** 2).sum()
-    st.html('<div style="border-top:1px solid var(--div); margin-top:6px"></div>')
-    ui.kicker("Başlık kurulumun holdout görünümü", f"({tr(len(ho), 0)} kayıt)", tone="ink")
-    ui.stats([
-        ("Holdout R²", tr(1 - ssr / sst, 3)),
-        ("MAE (puan)", tr(mae, 2)),
-        ("RMSE (puan)", tr(rmse, 2)),
-        ("%90 bandı", f"±{tr(HW, 2)}"),
-    ], border=False)
-    ui.text(f"Literatürdeki 0,70+ skorlarla tezin {tr(grup_r2, 3)}'u arasındaki farkın büyük bölümü model "
-            "kalitesi değil, <strong>protokol</strong> farkıdır (tez Tablo 2.1; Kapoor ve Narayanan, 2023).",
-            mute=True)
+    with ui.card():
+        mae = float(ho["mutlak_hata"].mean())
+        rmse = float(np.sqrt(((ho["tahmin"] - ho["PCE"]) ** 2).mean()))
+        ssr = ((ho["PCE"] - ho["tahmin"]) ** 2).sum()
+        sst = ((ho["PCE"] - ho["PCE"].mean()) ** 2).sum()
+        ui.kicker("Başlık kurulumun holdout görünümü", f"{tr(len(ho), 0)} kayıt", tone="ink")
+        ui.stats([
+            ("Holdout R²", tr(1 - ssr / sst, 3)),
+            ("MAE (puan)", tr(mae, 2)),
+            ("RMSE (puan)", tr(rmse, 2)),
+            ("%90 bandı", f"±{tr(HW, 2)}"),
+        ], border=False)
+        ui.text(f"Literatürdeki 0,70+ skorlarla tezin {tr(grup_r2, 3)}'u arasındaki farkın büyük bölümü model "
+                "kalitesi değil, <strong>protokol</strong> farkıdır (tez Tablo 2.1; Kapoor ve Narayanan, 2023).",
+                mute=True)
 
 with st.expander("Holdout dağılımı — gerçek – tahmin serpmesi ve hata dağılımı"):
     l, r = st.columns(2, gap="large")

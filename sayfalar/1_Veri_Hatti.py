@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 import streamlit as st
 
 from lib import data, ui
-from lib.ui import tr, INK, ACC, N600
+from lib.ui import tr, INK, ACC, BLUE, N900
 
 meta = data.js("app_meta.json")
 rec = data.records()
@@ -35,37 +35,37 @@ ui.page_header(
 )
 
 ui.stats([
-    ("Ham kayıt", tr(n_ham, 0)),
-    ("Temiz kayıt", tr(n_temiz, 0)),
-    ("Elenen", tr(n_elenen, 0), f"%{tr(100 * n_elenen / n_ham, 1)}", "acc"),
-    ("Özellik", "77", "+ eksiklik bayrakları"),
+    ("Ham kayıt", tr(n_ham, 0), "Perovskite Database anlık görüntüsü"),
+    ("Temiz kayıt", tr(n_temiz, 0), f"{tr(rec['DOI'].nunique(), 0)} yayın grubu"),
+    ("Elenen", f"−{tr(n_elenen, 0)}", f"%{tr(100 * n_elenen / n_ham, 1)} · her biri nedeniyle loglu", "acc"),
+    ("Özellik", "77", "kompozisyon 14 · cihaz 43 · süreç 20"),
 ])
 
 # ---------------------------------------------------------------- eleme nedenleri + doldurma oranları
-left, right = st.columns(2, gap="large")
-with left:
-    ui.kicker("Eleme nedenleri", f"(toplam {tr(n_elenen, 0)} kayıt)", tone="ink")
+left, right = st.columns(2, gap="medium")
+with left, ui.card():
+    ui.kicker("Eleme nedenleri", f"toplam {tr(n_elenen, 0)} kayıt", tone="ink")
     rs = reasons.sort_values("count", ascending=False)
     ui.bar_rows([
-        dict(name=r.neden_tr, value=int(r["count"]), value_str=tr(int(r["count"]), 0),
+        dict(name=r.neden_tr, value=int(r["count"]),
+             value_str=(f'<span style="color:var(--acc700)">{tr(int(r["count"]), 0)}</span>' if i == 0
+                        else tr(int(r["count"]), 0)),
              tone="acc" if i == 0 else "ink", bold=False)
         for i, (_, r) in enumerate(rs.iterrows())
     ], vmax=float(rs["count"].max()), slim=True)
     ui.text("Elenen her kaydın <strong>nedeni kayıt düzeyinde</strong> loglanır "
             "(<span class='m-mono'>outputs/logs/removed_records_log.csv</span>); hattın açıklanabilirlik "
             "sözleşmesi: hiçbir kayıt sessizce kaybolmaz.", mute=True)
-with right:
-    ui.kicker("Eksik değer doldurma oranları", "(bayrakla izlenir)", tone="ink")
+with right, ui.card():
+    ui.kicker("Eksik değer doldurma oranları", "bayrakla izlenir · eksen 0–30", tone="ink")
     imp = [("Band gap", 100 * rec["band_gap_dolduruldu"].mean()),
            ("Tavlama süresi", 100 * rec["tavlama_sure_dolduruldu"].mean()),
            ("Tavlama sıcaklığı", 100 * rec["tavlama_sicaklik_dolduruldu"].mean())]
-    ui.bar_rows([dict(name=n, value=v, value_str=f"%{tr(v, 1)}", tone="mid", bold=False) for n, v in imp],
+    ui.bar_rows([dict(name=n, value=v, value_str=f"%{tr(v, 1)}", tone="blue2", bold=False) for n, v in imp],
                 vmax=30.0, slim=True)
     ui.text("Doldurulan her değer (band gap, tavlama sıcaklığı/süresi → eğitim medyanı) modele ayrı bir "
             "<strong>eksiklik bayrağı</strong> olarak bildirilir; hattın hiçbir kararı görünmez değildir.",
             mute=True)
-
-ui.rule()
 
 # ---------------------------------------------------------------- modüller
 tab_dagilim, tab_gezgin, tab_elenen = st.tabs(["Dağılımlar", "Kayıt gezgini", "Elenen kayıtlar"])
@@ -74,12 +74,12 @@ with tab_dagilim:
     l, r = st.columns(2, gap="large")
     with l:
         fig = px.histogram(rec, x="PCE", nbins=70, labels={"PCE": "PCE (%)"})
-        fig.update_traces(marker_color=INK)
+        fig.update_traces(marker_color=N900)
         fig.update_layout(yaxis_title="Kayıt")
         ui.chart(fig, height=320, title=f"PCE dağılımı (n = {tr(len(rec), 0)}; medyan {tr(rec['PCE'].median(), 2)})")
 
         doi_sizes = rec[rec["DOI"] != "(DOI yok)"].groupby("DOI").size()
-        fig = go.Figure(go.Histogram(x=doi_sizes[doi_sizes <= 60], nbinsx=60, marker_color=INK))
+        fig = go.Figure(go.Histogram(x=doi_sizes[doi_sizes <= 60], nbinsx=60, marker_color=N900))
         fig.add_vline(x=doi_sizes.median(), line_dash="dash", line_color=ACC,
                       annotation_text=f"medyan = {int(doi_sizes.median())}")
         fig.update_layout(yaxis_type="log", xaxis_title="Yayın başına kayıt", yaxis_title="Yayın sayısı (log)")
@@ -93,7 +93,7 @@ with tab_dagilim:
         melt = rec[cols].melt(var_name="iyon", value_name="oran")
         melt["iyon"] = melt["iyon"].str.split("_").str[1]
         fig = px.histogram(melt, x="oran", color="iyon", nbins=40, barmode="overlay", opacity=0.65,
-                           color_discrete_sequence=[INK, ACC, N600])
+                           color_discrete_sequence=[N900, BLUE, ACC])
         fig.update_layout(yaxis_type="log", xaxis_title="Oran", yaxis_title="Kayıt (log)",
                           legend_title_text="")
         ui.chart(fig, height=300, title=f"{site} iyon oranları")
@@ -103,7 +103,7 @@ with tab_dagilim:
                                                   "HTL": "HTL", "cozucu": "Çözücü"}[s])
         vc = rec[kat].value_counts().head(10)[::-1]
         fig = px.bar(x=vc.values, y=[v[:34] for v in vc.index], orientation="h")
-        fig.update_traces(marker_color=INK)
+        fig.update_traces(marker_color=N900)
         fig.update_layout(xaxis_title="Kayıt", yaxis_title="")
         ui.chart(fig, height=320, title=f"En sık 10 kategori — {kat}")
 
@@ -142,7 +142,7 @@ with tab_gezgin:
         rid = st.selectbox("Kayıt detayı", list(etiket),
                            format_func=lambda i: f"#{i} — {etiket[i][:40]}")
         r = sub[sub["row_id"] == rid].iloc[0]
-        d1, d2 = st.columns(2, gap="large")
+        d1, d2 = st.columns(2, gap="medium")
         with d1:
             ui.box(
                 f"<p><strong>Kompozisyon:</strong> {ui.esc(r['kompozisyon'])}</p>"
@@ -150,8 +150,8 @@ with tab_gezgin:
                 f"<p><strong>Çözücü:</strong> {ui.esc(r['cozucu'][:30])} · <strong>Gerçek PCE:</strong> {tr(r['PCE'], 2)}</p>"
                 f"<p><strong>DOI grubu:</strong> <span class='m-mono'>{ui.esc(r['DOI'][:50])}</span> → "
                 f"<strong>{ui.esc(r['bolme'])}</strong> (CV kat {int(r['cv_fold'])})</p>",
-                chip="Kayıt durumu: modellemeye alındı")
-        with d2:
+                chip="Kayıt durumu: modellemeye alındı", tone="blue")
+        with d2, ui.card():
             islemler = []
             for flag, ad, val in [("band_gap_dolduruldu", "Band gap", r["band_gap"]),
                                   ("tavlama_sicaklik_dolduruldu", "Tavlama sıcaklığı", r["tavlama_sicaklik"]),

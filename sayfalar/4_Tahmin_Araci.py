@@ -22,11 +22,11 @@ ui.page_header(
     f"kestirim; nominal %90, holdout kapsaması %{tr(COV, 1)}).",
 )
 
-left, right = st.columns([5, 7], gap="large")
+left, right = st.columns([5, 7], gap="medium")
 
 # ---------------------------------------------------------------- tarif formu
-with left:
-    ui.kicker("Kompozisyon", "· her site toplamı 1,00 olmalı", tone="ink")
+with left, ui.card():
+    ui.kicker("Kompozisyon", "her site toplamı 1,00 olmalı", tone="ink")
     c = st.columns(3)
     heads = []
     sites = {}
@@ -43,11 +43,16 @@ with left:
     sums = {s: sum(v.values()) for s, v in sites.items()}
     oks = {s: abs(v - 1.0) <= 0.011 for s, v in sums.items()}
     for h, s in zip(heads, ["A", "B", "X"]):
-        h.html(f'<div style="display:flex; justify-content:space-between; align-items:baseline; '
-               f'border-bottom:2px solid var(--ink); padding-bottom:4px; margin:6px 0 2px">'
-               f'<span style="font-weight:800; font-size:13px">{s}-site</span>'
-               f'<span style="font-size:11px; font-weight:700; color:{"var(--n700)" if oks[s] else "var(--acc)"}">'
-               f'Σ {tr(sums[s], 2)}</span></div>')
+        tones = ["var(--blue)", "var(--blue400)", "var(--blue200)", "var(--n500)", "var(--n300)"]
+        seg = "".join(f'<span style="width:{100 * v / max(sums[s], 1e-9):.1f}%; background:{tones[i % 5]}"></span>'
+                      for i, v in enumerate(sites[s].values()) if v > 0)
+        h.html(f'<div style="display:flex; flex-direction:column; gap:6px; margin:2px 0 4px">'
+               f'<div style="display:flex; justify-content:space-between; align-items:baseline">'
+               f'<span style="font-weight:600; font-size:13.5px">{s}-site</span>'
+               f'<span class="num" style="font-size:11.5px; font-weight:600; color:{"var(--blue)" if oks[s] else "var(--acc700)"}">'
+               f'Σ {tr(sums[s], 2)}</span></div>'
+               f'<div aria-hidden="true" style="display:flex; height:8px; border-radius:999px; overflow:hidden; '
+               f'background:var(--n200)">{seg}</div></div>')
 
     ui.kicker("Cihaz yığını ve süreç", tone="ink")
     d = st.columns(2)
@@ -73,6 +78,8 @@ with left:
     if st.button("PCE tahmini al  →", type="primary", width="stretch"):
         st.session_state["p4_submitted"] = True
     submitted = st.session_state.get("p4_submitted", False)
+    ui.text("Ölçüm-sonrası hiçbir değişken (Voc, Jsc, FF…) modele girmez. \"bilinmiyor\" işaretlenen değer "
+            "eğitim medyanıyla doldurulur ve eksiklik bayrağı 1 olur.", mute=True)
     if submitted and not all(oks.values()):
         hatalar = [s for s, ok in oks.items() if not ok]
         ui.box(f"<strong>Katsayı toplamı hatası:</strong> {', '.join(hatalar)}-site katsayı toplamı 1,00 olmalı "
@@ -81,7 +88,6 @@ with left:
 # ---------------------------------------------------------------- sonuç
 with right:
     if not submitted:
-        st.html('<div style="padding:26px 0 0"></div>')
         ui.box("<p>Sol taraftaki tarifi kurun ve <strong>PCE tahmini al</strong> düğmesine basın. Sonuç, tahmini "
                "PCE ile birlikte %90 belirsizlik aralığını, tarifin eğitim verisine yakınlığını ve tahmini "
                "belirleyen özellik katkılarını (yerel SHAP) gösterir.</p>"
@@ -93,34 +99,41 @@ with right:
         pred = float(data.model().predict(enc)[0])
         m_lo, m_hi, q_lo, q_hi, quart = encode.conformal_interval(pred)
         dist, thr, inside, komsular = encode.ad_distance(enc)
-        fg = "var(--ink)" if inside else "var(--acc)"
+        fg = "var(--ink)" if inside else "var(--acc700)"
 
-        ui.stats([
-            ("Tahmini PCE", f"{tr(pred, 2)}<small>%</small>", "", "acc"),
-            ("%90 aralık — genel", f"{tr(m_lo, 1)} – {tr(m_hi, 1)}", f"marjinal conformal · ±{tr(HW, 2)}"),
-            (f"%90 aralık — bölgesel {quart}", f"{tr(q_lo, 1)} – {tr(q_hi, 1)}", "Mondrian conformal · çeyreğe duyarlı"),
-            ("Eğitim-uzayına uzaklık", f'<span style="color:{fg}">{tr(dist, 2)}</span>',
-             f'eşik {tr(thr, 2)} — <strong style="color:{fg}">{"alan içi" if inside else "alan DIŞI"}</strong>'),
-        ], border=False, small=True)
+        with ui.card():
+            st.html(
+                '<div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-end; gap:12px">'
+                '<div><div class="m-kicker mute">Tahmini PCE</div>'
+                '<div style="display:flex; align-items:baseline; gap:6px">'
+                f'<span style="font-family:var(--hfont); font-weight:600; font-size:clamp(56px,6vw,76px); line-height:1; '
+                f'letter-spacing:-0.03em; color:var(--blue)">{tr(pred, 2)}</span>'
+                '<span style="font-family:var(--hfont); font-weight:500; font-size:26px; color:var(--n700)">%</span></div></div>'
+                '<span class="m-chip">CatBoost · v0.4.0 eğitim bölmesi</span></div>'
+            )
+            st.html(
+                '<div class="m-band" role="img" aria-label="PCE ekseni 0–30 üzerinde tahmin ve %90 aralıklar">'
+                f'<div class="mb" style="left:{pct(m_lo):.2f}%; width:{pct(m_hi) - pct(m_lo):.2f}%"></div>'
+                f'<div class="qb" style="left:{pct(q_lo):.2f}%; width:{pct(q_hi) - pct(q_lo):.2f}%"></div>'
+                f'<div class="pt" style="left:{pct(pred):.2f}%"></div></div>'
+                '<div class="m-axis"><span class="num">0</span><span>PCE (%) — açık bant: marjinal %90 · koyu bant: '
+                f'Mondrian %90 ({quart})</span><span class="num">30</span></div>'
+            )
+            ui.stats([
+                ("%90 aralık — genel", f"{tr(m_lo, 1)} – {tr(m_hi, 1)}", f"marjinal conformal · ±{tr(HW, 2)}"),
+                (f"%90 aralık — bölgesel {quart}", f"{tr(q_lo, 1)} – {tr(q_hi, 1)}", "Mondrian conformal · çeyreğe duyarlı"),
+                ("Eğitim-uzayına uzaklık", f'<span style="color:{fg}">{tr(dist, 2)}</span>',
+                 f'eşik {tr(thr, 2)} — <strong style="color:{fg}">{"eşik içinde" if inside else "eşik dışı"}</strong>'),
+            ], border=False)
 
-        st.html(
-            '<div class="m-band">'
-            f'<div class="mb" style="left:{pct(m_lo):.2f}%; width:{pct(m_hi) - pct(m_lo):.2f}%"></div>'
-            f'<div class="qb" style="left:{pct(q_lo):.2f}%; width:{pct(q_hi) - pct(q_lo):.2f}%"></div>'
-            f'<div class="pt" style="left:{pct(pred):.2f}%"></div>'
-            f'<div class="pl" style="left:{pct(pred):.2f}%">{tr(pred, 2)}</div></div>'
-            '<div class="m-axis"><span>0</span><span>PCE (%) — açık bant: marjinal %90 · koyu bant: Mondrian %90</span>'
-            '<span>30</span></div>'
-        )
-
-        if not inside:
-            ui.box(f"Bu tarif, eğitim verisinin yoğun bölgesinin <strong>dışında</strong> (kNN uzaklığı "
-                   f"{tr(dist, 2)} &gt; eşik {tr(thr, 2)}). Model bu bölgeyi çok az örnekten öğrenmiştir; tahmini "
-                   "yalnızca kaba bir yönlendirme olarak okuyun.", chip="Alan dışı", accent=True)
-        if pred > fmeta["train_pce_max"] * 0.6:
-            ui.text(f"Not: eğitimdeki en yüksek PCE {tr(fmeta['train_pce_max'], 1)}. Ağaç modeller gözlenmemiş "
-                    "bölgede güvenilir ekstrapolasyon yapamaz; tahminler pratikte bu tavanın belirgin altında kalır "
-                    "(tez Bölüm 5.4).", mute=True)
+            if not inside:
+                ui.box(f"Bu tarif, eğitim verisinin yoğun bölgesinin <strong>dışında</strong> (kNN uzaklığı "
+                       f"{tr(dist, 2)} &gt; eşik {tr(thr, 2)}). Model bu bölgeyi çok az örnekten öğrenmiştir; tahmini "
+                       "yalnızca kaba bir yönlendirme olarak okuyun.", chip="Alan dışı", accent=True)
+            if pred > fmeta["train_pce_max"] * 0.6:
+                ui.text(f"Not: eğitimdeki en yüksek PCE {tr(fmeta['train_pce_max'], 1)}. Ağaç modeller gözlenmemiş "
+                        "bölgede güvenilir ekstrapolasyon yapamaz; tahminler pratikte bu tavanın belirgin altında kalır "
+                        "(tez Bölüm 5.4).", mute=True)
 
         # --- veri desteği
         rec = data.records()
@@ -128,50 +141,50 @@ with right:
         uclu_n = int(((egitim["kova_arch"] == arch[1]) & (egitim["kova_ETL"] == etl[1]) &
                       (egitim["kova_HTL"] == htl[1])).sum())
         solv_n = int((egitim["kova_solv"] == solv[1]).sum())
-        st.html('<div style="border-top:1px solid var(--div); margin-top:8px"></div>')
-        ui.kicker("Veri desteği", tone="ink")
-        u_fg = "var(--acc)" if uclu_n == 0 else ("var(--acc700)" if uclu_n < 5 else "var(--ink)")
-        ui.stats([
-            ("Mimari–ETL–HTL üçlüsü eğitimde", f'<span style="color:{u_fg}">{tr(uclu_n, 0)}<small> kayıt</small></span>',
-             "hiç gözlenmedi" if uclu_n == 0 else ("seyrek (&lt;5)" if uclu_n < 5 else "≥ 5 · destekli (Bölüm 4.5)")),
-            ("Çözücü sistemi eğitimde", f"{tr(solv_n, 0)}<small> kayıt</small>", "çözücü sisteminin eğitimdeki sıklığı"),
-            ("En yakın 5 komşuya uzaklık", tr(dist, 2), "ölçekli özellik uzayında"),
-        ], border=False, small=True)
-        if any(s.startswith("Diğer (") or s in ("unknown", "Unknown") for s in (arch[1], etl[1], htl[1], solv[1])):
-            ui.text("Not: \"Diğer (…)\" ve \"unknown\" seçenekleri tek bir malzemeyi değil, modelin aynı kovada "
-                    "topladığı tüm seyrek/bilinmeyen etiketleri temsil eder; yukarıdaki sayımlar bu kovanın "
-                    "toplamıdır.", mute=True)
-        if uclu_n == 0:
-            ui.box("<strong>Bu üçlü eğitimde hiç gözlenmemiş.</strong> Model bu birleşimin etkileşimini öğrenmiş "
-                   "olamaz; tahmin, bileşenlerin tekil örüntülerinin toplamıdır (tez Bölüm 4.5'teki birlikte-görülme "
-                   "denetiminin birebir karşılığı).", accent=True)
-        elif uclu_n < 5:
-            ui.box(f"Bu üçlü eğitimde yalnızca {uclu_n} kez görüldü; tezin eğitim-desteği eşiğinin (≥5) altında "
-                   "(Bölüm 4.5).", accent=True)
+        with ui.card():
+            ui.kicker("Veri desteği", tone="ink")
+            u_fg = "var(--acc700)" if uclu_n < 5 else "var(--ink)"
+            ui.stats([
+                ("Mimari–ETL–HTL üçlüsü eğitimde", f'<span style="color:{u_fg}">{tr(uclu_n, 0)}<small> kayıt</small></span>',
+                 "hiç gözlenmedi" if uclu_n == 0 else ("seyrek (&lt;5)" if uclu_n < 5 else "≥ 5 · destekli (Bölüm 4.5)")),
+                ("Çözücü sistemi eğitimde", f"{tr(solv_n, 0)}<small> kayıt</small>", "çözücü sisteminin eğitimdeki sıklığı"),
+                ("En yakın 5 komşuya uzaklık", tr(dist, 2), "ölçekli özellik uzayında"),
+            ], border=False)
+            if any(s.startswith("Diğer (") or s in ("unknown", "Unknown") for s in (arch[1], etl[1], htl[1], solv[1])):
+                ui.text("Not: \"Diğer (…)\" ve \"unknown\" seçenekleri tek bir malzemeyi değil, modelin aynı kovada "
+                        "topladığı tüm seyrek/bilinmeyen etiketleri temsil eder; yukarıdaki sayımlar bu kovanın "
+                        "toplamıdır.", mute=True)
+            if uclu_n == 0:
+                ui.box("<strong>Bu üçlü eğitimde hiç gözlenmemiş.</strong> Model bu birleşimin etkileşimini öğrenmiş "
+                       "olamaz; tahmin, bileşenlerin tekil örüntülerinin toplamıdır (tez Bölüm 4.5'teki birlikte-görülme "
+                       "denetiminin birebir karşılığı).", accent=True)
+            elif uclu_n < 5:
+                ui.box(f"Bu üçlü eğitimde yalnızca {uclu_n} kez görüldü; tezin eğitim-desteği eşiğinin (≥5) altında "
+                       "(Bölüm 4.5).", accent=True)
 
         # --- yerel SHAP
-        st.html('<div style="border-top:1px solid var(--div); margin-top:8px"></div>')
-        ui.kicker("Bu tahmini ne belirledi? — yerel katkılar", "(SHAP, PCE puanı)", tone="ink")
-        sv = data.explainer().shap_values(enc)[0]
-        imp = pd.DataFrame({"özellik": enc.columns, "katkı": sv})
-        imp = imp[imp["katkı"].abs() > 1e-4].sort_values("katkı")
-        top = pd.concat([imp.head(8), imp.tail(8)]).drop_duplicates().sort_values("katkı")
-        mx = max(0.01, float(top["katkı"].abs().max()))
-        rows = []
-        for r in top.itertuples():
-            w = abs(r.katkı) / mx * 50
-            left_ = f"{50 - w:.2f}%" if r.katkı < 0 else "50%"
-            col = "var(--acc)" if r.katkı < 0 else "var(--ink)"
-            fgc = "var(--acc700)" if r.katkı < 0 else "var(--ink)"
-            sign = "−" if r.katkı < 0 else "+"
-            rows.append(f'<div><div class="nm" title="{ui.esc(r.özellik)}">{ui.esc(r.özellik)}</div>'
-                        f'<div class="tr"><div class="z"></div><div class="b" style="left:{left_}; width:{w:.2f}%; '
-                        f'background:{col}"></div></div><div class="vl" style="color:{fgc}">{sign}{tr(abs(r.katkı), 2)}</div></div>')
-        st.html(f'<div class="m-shap">{"".join(rows)}</div>')
-        g = data.csv("shap_top_features.csv")
-        ui.text("Sola uzanan (kırmızı) katkılar tahmini düşürür, sağa uzananlar (mürekkep) yükseltir. Küresel "
-                f"önem sıralaması (model geneli): {' · '.join(ui.esc(f) for f in g['feature'].head(5))} "
-                "(tez Tablo 4.6).", mute=True)
+        with ui.card():
+            ui.kicker("Bu tahmini ne belirledi?", "yerel SHAP · PCE puanı", tone="ink")
+            sv = data.explainer().shap_values(enc)[0]
+            imp = pd.DataFrame({"özellik": enc.columns, "katkı": sv})
+            imp = imp[imp["katkı"].abs() > 1e-4].sort_values("katkı")
+            top = pd.concat([imp.head(8), imp.tail(8)]).drop_duplicates().sort_values("katkı")
+            mx = max(0.01, float(top["katkı"].abs().max()))
+            rows = []
+            for r in top.itertuples():
+                w = abs(r.katkı) / mx * 50
+                left_ = f"{50 - w:.2f}%" if r.katkı < 0 else "50%"
+                col = "var(--acc)" if r.katkı < 0 else "var(--blue)"
+                fgc = "var(--acc700)" if r.katkı < 0 else "var(--blue)"
+                sign = "−" if r.katkı < 0 else "+"
+                rows.append(f'<div><div class="nm" title="{ui.esc(r.özellik)}">{ui.esc(r.özellik)}</div>'
+                            f'<div class="tr"><div class="z"></div><div class="b" style="left:{left_}; width:{w:.2f}%; '
+                            f'background:{col}"></div></div><div class="vl" style="color:{fgc}">{sign}{tr(abs(r.katkı), 2)}</div></div>')
+            st.html(f'<div class="m-shap">{"".join(rows)}</div>')
+            g = data.csv("shap_top_features.csv")
+            ui.text("Sola uzanan (turuncu) katkılar tahmini düşürür, sağa uzananlar (mavi) yükseltir. Küresel "
+                    f"önem sıralaması (model geneli): {' · '.join(ui.esc(f) for f in g['feature'].head(5))} "
+                    "(tez Tablo 4.6).", mute=True)
         with st.expander("Küresel önem sıralaması (model geneli, tez Tablo 4.6)"):
             st.dataframe(g.head(15), hide_index=True, width="stretch",
                          column_config={"feature": "Özellik", "mean_abs_shap": st.column_config.NumberColumn(

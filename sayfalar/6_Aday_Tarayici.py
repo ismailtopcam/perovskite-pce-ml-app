@@ -5,7 +5,7 @@ import plotly.express as px
 import streamlit as st
 
 from lib import data, ui
-from lib.ui import tr, INK, ACC
+from lib.ui import tr, INK, ACC, BLUE
 
 cand = data.candidates()
 conf = data.js("conformal.json")
@@ -31,46 +31,48 @@ ui.page_header(
 )
 
 ui.stats([
-    ("Aday", tr(len(cand), 0)),
-    ("Eğitimde destekli (≥5)", tr(n_destek, 0), "mimari–ETL–HTL üçlüsü eğitimde ≥5 kayıt"),
+    ("Aday", tr(len(cand), 0), "çözücü DMF; DMSO'ya sabit"),
+    ("Eğitimde destekli (≥5)", tr(n_destek, 0), "mimari–ETL–HTL üçlüsü eğitimde ≥5 kayıt", "blue"),
     ("En yüksek tahmin", tr(float(top["Predicted_PCE"]), 2),
      f"birincil (≥5 destek) liste; filtresiz {tr(float(top_all['Predicted_PCE']), 2)} — eğitim maksimumu 34,8'in çok altında"),
     ("Sıralama korelasyonu", f"ρ {tr(scr['spearman'], 3)}",
      f"holdout Spearman" + (f"; ilk %5'te {tr(zeng, 1)}× zenginleştirme" if zeng else "")),
 ])
 
-left, right = st.columns(2, gap="large")
+left, right = st.columns(2, gap="medium")
 with left:
-    ui.kicker("En yüksek tahminli aday", "(birincil liste: eğitim desteği ≥5)", tone="ink")
-    st.html(
-        '<div class="m-box" style="padding:0">'
-        '<div style="display:flex; justify-content:space-between; align-items:baseline; padding:12px 16px; '
-        'border-bottom:2px solid var(--ink)">'
-        f'<span style="font-weight:800; font-size:17px">{ui.esc(top["A"])} · {ui.esc(top["B"])} · {ui.esc(top["X"])} · {ui.esc(top["arch"])}</span>'
-        f'<span class="m-kicker" style="font-size:11px">sıra 01 / {len(prim)}</span></div>'
-        '<div style="display:grid; grid-template-columns:1fr 1fr 1fr; padding:14px 16px; gap:12px">'
-        f'<div><div class="m-kicker mute" style="font-size:10.5px">Tahmini PCE</div><div style="font-weight:800; font-size:28px; color:var(--acc)">{tr(top["Predicted_PCE"], 2)}</div></div>'
-        f'<div><div class="m-kicker mute" style="font-size:10.5px">Marjinal %90</div><div style="font-weight:800; font-size:20px; padding-top:5px">{tr(top["marginal90_low"], 1)} – {tr(top["marginal90_high"], 1)}</div></div>'
-        f'<div><div class="m-kicker mute" style="font-size:10.5px">Eğitim desteği</div><div style="font-weight:800; font-size:20px; padding-top:5px">{tr(int(top["egitim_kayit_sayisi"]), 0)} kayıt</div></div>'
-        '</div>'
-        f'<div style="padding:0 16px 12px; font-size:12px; color:var(--n700)">ETL {ui.esc(top["ETL"])} · HTL {ui.esc(top["HTL"])} · '
-        f'eğitim-uzayı uzaklığı {tr(top["knn_uzaklik"], 2)}. Filtresiz sıralamanın tepesi ({tr(float(top_all["Predicted_PCE"]), 2)}; '
-        f'{ui.esc(top_all["arch"])}, {ui.esc(top_all["ETL"])}, {ui.esc(top_all["HTL"])}) eğitimde hiç görülmemiş bir üçlüye aittir (tez Bölüm 4.5).</div></div>'
-    )
+    with ui.card():
+        ui.kicker("En yüksek tahminli aday", "birincil liste: eğitim desteği ≥5", tone="ink")
+        st.html(
+            '<div style="display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap; '
+            'padding-bottom:10px; border-bottom:1px solid var(--n200)">'
+            f'<span style="font-family:var(--hfont); font-weight:600; font-size:19px">{ui.esc(top["A"])} · {ui.esc(top["B"])} · '
+            f'{ui.esc(top["X"])} · {ui.esc(top["arch"])}</span>'
+            f'<span class="m-chip">sıra 01 / {len(prim)}</span></div>'
+            '<div class="m-stats noborder" style="margin-top:12px">'
+            f'<div><div class="l">Tahmini PCE</div><div class="v" style="color:var(--blue)">{tr(top["Predicted_PCE"], 2)}</div></div>'
+            f'<div><div class="l">Marjinal %90</div><div class="v">{tr(top["marginal90_low"], 1)} – {tr(top["marginal90_high"], 1)}</div></div>'
+            f'<div><div class="l">Eğitim desteği</div><div class="v">{tr(int(top["egitim_kayit_sayisi"]), 0)} <small>kayıt</small></div></div>'
+            '</div>'
+            f'<div class="m-mute" style="margin-top:10px">ETL {ui.esc(top["ETL"])} · HTL {ui.esc(top["HTL"])} · '
+            f'eğitim-uzayı uzaklığı {tr(top["knn_uzaklik"], 2)}. Filtresiz sıralamanın tepesi ({tr(float(top_all["Predicted_PCE"]), 2)}; '
+            f'{ui.esc(top_all["arch"])}, {ui.esc(top_all["ETL"])}, {ui.esc(top_all["HTL"])}) eğitimde hiç görülmemiş bir üçlüye aittir (tez Bölüm 4.5).</div>'
+        )
 
-    ui.kicker("Filtreler", tone="ink")
-    min_pce = st.slider("Min. tahmini PCE", 8.0, 18.0, 12.0, 0.5)
-    sadece_uyumlu = st.checkbox(
-        f"yalnızca eğitimde denenmiş kombinasyonlar ({len(cand)} → {n_destek})", value=True,
-        help="Adayın mimari–ETL–HTL üçlüsü, modelin eğitim verisinde en az 5 kayıtta birlikte görülmüşse "
-             "gösterilir (tez Bölüm 4.5). Model, hiç görmediği bir kombinasyonun katman etkileşimini öğrenmiş "
-             "olamaz.")
-    f3, f4, f5 = st.columns(3)
-    a_sel = f3.multiselect("A-site", sorted(cand["A"].unique()), placeholder="Tümü")
-    b_sel = f4.multiselect("B-site", sorted(cand["B"].unique()), placeholder="Tümü")
-    arch_sel = f5.multiselect("Mimari", sorted(cand["arch"].unique()), placeholder="Tümü")
+    with ui.card():
+        ui.kicker("Filtreler", tone="ink")
+        min_pce = st.slider("Min. tahmini PCE", 8.0, 18.0, 12.0, 0.5)
+        sadece_uyumlu = st.checkbox(
+            f"yalnızca eğitimde denenmiş kombinasyonlar ({len(cand)} → {n_destek})", value=True,
+            help="Adayın mimari–ETL–HTL üçlüsü, modelin eğitim verisinde en az 5 kayıtta birlikte görülmüşse "
+                 "gösterilir (tez Bölüm 4.5). Model, hiç görmediği bir kombinasyonun katman etkileşimini öğrenmiş "
+                 "olamaz.")
+        f3, f4, f5 = st.columns(3)
+        a_sel = f3.multiselect("A-site", sorted(cand["A"].unique()), placeholder="Tümü")
+        b_sel = f4.multiselect("B-site", sorted(cand["B"].unique()), placeholder="Tümü")
+        arch_sel = f5.multiselect("Mimari", sorted(cand["arch"].unique()), placeholder="Tümü")
 
-with right:
+with right, ui.card():
     ui.kicker("Bu sayfayı dürüst okumak", tone="ink")
     ad = conf["applicability_domain"]
     ui.text(
@@ -95,9 +97,8 @@ if arch_sel: m &= cand["arch"].isin(arch_sel)
 if sadece_uyumlu: m &= cand["uyumlu_N5"]
 sub = cand[m].sort_values("Predicted_PCE", ascending=False)
 
-ui.rule()
 ui.kicker(f"{tr(len(sub), 0)} / {len(cand)} aday eşleşti",
-          f"(eğitimde ≥5 kez görülmüş kombinasyon: {tr(n_destek, 0)}; eğitim-uzayı eşiği içinde: {tr(n_ici, 0)})",
+          f"eğitimde ≥5 kez görülmüş kombinasyon: {tr(n_destek, 0)}; eğitim-uzayı eşiği içinde: {tr(n_ici, 0)}",
           tone="ink")
 view = sub[["A", "B", "X", "arch", "ETL", "HTL", "Predicted_PCE", "marginal90_low", "marginal90_high",
             "egitim_kayit_sayisi", "knn_uzaklik", "alan_ici"]].rename(columns={
@@ -108,7 +109,7 @@ st.dataframe(view.head(200), hide_index=True, width="stretch", height=380,
                             for c in ["Tahmini PCE", "%90 alt", "%90 üst", "Eğitim-uzayı uzaklığı"]})
 
 fig = px.scatter(cand, x="knn_uzaklik", y="Predicted_PCE", color="destek",
-                 color_discrete_map={"eğitimde destekli (≥5)": INK, "destek < 5": ACC},
+                 color_discrete_map={"eğitimde destekli (≥5)": BLUE, "destek < 5": ACC},
                  labels={"knn_uzaklik": "Eğitim-uzayına kNN uzaklığı", "Predicted_PCE": "Tahmini PCE",
                          "destek": ""},
                  hover_data=["A", "B", "X", "arch", "ETL", "HTL"])

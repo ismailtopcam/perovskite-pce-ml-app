@@ -19,20 +19,21 @@ ui.page_header(
     "görünümüdür; uygulama bir ML denetim (audit) kaydı gibi okunabilir.",
 )
 
-ui.flow([
-    ("Ham veri", f"{tr(meta['n_ham'], 0)} × 410"),
-    ("Şema doğrulama", "sızıntı kolonu kontrolü"),
-    ("Temizleme", f"{tr(meta['n_temiz'], 0)} (−{tr(meta['n_elenen'], 0)})"),
-    ("Vektörizasyon", "A/B/X katsayıları"),
-    ("77 özellik", "+ eksiklik bayrakları"),
-    ("DOI-grup bölme", f"seed {meta['seed']}"),
-    ("6 model", "CV + holdout"),
-    ("SHAP", "küresel + yerel"),
-    ("756 aday", "+ conformal"),
-])
+with ui.card():
+    ui.flow([
+        ("Ham veri", f"{tr(meta['n_ham'], 0)} × 410"),
+        ("Şema doğrulama", "sızıntı kolonu kontrolü"),
+        ("Temizleme", f"{tr(meta['n_temiz'], 0)} (−{tr(meta['n_elenen'], 0)})"),
+        ("Vektörizasyon", "A/B/X katsayıları"),
+        ("77 özellik", "+ eksiklik bayrakları"),
+        ("DOI-grup bölme", f"seed {meta['seed']}"),
+        ("6 model", "CV + holdout"),
+        ("SHAP", "küresel + yerel"),
+        ("756 aday", "+ conformal"),
+    ])
 
 ui.stats([
-    ("Pipeline commit", f'<span class="m-mono" style="font-size:0.55em">{meta["pipeline_git_commit"][:10]}</span>'),
+    ("Pipeline commit", f'<span class="num" style="font-size:0.7em">{meta["pipeline_git_commit"][:10]}</span>'),
     ("Seed", str(meta["seed"])),
     ("Aşama manifesti", str(n_man)),
     ("Veri hazırlama", meta["hazirlama_zamani_utc"][:10]),
@@ -45,7 +46,7 @@ if len(vs) == 1:
            f"scikit-learn {v0.get('scikit-learn')} · catboost {v0.get('catboost')} · "
            f"{ui.esc(str(v0.get('platform', '')).split('-')[0])}); sürüm karışması yoktur. Uygulamanın tüm veri "
            "dosyaları <span class='m-mono'>tools/prepare_app_data.py</span> ile pipeline reposundan deterministik "
-           "üretilir; betik bölmeleri yeniden kurup bilinen değerlerle doğrular, uyuşmazlıkta durur.")
+           "üretilir; betik bölmeleri yeniden kurup bilinen değerlerle doğrular, uyuşmazlıkta durur.", tone="blue")
 else:
     ui.box(f"Manifestler {len(vs)} farklı ortam kaydı içeriyor; ayrıntı için tabloya bakın.", accent=True)
 
@@ -62,39 +63,40 @@ for m in manifests:
 st.dataframe(pd.DataFrame(rows).sort_values("Zaman (UTC)"), hide_index=True, width="stretch", height=380)
 
 ui.kicker("Bağımsız denetim özetleri", tone="ink")
-a, b, c = st.columns(3, gap="large")
-with a:
+a, b, c = st.columns(3, gap="medium")
+with a, ui.card():
     ui.text(f"<strong>Ön-işleme sızıntısı testi</strong> <span style='color:var(--n700)'>· Bölüm 3.7</span><br>"
             f"Global matris R² <strong>{tr(p['global_mean'], 4)}</strong> · kat-içi Pipeline R² "
             f"<strong>{tr(p['foldlocal_mean'], 4)}</strong> · fark <strong>{tr(abs(p['delta']), 4)}</strong> — "
             "ön-işleme sızıntısı ihmal edilebilir.")
-with b:
+with b, ui.card():
     ui.text(f"<strong>DOI normalizasyon duyarlılığı</strong> <span style='color:var(--n700)'>· Bölüm 5.7</span><br>"
             f"GroupKFold <strong>{tr(d['raw_groups']['gkf5']['R2_mean'], 3)} → "
             f"{tr(d['normalized_groups']['gkf5']['R2_mean'], 3)}</strong> · holdout "
             f"<strong>{tr(d['raw_groups']['holdout']['R2'], 3)} → {tr(d['normalized_groups']['holdout']['R2'], 3)}</strong> "
             "(ham → normalize gruplar); fark kat gürültüsü içinde.")
-with c:
+with c, ui.card():
     ui.text("<strong>CatBoost ızgara araması</strong> <span style='color:var(--n700)'>· Bölüm 4.8</span><br>"
             "Grup-güvenli arama temel yapılandırmayı seçti; 5-katta fark <strong>0,000</strong>. Sınırlayıcı etken "
             "hiperparametre değil veri yapısı.")
 
-ui.kicker("Model ve veri kimliği", tone="ink")
-gh_p = meta.get("github_pipeline", ""); gh_a = meta.get("github_app", ""); zdoi = meta.get("zenodo_doi", "10.5281/zenodo.20829027")
-ui.table([], [
-    ["Model", "CatBoost 1.2.10 — iterations 500 · depth 6 · lr 0,05 · seed 42"],
-    ["model.cbm SHA-256", f"<span class='m-mono'>{meta.get('model_cbm_sha256', '—')[:32]}…</span>"],
-    ["model_ready_dataset.csv SHA-256", f"<span class='m-mono'>{meta['model_ready_sha256'][:32]}…</span>"],
-    ["Ham veri anlık görüntüsü", f"{tr(meta['n_ham'], 0)} kayıt × 410 kolon (SHA-256: pipeline README)"],
-    ["Pipeline commit", f"<span class='m-mono'>{meta['pipeline_git_commit'][:12]}</span> (v0.4.0; 17 Ekim 2026 "
-                        f"geçmiş yeniden yazımı öncesi kimliği {meta.get('pipeline_git_commit_eski', '')[:7]}; "
-                        "koşu-manifestlerindeki d6ce55f'in yeni karşılığı 6eba260)"],
-    ["Kod arşivi", f'<a href="https://doi.org/{zdoi}">Zenodo DOI {zdoi}</a> · <a href="{gh_p}">pipeline deposu</a> · '
-                   f'<a href="{gh_a}">uygulama deposu</a>'],
-    ["DOI-grup CV sonucu", "R² = 0,410 ± 0,016 · MAE 3,12 · RMSE 4,02 — <strong>ölçüm-sonrası hiçbir değişken "
-                           "modele dâhil değildir</strong>; şema katmanı bunu her koşuda zorlar."],
-], kv=True)
-ui.text("Ölçüm-sonrası değişkenler (Voc, Jsc, FF, EQE, stabilite alanları) dâhil edilselerdi R² yapay olarak "
-        "0,937'ye çıkardı (tez Deney B).", mute=True)
+with ui.card():
+    ui.kicker("Model ve veri kimliği", tone="ink")
+    gh_p = meta.get("github_pipeline", ""); gh_a = meta.get("github_app", ""); zdoi = meta.get("zenodo_doi", "10.5281/zenodo.20829027")
+    ui.table([], [
+        ["Model", "CatBoost 1.2.10 — iterations 500 · depth 6 · lr 0,05 · seed 42"],
+        ["model.cbm SHA-256", f"<span class='m-mono'>{meta.get('model_cbm_sha256', '—')[:32]}…</span>"],
+        ["model_ready_dataset.csv SHA-256", f"<span class='m-mono'>{meta['model_ready_sha256'][:32]}…</span>"],
+        ["Ham veri anlık görüntüsü", f"{tr(meta['n_ham'], 0)} kayıt × 410 kolon (SHA-256: pipeline README)"],
+        ["Pipeline commit", f"<span class='m-mono'>{meta['pipeline_git_commit'][:12]}</span> (v0.4.0; 17 Ekim 2026 "
+                            f"geçmiş yeniden yazımı öncesi kimliği {meta.get('pipeline_git_commit_eski', '')[:7]}; "
+                            "koşu-manifestlerindeki d6ce55f'in yeni karşılığı 6eba260)"],
+        ["Kod arşivi", f'<a href="https://doi.org/{zdoi}">Zenodo DOI {zdoi}</a> · <a href="{gh_p}">pipeline deposu</a> · '
+                       f'<a href="{gh_a}">uygulama deposu</a>'],
+        ["DOI-grup CV sonucu", "R² = 0,410 ± 0,016 · MAE 3,12 · RMSE 4,02 — <strong>ölçüm-sonrası hiçbir değişken "
+                               "modele dâhil değildir</strong>; şema katmanı bunu her koşuda zorlar."],
+    ], kv=True)
+    ui.text("Ölçüm-sonrası değişkenler (Voc, Jsc, FF, EQE, stabilite alanları) dâhil edilselerdi R² yapay olarak "
+            "0,937'ye çıkardı (tez Deney B).", mute=True)
 
 ui.footer()

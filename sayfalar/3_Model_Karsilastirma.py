@@ -20,14 +20,17 @@ ui.page_header(
 NOT = {"CatBoost": "— seçilen model", "HistGBM": "— salt scikit-learn", "Ridge": "— doğrusal taban"}
 AD = {"RandomForest": "Random Forest"}
 
-left, right = st.columns(2, gap="large")
-with left:
-    ui.kicker("DOI-grup 5-kat CV — ana ölçüt", "(R² ort ± std, eksen 0–0,5)", tone="ink")
+left, right = st.columns(2, gap="medium")
+with left, ui.card():
+    ui.kicker("DOI-grup 5-kat CV — ana ölçüt", "R² ort. ± std · eksen 0–0,5", tone="ink")
     ui.bar_rows([
-        dict(name=(f'<span style="color:var(--acc700)">{AD.get(r.model, r.model)}</span>' if r.model == "CatBoost"
+        dict(name=(f'<span style="color:var(--blue)">{AD.get(r.model, r.model)}</span>' if r.model == "CatBoost"
                    else AD.get(r.model, r.model)),
-             sub=NOT.get(r.model, ""), value=r.R2_mean, value_str=tr(r.R2_mean, 3),
-             value_sub=f"±{tr(r.R2_std, 3)}", std=r.R2_std, tone="acc" if r.model == "CatBoost" else "ink",
+             sub=NOT.get(r.model, ""), value=r.R2_mean,
+             value_str=(f'<span style="color:var(--blue)">{tr(r.R2_mean, 3)}</span>' if r.model == "CatBoost"
+                        else tr(r.R2_mean, 3)),
+             value_sub=f"±{tr(r.R2_std, 3)}", std=r.R2_std,
+             tone="blue" if r.model == "CatBoost" else ("ink" if r.R2_mean > 0.39 else "mid"),
              bold=(r.model == "CatBoost"))
         for r in cv.itertuples()
     ], vmax=0.5)
@@ -40,25 +43,26 @@ with left:
             "Sıfır-bilgi tabanı (eğitim ortalaması) aynı protokolde R² ≈ 0,00 / MAE 4,32 verir.", mute=True)
 
 with right:
-    ui.kicker("Sayısal tablo", tone="ink")
-    tab = cv.merge(holdout, on="model", suffixes=("_cv", "_holdout"))
-    rows = [[AD.get(r.model, r.model), tr(r.R2_mean, 3), tr(r.R2_std, 3), tr(r.MAE_mean, 3),
-             tr(r.RMSE_mean, 3), tr(r.R2, 3), tr(r.MAE, 3)] for r in tab.itertuples()]
-    ui.table(["Model", "CV R²", "± std", "CV MAE", "CV RMSE", "Hold. R²", "Hold. MAE"], rows,
-             right_cols=(1, 2, 3, 4, 5, 6), hi_row=0)
-    ui.text(
-        "<p><strong>Ayar duyarlılığı (Bölüm 4.8):</strong> grup-güvenli ızgara aramaları hem HistGBM'de "
-        f"(varsayılan {tr(tune['default_cv_r2'][0], 4)} → ayarlı {tr(tune['tuned_cv_r2'][0], 4)}; kazanım "
-        f"{tr(tune['tuned_cv_r2'][0] - tune['default_cv_r2'][0], 4)}) hem CatBoost'ta (fark 0,000) baştan kullanılan temel yapılandırmayı seçti — başarım "
-        "hiperparametreyle değil <strong>veri yapısıyla</strong> sınırlı.</p>"
-        f"<p><strong>Fiziksel tanımlayıcı ablasyonu (Bölüm 4.9):</strong> Goldschmidt <em>t</em> / oktahedral "
-        f"<em>μ</em> / Bartel <em>τ</em> eklemek başarımı artırmadı (Δ = +{tr(abl['delta_r2'], 4)}; "
-        f"{tr(abl['descriptor_yok']['r2'], 4)} → {tr(abl['descriptor_var']['r2'], 4)}, kat gürültüsünün çok "
-        "altında): ağaç modeller aynı bilgiyi ham oranlardan zaten öğreniyor.</p>")
+    with ui.card():
+        ui.kicker("Sayısal tablo", tone="ink")
+        tab = cv.merge(holdout, on="model", suffixes=("_cv", "_holdout"))
+        rows = [[AD.get(r.model, r.model), tr(r.R2_mean, 3), tr(r.R2_std, 3), tr(r.MAE_mean, 3),
+                 tr(r.RMSE_mean, 3), tr(r.R2, 3), tr(r.MAE, 3)] for r in tab.itertuples()]
+        ui.table(["Model", "CV R²", "± std", "CV MAE", "CV RMSE", "Hold. R²", "Hold. MAE"], rows,
+                 right_cols=(1, 2, 3, 4, 5, 6), hi_row=0)
+    with ui.card():
+        ui.text(
+            "<p><strong>Ayar duyarlılığı (Bölüm 4.8):</strong> grup-güvenli ızgara aramaları hem HistGBM'de "
+            f"(varsayılan {tr(tune['default_cv_r2'][0], 4)} → ayarlı {tr(tune['tuned_cv_r2'][0], 4)}; kazanım "
+            f"{tr(tune['tuned_cv_r2'][0] - tune['default_cv_r2'][0], 4)}) hem CatBoost'ta (fark 0,000) baştan kullanılan temel yapılandırmayı seçti — başarım "
+            "hiperparametreyle değil <strong>veri yapısıyla</strong> sınırlı.</p>"
+            f"<p><strong>Fiziksel tanımlayıcı ablasyonu (Bölüm 4.9):</strong> Goldschmidt <em>t</em> / oktahedral "
+            f"<em>μ</em> / Bartel <em>τ</em> eklemek başarımı artırmadı (Δ = +{tr(abl['delta_r2'], 4)}; "
+            f"{tr(abl['descriptor_yok']['r2'], 4)} → {tr(abl['descriptor_var']['r2'], 4)}, kat gürültüsünün çok "
+            "altında): ağaç modeller aynı bilgiyi ham oranlardan zaten öğreniyor.</p>")
 
-ui.rule(thin=True)
-ui.text("Yol haritası: eğitim süresi / tahmin süresi / model boyutu bu koşularda kaydedilmediği için "
-        "operasyonel maliyet (Pareto) görünümü henüz verilemiyor; pipeline'a enstrümantasyon eklendiğinde bu "
+ui.text("<strong>Yol haritası:</strong> eğitim süresi / tahmin süresi / model boyutu bu koşularda kaydedilmediği "
+        "için operasyonel maliyet (Pareto) görünümü henüz verilemiyor; pipeline'a enstrümantasyon eklendiğinde bu "
         "sayfaya R²–maliyet grafiği eklenecek.", mute=True)
 
 ui.footer()

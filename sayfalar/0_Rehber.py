@@ -8,7 +8,7 @@ from lib.ui import tr
 meta = data.js("app_meta.json")
 
 ui.page_header(
-    "Kullanım Rehberi",
+    "Kullanım Rehberi · Uzman olmayan ziyaretçiler için",
     "Her ekran ne gösterir, nasıl okunur?",
     "Model, geçmiş literatürdeki on binlerce perovskit güneş hücresi kaydından verim (PCE) tahmin "
     "etmeyi öğrenir; tezin asıl katkısı bu tahminin <strong>dürüstçe nasıl ölçüleceğini</strong> "
@@ -16,10 +16,9 @@ ui.page_header(
     "<em>tezin hangi bölümüne dayandığını</em> açıklar.",
 )
 
-left, right = st.columns([7, 5], gap="large")
+left, right = st.columns([7, 5], gap="medium")
 
 with left:
-    st.html('<div style="height:8px"></div>')
     ui.list_rows([
         ("—", "Genel Bakış", "",
          "Tezin ana savı ve dört temel sayı; diğer tüm sayfalar bu sayıların nereden geldiğini açar."),
@@ -42,7 +41,7 @@ with left:
          "Kendi sanal hücre tarifinizi kurup modelden tahmin alın. Üç şeye birden bakın: tahmini PCE (tek "
          "sayı, tek başına yanıltıcı); %90 aralık (± ~6,7 puan geniştir — bu genişlik modelin değil, literatür "
          "verisindeki gürültünün eseridir); eğitim-uzayına uzaklık uyarısı (tarif modelin hiç görmediği "
-         "bölgedeyse uygulama sizi kırmızı kutuyla uyarır). SHAP satırları bu tahmini neyin yükseltip "
+         "bölgedeyse uygulama sizi turuncu kutuyla uyarır). SHAP satırları bu tahmini neyin yükseltip "
          "düşürdüğünü gösterir. <strong>Hiçbir çıktı deneysel doğrulama yerine geçmez.</strong>"),
         ("05", "Gerçek – Tahmin", "· Bölüm 4.7",
          f"Modelin eğitimde hiç görmediği {tr(meta['n_holdout'], 0)} kayıtta (holdout) tahminlerle gerçek "
@@ -71,25 +70,25 @@ with left:
          "değiştirmez."),
     ], numbered=True)
 
-    ui.kicker("Sık sorulanlar", tone="ink")
-    ui.text(
-        "<p><strong>R² = 0,410 düşük değil mi?</strong> Tek başına bakıldığında mütevazı görünür; ama bu değer "
-        "eğitimden kanonik DOI anahtarı düzeyinde ayrık tutulan yayınlara genellemeyi ölçer ve tez, literatür "
-        "verisindeki reçete-içi gürültünün ulaşılabilir tavanı ~0,52'ye sınırladığını gösterir (Bölüm 5.1). "
-        "0,410 \"kötü bir model\" değil; dürüst ölçülmüş, tavana yakın bir modeldir. Daha yüksek görünen "
-        "skorların nasıl üretildiğini 02'de kendiniz deneyebilirsiniz.</p>"
-        "<p><strong>Tahmin Aracı'ndaki sonuca ne kadar güvenebilirim?</strong> Üç göstergeyi birlikte okuyun: "
-        "aralık genişliği, eğitim-uzayına uzaklık uyarısı ve SHAP açıklaması. Sonuç bir "
-        "<strong>önceliklendirme</strong> çıktısıdır: hangi tarifin denenmeye değer olduğuna dair veri-destekli "
-        "bir işaret; laboratuvar doğrulamasının yerine geçmez.</p>"
-        "<p><strong>Sayılar tezle birebir aynı mı?</strong> Evet. Uygulamanın tüm veri dosyaları tezin kod "
-        "deposundan (<span class='m-mono'>perovskite-pce-ml-thesis</span>) deterministik olarak üretilir; üretim "
-        "betiği bölmeleri yeniden kurup bilinen değerlerle doğrular, uyuşmazlıkta durur. 08 Provenans hangi "
-        "commit'ten üretildiğini gösterir.</p>"
-    )
+    with ui.card():
+        ui.kicker("Sık sorulanlar", tone="ink")
+        ui.text(
+            "<p><strong>R² = 0,410 düşük değil mi?</strong> Tek başına bakıldığında mütevazı görünür; ama bu değer "
+            "eğitimden kanonik DOI anahtarı düzeyinde ayrık tutulan yayınlara genellemeyi ölçer ve tez, literatür "
+            "verisindeki reçete-içi gürültünün ulaşılabilir tavanı ~0,52'ye sınırladığını gösterir (Bölüm 5.1). "
+            "0,410 \"kötü bir model\" değil; dürüst ölçülmüş, tavana yakın bir modeldir. Daha yüksek görünen "
+            "skorların nasıl üretildiğini 02'de kendiniz deneyebilirsiniz.</p>"
+            "<p><strong>Tahmin Aracı'ndaki sonuca ne kadar güvenebilirim?</strong> Üç göstergeyi birlikte okuyun: "
+            "aralık genişliği, eğitim-uzayına uzaklık uyarısı ve SHAP açıklaması. Sonuç bir "
+            "<strong>önceliklendirme</strong> çıktısıdır: hangi tarifin denenmeye değer olduğuna dair veri-destekli "
+            "bir işaret; laboratuvar doğrulamasının yerine geçmez.</p>"
+            "<p><strong>Sayılar tezle birebir aynı mı?</strong> Evet. Uygulamanın tüm veri dosyaları tezin kod "
+            "deposundan (<span class='m-mono'>perovskite-pce-ml-thesis</span>) deterministik olarak üretilir; üretim "
+            "betiği bölmeleri yeniden kurup bilinen değerlerle doğrular, uyuşmazlıkta durur. 08 Provenans hangi "
+            "commit'ten üretildiğini gösterir.</p>"
+        )
 
 with right:
-    st.html('<div style="height:8px"></div>')
     ui.kicker("Küçük sözlük", tone="ink")
     ui.list_rows([
         ("PCE", "Güç dönüşüm verimi: hücrenin ışığı elektriğe çevirme yüzdesi."),

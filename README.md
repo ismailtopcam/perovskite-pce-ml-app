@@ -27,16 +27,24 @@ başlıklar `streamlit_app.py` içinde tanımlanır.
 
 ## Tasarım
 
-Arayüz, Claude Design'da hazırlanan **"Tez Uygulamasi (Modernist)"** tasarımını uygular: sol sabit
-ray (İKÇÜ kimliği → numaralı sayfa listesi → tez sahibi/provenans bloğu), Archivo yazı tipi, mürekkep
-`#201e1d` / zemin `#f3f2f2` / vurgu `#ec3013`, sıfır köşe yarıçapı, 2 px çizgiler, büyük sayı
-şeritleri ve mürekkep çerçeveli kutular.
+Arayüz, Claude Design'da hazırlanan **"Kafes"** tasarım dilini uygular (kanvas: "Tez Uygulaması
+Yeniden Tasarım", 2026-11): lacivert sol ray (ABX₃ kafes logosu + İKÇÜ kimliği → dört bölümlü numaralı
+sayfa listesi → tez sahibi/provenans bloğu), serin zemin `#F4F5F7` üzerinde beyaz kartlar, mürekkep
+`#0E1A2B`. Renklerin anlamı her ekranda aynıdır: **mavi `#1F4FD1` = dürüst ölçüm / eğitimde destekli**,
+**turuncu `#D9530F` (metin `#B84308`) = sızıntı / iyimser skor / uyarı**. Başlıklar Space Grotesk,
+metin Inter, sayılar JetBrains Mono.
 
-- Tema jetonları: `.streamlit/config.toml` (`[theme]`, `[[theme.fontFaces]]`).
-- Bileşen CSS'i ve HTML yardımcıları (`page_header`, `stats`, `bar_rows`, `box`, `table`, `flow`,
-  `chart` …): `lib/ui.py`. Her sayfa `ui.page_header(...)` ile başlar, `ui.footer()` ile biter.
-- Yazı tipi uygulamayla birlikte sunulur: `static/fonts/` (Archivo, SIL OFL 1.1 — lisans dosyası
-  aynı klasörde); `server.enableStaticServing = true` gerektirir.
+- Tema jetonları: `.streamlit/config.toml` (`[theme]`, `[theme.sidebar]`, `[[theme.fontFaces]]`).
+- Bileşen CSS'i ve HTML yardımcıları (`page_header`, `card`, `stats`, `bar_rows`, `box`, `table`,
+  `flow`, `chart` …): `lib/ui.py`. Her sayfa `ui.page_header(...)` ile başlar, `ui.footer()` ile biter;
+  kart içine alınacak bölümler `with ui.card():` ile sarılır. `bar_rows` tonları: `blue` (dürüst),
+  `acc` / `soft` (sızıntı), `ink`, `mid`, `blue2`; `stats` ve `box` için `blue` / `acc` tonları.
+- Raydaki sayfa numaraları URL yoluna göre CSS ile eklenir (`lib/ui.py` → `_NAV_NUM`); yeni sayfa
+  eklenirse oraya da yazılmalıdır.
+- Yazı tipleri uygulamayla birlikte sunulur, dış istek yapılmaz: `static/fonts/` (Inter, Space Grotesk,
+  JetBrains Mono — Fontsource 5.3.0 değişken sürümleri, latin + latin-ext; üçü de SIL OFL 1.1, lisans
+  dosyaları aynı klasörde). Logo: `static/logo-kafes.svg` (`st.html` satır içi SVG'yi temizlediği için
+  dosyadan yüklenir). `server.enableStaticServing = true` gerektirir.
 - Etkileşimli parçalar (segmentli seçim, sayı girişleri, tablolar, Plotly grafikleri) Streamlit
   bileşenleridir; `lib/ui.py` içindeki CSS onları aynı dile çeker.
 
