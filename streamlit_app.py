@@ -50,6 +50,7 @@ pages = [
     st.Page("pages/6_Aday_Tarayici.py", title="Aday Tarayıcı"),
     st.Page("pages/7_DOI_Gezgini.py", title="DOI Gezgini"),
     st.Page("pages/8_Pipeline_Provenance.py", title="Provenans"),
+    st.Page("pages/9_Sayilarin_Evrimi.py", title="Sayıların Evrimi"),
 ]
 
 with hatalar.yakala():

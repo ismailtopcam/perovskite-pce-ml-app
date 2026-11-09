@@ -64,6 +64,7 @@ with left:
         ("06", "Aday Tarayıcı", "756 adayın aralıklı ve eğitim-uzayı bilgili keşfi", "Aday_Tarayici"),
         ("07", "DOI Gezgini", "Yayın-düzeyi izlenebilirlik; grup-güvenli ayrımın somut hâli", "DOI_Gezgini"),
         ("08", "Pipeline & Provenans", "Aşama manifestleri, sürümler, denetim özetleri", "Pipeline_Provenance"),
+        ("09", "Sayıların Evrimi", "Bildiriden teze: ham ve kanonik DOI anahtarıyla ana sayılar", "Sayilarin_Evrimi"),
     ])
 with right:
     ui.kicker("Nasıl okumalı")

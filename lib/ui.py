@@ -111,6 +111,7 @@ ul[data-testid="stSidebarNavItems"] li:nth-child(7) a::before {{ content: "05"; 
 ul[data-testid="stSidebarNavItems"] li:nth-child(8) a::before {{ content: "06"; }}
 ul[data-testid="stSidebarNavItems"] li:nth-child(9) a::before {{ content: "07"; }}
 ul[data-testid="stSidebarNavItems"] li:nth-child(10) a::before {{ content: "08"; }}
+ul[data-testid="stSidebarNavItems"] li:nth-child(11) a::before {{ content: "09"; }}
 
 /* ---------- tipografi kalıpları ---------- */
 .m-kicker {{ font-size: 11px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--acc700); }}

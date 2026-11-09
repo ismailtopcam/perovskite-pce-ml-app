@@ -64,6 +64,11 @@ with left:
          "sürümleri, hangi metrikler), akış diyagramı ve bağımsız denetim özetleri. \"Bu sayılar tekrar "
          "üretilebilir mi?\" sorusunun cevabı: manifestlerin tamamı aynı ortamı gösterir ve uygulamadaki her "
          "veri dosyası pipeline'dan deterministik olarak türetilir."),
+        ("09", "Sayıların Evrimi", "· Bölüm 3.15, 5.7, 5.8",
+         "ICRAS 2026 bildirisindeki sayıların (ham DOI anahtarlı v0.3.x) tezdeki sayılarla (kanonik DOI anahtarlı "
+         "v0.4.0) karşılaştırması. 44 DOI yazım varyantının birleştirilmesi kat sınırını aşan kayıtları sıfırladı; "
+         "CV R² 0,413'ten 0,410'a indi. Farklar katlar arası standart sapmanın altında kalır ve nitel sonuçları "
+         "değiştirmez."),
     ], numbered=True)
 
     ui.kicker("Sık sorulanlar", tone="ink")
