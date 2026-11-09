@@ -22,6 +22,15 @@ hw_top = float(conf["marginal"]["90"]["half_width"])
 cand = cand.assign(destek=np.where(cand["uyumlu_N5"], "eğitimde destekli (≥5)", "destek < 5"))
 zeng = enr[(enr["esik"] == scr.get("gains_threshold", 18)) & (enr["k_frac"] == 0.05)]
 zeng = float(zeng["zenginlestirme"].iloc[0]) if len(zeng) else None
+# Eğitim bölmesinin en yüksek PCE'si (33,0). Temiz verinin tamamındaki 34,8 holdout'taki bir kayda aittir;
+# ağaç modelin ulaşabileceği tavanı eğitim bölmesi belirlediği için karşılaştırma bununla yapılır.
+train_max = float(data.js("features.json")["train_pce_max"])
+tavan_all, tavan_prim = float(top_all["Predicted_PCE"]), float(top["Predicted_PCE"])
+if round(tavan_all, 2) == round(tavan_prim, 2):
+    tavan_etki = "tavanı değiştirmez"
+else:
+    tavan_etki = (f"tavanı {tr(tavan_all, 2)} yerine {tr(tavan_prim, 2)} yapar — filtresiz listenin tepesi "
+                  "eğitimde hiç görülmemiş bir üçlüye aittir")
 
 ui.page_header(
     "06 — Aday Kompozisyon Tarayıcı · Tez Bölüm 3.12, 4.5 ve 4.10",
@@ -34,7 +43,8 @@ ui.stats([
     ("Aday", tr(len(cand), 0), "çözücü DMF; DMSO'ya sabit"),
     ("Eğitimde destekli (≥5)", tr(n_destek, 0), "mimari–ETL–HTL üçlüsü eğitimde ≥5 kayıt", "blue"),
     ("En yüksek tahmin", tr(float(top["Predicted_PCE"]), 2),
-     f"birincil (≥5 destek) liste; filtresiz {tr(float(top_all['Predicted_PCE']), 2)} — eğitim maksimumu 34,8'in çok altında"),
+     f"birincil (≥5 destek) liste; filtresiz {tr(tavan_all, 2)} — eğitimdeki en yüksek PCE {tr(train_max, 1)}; "
+     "tavan bunun çok altında"),
     ("Sıralama korelasyonu", f"ρ {tr(scr['spearman'], 3)}",
      f"holdout Spearman" + (f"; ilk %5'te {tr(zeng, 1)}× zenginleştirme" if zeng else "")),
 ])
@@ -76,13 +86,15 @@ with right, ui.card():
     ui.kicker("Bu sayfayı dürüst okumak", tone="ink")
     ad = conf["applicability_domain"]
     ui.text(
-        f"<p><strong>Tavan {tr(float(top_all['Predicted_PCE']), 2)} (birincil filtreli listede {tr(float(top['Predicted_PCE']), 2)}):</strong> hiçbir aday eğitim maksimumuna "
-        "(34,8) yaklaşamaz — ağaç tabanlı modelin eğitim aralığı dışına çıkamaması, 756 adaylık kısıtlı eksen "
+        f"<p><strong>Tavan {tr(tavan_all, 2)} (birincil filtreli listede {tr(tavan_prim, 2)}):</strong> hiçbir aday "
+        f"eğitimdeki en yüksek PCE değerine ({tr(train_max, 1)}) yaklaşamaz — ağaç tabanlı modelin eğitim aralığı "
+        "dışına çıkamaması, 756 adaylık kısıtlı eksen "
         "uzayı ve band gap/tavlama gibi bağlam değişkenlerinin eğitim medyanlarına sabitlenmesi birlikte çalışır. "
         "Liste <strong>bilinen yüksek-verim bölgesinin yeniden bulunmasıdır</strong>; yeni bir keşif vaat etmez "
         "(tez Bölüm 5.4).</p>"
         f"<p><strong>Eğitim desteği:</strong> ham ilk-30'a hâkim bazı (mimari, ETL, HTL) üçlüleri eğitimde hiç "
-        f"görülmemiştir; ≥5 kayıt filtresi {len(cand)} adayı {n_destek}'e indirir ve tavanı değiştirmez (tez Bölüm 4.5).</p>"
+        f"görülmemiştir; ≥5 kayıt filtresi {len(cand)} adayı {n_destek}'e indirir ve {tavan_etki} "
+        "(tez Bölüm 4.5).</p>"
         f"<p><strong>Uzaklık ≠ güven:</strong> adayların yalnızca {tr(n_ici, 0)} tanesi eğitim-uzayı eşiğinin "
         "içindedir (sabit medyan varsayımları yüzünden beklenen bir durum). Üstelik tez, bu mesafenin holdout'ta "
         f"hata düzeyini <strong>ayırt etmediğini</strong> göstermiştir (MAE {tr(ad['mae_inside'], 2)}'e karşı "

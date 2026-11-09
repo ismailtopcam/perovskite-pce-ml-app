@@ -50,7 +50,7 @@ with left:
          "bölgesinde güçlü, az örneklenmiş bölgelerde zayıftır — beklenen ve tezde tartışılan örüntü."),
         ("06", "Aday Tarayıcı", "· Bölüm 3.12, 4.5, 4.10",
          "Modelin taradığı 756 hipotetik kompozisyon; her biri tahmin, belirsizlik aralığı, eğitim desteği ve "
-         "veri-yoğunluğu bilgisiyle. En yüksek tahmin 17,95 — eğitim maksimumunun (34,8) çok altında. Bu bir "
+         "veri-yoğunluğu bilgisiyle. En yüksek tahmin 17,95 — eğitimdeki en yüksek PCE'nin (33,0) çok altında. Bu bir "
          "hata değil, ağaç tabanlı modellerin bilinen sınırıdır: liste <strong>bilinen iyi bölgenin yeniden "
          "bulunmasıdır</strong>; deneysel taramayı daraltma aracı olarak okunmalıdır."),
         ("07", "DOI Gezgini", "· Bölüm 3.8, 5.7",
