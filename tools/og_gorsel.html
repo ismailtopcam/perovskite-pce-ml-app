@@ -1,0 +1,94 @@
+<!doctype html>
+<!--
+  static/og.png kaynagi (paylasim onizleme gorseli, 1200x630, "Kafes" tasarim dili).
+  Sayilar degisirse bu dosyayi duzenleyip yeniden uretin (Windows, depo kokunden):
+    msedge --headless=new --disable-gpu --hide-scrollbars --force-device-scale-factor=1 `n      --window-size=1200,630 --virtual-time-budget=6000 --screenshot=static/og.png file:///<tam-yol>/tools/og_gorsel.html
+  Yazi tipleri ve logo depodan okunur (static/fonts, static/logo-kafes.svg).
+-->
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>og</title>
+<style>
+@font-face { font-family: "Inter"; font-weight: 100 900; src: url(../static/fonts/inter-latin-wght-normal.woff2) format("woff2");
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: "Inter"; font-weight: 100 900; src: url(../static/fonts/inter-latin-ext-wght-normal.woff2) format("woff2");
+  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: "Space Grotesk"; font-weight: 300 700; src: url(../static/fonts/space-grotesk-latin-wght-normal.woff2) format("woff2");
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: "Space Grotesk"; font-weight: 300 700; src: url(../static/fonts/space-grotesk-latin-ext-wght-normal.woff2) format("woff2");
+  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: "JetBrains Mono"; font-weight: 100 800; src: url(../static/fonts/jetbrains-mono-latin-wght-normal.woff2) format("woff2");
+  unicode-range: U+0000-00FF,U+0131,U+2000-206F,U+2212; }
+@font-face { font-family: "JetBrains Mono"; font-weight: 100 800; src: url(../static/fonts/jetbrains-mono-latin-ext-wght-normal.woff2) format("woff2");
+  unicode-range: U+0100-02BA,U+02BD-02C5,U+1E00-1E9F; }
+html, body { margin: 0; }
+body { width: 1200px; height: 630px; overflow: hidden; background: #0E1A2B; color: #FFFFFF; font-family: Inter, sans-serif; }
+.wrap { box-sizing: border-box; width: 1200px; height: 630px; padding: 52px 60px 44px; display: flex; flex-direction: column; }
+.top { display: flex; justify-content: space-between; align-items: center; }
+.brand { display: flex; align-items: center; gap: 14px; }
+.brand img { width: 52px; height: 52px; display: block; }
+.brand .n { font-family: "Space Grotesk"; font-weight: 700; font-size: 27px; letter-spacing: -0.01em; line-height: 1.05; }
+.brand .s { font-size: 15px; color: #9AA7B8; margin-top: 4px; }
+.url { font-family: "JetBrains Mono"; font-weight: 500; font-size: 17px; color: #C9D2DE; border: 1px solid #2A3D5C; border-radius: 999px; padding: 8px 16px; }
+.kicker { margin-top: 40px; font-size: 15px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #7FA0F0; }
+h1 { margin: 12px 0 0; font-family: "Space Grotesk"; font-weight: 600; font-size: 47px; line-height: 1.07; letter-spacing: -0.02em; max-width: 1060px; }
+h1 em { font-style: normal; color: #7FA0F0; }
+.sub { margin: 18px 0 0; font-size: 20px; color: #9AA7B8; }
+.tiles { margin-top: auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.t { background: #16263D; border: 1px solid #22324A; border-radius: 16px; padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 4px; }
+.t.on { border: 2px solid #7FA0F0; background: #1A2E4D; }
+.t .l { font-size: 15px; font-weight: 600; color: #C9D2DE; }
+.t .d { font-size: 13.5px; color: #9AA7B8; }
+.t .v { font-family: "Space Grotesk"; font-weight: 600; font-size: 50px; line-height: 1; letter-spacing: -0.02em; margin-top: 6px; }
+.t .b { height: 8px; border-radius: 999px; background: #22324A; margin-top: 12px; overflow: hidden; }
+.t .b span { display: block; height: 100%; border-radius: 999px; }
+.foot { margin-top: 22px; display: flex; justify-content: space-between; align-items: baseline; font-size: 16px; color: #9AA7B8; }
+.foot b { color: #E7ECF3; font-weight: 600; }
+.foot .m { font-family: "JetBrains Mono"; font-size: 15px; color: #C9D2DE; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand">
+      <img src="../static/logo-kafes.svg" alt="">
+      <div><div class="n">Perovskit PCE</div><div class="s">ML ile verim tahmini · yüksek lisans tezi uygulaması</div></div>
+    </div>
+    <div class="url">tez.ismailtopcam.dev</div>
+  </div>
+
+  <div class="kicker">Tezin savı</div>
+  <h1>Raporlanan model başarımını algoritma kadar <em>doğrulama ve özellik kararları</em> belirler.</h1>
+  <p class="sub">Aynı veri, aynı model — yalnızca bölme ve özellik kararları değişince 5-kat CV R²:</p>
+
+  <div class="tiles">
+    <div class="t">
+      <div class="l">Yalnızca kompozisyon</div><div class="d">14 özellik · DOI-grup</div>
+      <div class="v" style="color:#C9D2DE">0,261</div>
+      <div class="b"><span style="width:26.1%; background:#9AA7B8"></span></div>
+    </div>
+    <div class="t on">
+      <div class="l" style="color:#FFFFFF">Tezin ölçümü</div><div class="d">77 özellik · yayın-ayrık</div>
+      <div class="v" style="color:#7FA0F0">0,410</div>
+      <div class="b"><span style="width:41%; background:#7FA0F0"></span></div>
+    </div>
+    <div class="t">
+      <div class="l">Rastgele bölme</div><div class="d">kardeş-cihaz sızıntısı</div>
+      <div class="v" style="color:#FFB37A">0,481</div>
+      <div class="b"><span style="width:48.1%; background:#F4A26B"></span></div>
+    </div>
+    <div class="t">
+      <div class="l">+ Voc, Jsc, FF</div><div class="d">hedef sızıntısı</div>
+      <div class="v" style="color:#FF9A5C">0,937</div>
+      <div class="b"><span style="width:93.7%; background:#F07A35"></span></div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span><b>İzmir Kâtip Çelebi Üniversitesi</b> · Yazılım Mühendisliği YL tezi · İsmail Topçam</span>
+    <span class="m">41.485 kayıt · DOI-grup CV</span>
+  </div>
+</div>
+</body>
+</html>
