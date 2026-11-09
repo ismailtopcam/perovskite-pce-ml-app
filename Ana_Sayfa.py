@@ -32,9 +32,9 @@ with right:
     )
     b1, b2 = st.columns([1.3, 1])
     with b1:
-        st.page_link("pages/2_Dogrulama_Deneyleri.py", label="Merkez deneyi çalıştır  →")
+        st.page_link("sayfalar/2_Dogrulama_Deneyleri.py", label="Merkez deneyi çalıştır  →")
     with b2:
-        st.page_link("pages/0_Rehber.py", label="Kullanım rehberi  →")
+        st.page_link("sayfalar/0_Rehber.py", label="Kullanım rehberi  →")
 
 st.html('<div style="height:14px"></div>')
 
