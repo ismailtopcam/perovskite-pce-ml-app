@@ -1,6 +1,8 @@
 {
  "hazirlama_zamani_utc": "2026-08-10T12:31:09+00:00",
- "pipeline_git_commit": "f65ed93b82f84b4da8ff9a37aa2e3363ab5d950f",
+ "pipeline_git_commit": "f2bf18276057667505682516d290034024011dae",
+ "pipeline_git_commit_eski": "f65ed93b82f84b4da8ff9a37aa2e3363ab5d950f",
+ "pipeline_gecmis_notu": "2026-10-17: pipeline deposu gecmisi yalnizca commit ust verisi icin yeniden yazildi; v0.4.0 agaci (ff27177) ozdes, veri yeniden uretilmedi. Kosu-manifestlerindeki d6ce55f'in yeni karsiligi 6eba260.",
  "model_ready_sha256": "3c42a5433261ecdd5ba3701eba2fb0889025069f6ec0ed359c3f1706ca9c82c9",
  "model_cbm_sha256": "a260d88e6c018e1263ba5f742600c0e70a1b15041a590cc8e02222df0f8f0af3",
  "n_ham": 43398,

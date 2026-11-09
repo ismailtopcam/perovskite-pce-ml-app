@@ -33,8 +33,9 @@ with left:
     ], vmax=0.5)
     top = cv.iloc[0]; second = cv.iloc[1]
     ui.text(f"İlk dört boosting modeli standart sapma mertebesinde iç içedir; CatBoost'un üstünlüğü "
-            f"<strong>marjinaldir</strong>: eşleştirilmiş t-testinde CatBoost–HistGBM farkı anlamsız "
-            f"(ΔR² ≈ {tr(top.R2_mean - second.R2_mean, 3)}; p = 0,495; tez Bölüm 4.2). Salt-scikit-learn "
+            f"<strong>marjinaldir</strong>: eşleştirilmiş kat karşılaştırmasında CatBoost beş katın beşinde HistGBM'in "
+            f"önündedir (ortalama fark ΔR² ≈ {tr(top.R2_mean - second.R2_mean, 4)}; eşleştirilmiş t p = 0,006, "
+            "Wilcoxon p = 0,063) — yön tutarlı, büyüklük pratikte ihmal edilebilir (tez Bölüm 4.2). Salt-scikit-learn "
             "HistGBM'in dış kütüphanelerle at başı gitmesi, kurulum-hafif tekrar üretim için önemlidir. "
             "Sıfır-bilgi tabanı (eğitim ortalaması) aynı protokolde R² ≈ 0,00 / MAE 4,32 verir.", mute=True)
 
@@ -47,7 +48,8 @@ with right:
              right_cols=(1, 2, 3, 4, 5, 6), hi_row=0)
     ui.text(
         "<p><strong>Ayar duyarlılığı (Bölüm 4.8):</strong> grup-güvenli ızgara aramaları hem HistGBM'de "
-        "(+0,0002) hem CatBoost'ta (fark 0,000) baştan kullanılan temel yapılandırmayı seçti — başarım "
+        f"(varsayılan {tr(tune['default_cv_r2'][0], 4)} → ayarlı {tr(tune['tuned_cv_r2'][0], 4)}; kazanım "
+        f"{tr(tune['tuned_cv_r2'][0] - tune['default_cv_r2'][0], 4)}) hem CatBoost'ta (fark 0,000) baştan kullanılan temel yapılandırmayı seçti — başarım "
         "hiperparametreyle değil <strong>veri yapısıyla</strong> sınırlı.</p>"
         f"<p><strong>Fiziksel tanımlayıcı ablasyonu (Bölüm 4.9):</strong> Goldschmidt <em>t</em> / oktahedral "
         f"<em>μ</em> / Bartel <em>τ</em> eklemek başarımı artırmadı (Δ = +{tr(abl['delta_r2'], 4)}; "

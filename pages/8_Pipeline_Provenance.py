@@ -86,7 +86,9 @@ ui.table([], [
     ["model.cbm SHA-256", f"<span class='m-mono'>{meta.get('model_cbm_sha256', '—')[:32]}…</span>"],
     ["model_ready_dataset.csv SHA-256", f"<span class='m-mono'>{meta['model_ready_sha256'][:32]}…</span>"],
     ["Ham veri anlık görüntüsü", f"{tr(meta['n_ham'], 0)} kayıt × 410 kolon (SHA-256: pipeline README)"],
-    ["Pipeline commit", f"<span class='m-mono'>{meta['pipeline_git_commit'][:12]}</span> (v0.4.0)"],
+    ["Pipeline commit", f"<span class='m-mono'>{meta['pipeline_git_commit'][:12]}</span> (v0.4.0; 17 Ekim 2026 "
+                        f"geçmiş yeniden yazımı öncesi kimliği {meta.get('pipeline_git_commit_eski', '')[:7]}; "
+                        "koşu-manifestlerindeki d6ce55f'in yeni karşılığı 6eba260)"],
     ["Kod arşivi", f'<a href="https://doi.org/{zdoi}">Zenodo DOI {zdoi}</a> · <a href="{gh_p}">pipeline deposu</a> · '
                    f'<a href="{gh_a}">uygulama deposu</a>'],
     ["DOI-grup CV sonucu", "R² = 0,410 ± 0,016 · MAE 3,12 · RMSE 4,02 — <strong>ölçüm-sonrası hiçbir değişken "
